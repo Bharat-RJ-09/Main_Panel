@@ -104,3 +104,88 @@ body {
   display: block;
   margin-bottom: 10px;
 }
+
+
+/* Update Navbar Styles */
+.menu-btn {
+    /* Existing style: was 'div' now needs to be 'button' */
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background: rgba(30, 30, 50, 0.95); /* Darker background */
+  backdrop-filter: blur(15px);
+  z-index: 1000; /* Ensure it's above other content */
+  transform: translateX(-100%); /* Hide it off-screen */
+  transition: transform 0.3s ease-out;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+  padding: 20px;
+}
+
+.sidebar.open {
+  transform: translateX(0); /* Slide it into view */
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-item i {
+  font-size: 18px;
+}
+
+.nav-item:hover {
+  background: rgba(77, 184, 255, 0.2);
+}
+
+.nav-item.active {
+  background: #4db8ff;
+  font-weight: bold;
+}
+
+.separator {
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin: 10px 0;
+}
