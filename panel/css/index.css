@@ -1,0 +1,106 @@
+/* General theme */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, rgba(40,0,80,0.9), rgba(0,0,60,0.9));
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+.logo span {
+  color: #4db8ff;
+}
+#logoutBtn {
+  background: red;
+  border: none;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Balance Card */
+.balance-card {
+  margin: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+.balance-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-img {
+  width: 50px;
+  border-radius: 50%;
+}
+.add-btn {
+  background: #4db8ff;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.action-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.red-btn {
+  background: #ff3b3b;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Features Grid */
+.features {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+.feature-card {
+  background: rgba(0,0,255,0.6);
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+.feature-card:hover {
+  transform: translateY(-5px) scale(1.05);
+  background: rgba(0,0,255,0.8);
+}
+.feature-card i {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 10px;
+}

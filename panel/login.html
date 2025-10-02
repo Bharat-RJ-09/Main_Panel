@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instant Panel - Login</title>
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="utility/font.css">
+</head>
+<body class="bdfont">
+   <div class="bg-wrap">
+    <!-- optional background image (kept empty; controlled by CSS) -->
+    <div class="bg-image"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-blur"></div>
+  </div>
+
+  <main class="login-container">
+    <h1>Instant Panel</h1>
+    <form id="loginForm">
+  <div class="form-group">
+    <label for="userLogin">Username or Gmail</label>
+    <input type="text" id="userLogin" placeholder="Enter Username or Gmail" required>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <div class="password-box">
+      <input type="password" id="password" placeholder="Enter password" required>
+      <button type="button" id="togglePassword">👁</button>
+    </div>
+  </div>
+
+  <button type="submit" class="btn">Login</button>
+</form>
+
+<!-- OTP Modal (add near bottom of body) -->
+<div id="otpModal" class="otp-modal" style="display:none;">
+  <div class="otp-card">
+    <button id="closeOtpBtn" class="otp-close">✕</button>
+    <h3>Enter OTP</h3>
+    <p id="otpMessage">OTP sent to your email</p>
+
+    <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" />
+
+    <div class="otp-actions">
+      <button id="verifyOtpBtn" type="button">Verify OTP</button>
+      <button id="resendOtpBtn" type="button">Resend</button>
+    </div>
+
+    <div class="otp-meta">
+      <small id="otpTimer">05:00</small>
+      <button id="showOtpDev" type="button" class="dev-btn">Show OTP (dev)</button>
+    </div>
+  </div>
+</div>
+
+    <p class="signup-text">Don’t have an account? <a href="signup.html">Sign Up</a></p>
+  </main>
+
+  
+  <script src="js/script.js"></script>
+</body>
+</html>

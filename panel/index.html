@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Instant Panel</title>
+  <link rel="stylesheet" href="css/index.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="menu-btn">☰</div>
+    <h1 class="logo">Instant <span>Panel</span></h1>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
+  <!-- Balance Card -->
+  <section class="balance-card">
+    <div class="balance-left">
+      <img src="logo.png" alt="logo" class="logo-img">
+      <h2>₹0</h2>
+      <button class="add-btn">+</button>
+    </div>
+    <div class="balance-right">
+      <p><b>User:</b> <span id="username">Bharat</span></p>
+      <div class="action-btns"> 
+        <!-- New Subscription Button -->
+        <a href="subscription.html"><button class="red-btn" id="subscriptionBtn">Subscription</button></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid -->
+  <section class="features">
+    <div class="feature-card">
+      <i class="ri-money-rupee-circle-line"></i>
+      <p>Wallet</p>
+    </div>
+    <div class="feature-card">
+      <i>⚡</i>
+      <p>Instant Panel</p>
+    </div>
+    <div class="feature-card">
+      <i class="ri-bar-chart-box-ai-line"></i>
+      <p>Camp Panel</p>
+    </div>
+    <div class="feature-card">
+      <i class="ri-notification-3-line"></i>
+      <p>Bot Alert</p>
+    </div>
+  </section>
+
+  <script src="js/index.js"></script>
+</body>
+</html>

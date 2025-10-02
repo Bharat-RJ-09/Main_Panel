@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up | Instant Panel</title>
+  <link rel="stylesheet" href="css/signup.css" />
+  <script defer src="js/signup.js"></script>
+</head>
+<body>
+  <div class="background"></div>
+  
+  <div class="form-container">
+    <h2>Create Account</h2>
+    <form id="signupForm">
+      
+      <input type="text" id="fullname" placeholder="Full Name" required />
+      
+      <input type="text" id="username" placeholder="Username" required />
+      <small id="usernameMsg"></small>
+      
+      <input type="email" id="email" placeholder="Email (Gmail only)" required pattern=".+@gmail\.com" />
+      
+      <input type="tel" id="mobile" placeholder="Mobile Number" required pattern="[0-9]{10}" />
+      
+      <input type="password" id="password" placeholder="Password" required />
+      
+      <button type="submit">Sign Up</button>
+      
+      <p class="switch">Already have an account? <a href="login.html">Login</a></p>
+    </form>
+  </div>
+
+  <script src="js/signup.js"></script>
+</body>
+</html>

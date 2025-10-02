@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase - Instant Panel</title>
+  <link rel="stylesheet" href="css/purchase.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Complete Your Purchase</h1>
+    <p>Scan this QR code to pay for your subscription</p>
+  </header>
+
+  <section class="qr-section">
+    <div id="qrcode"></div>
+    <p id="planInfo"></p>
+
+    <!-- Transaction ID Input -->
+    <div class="transaction">
+      <input type="text" id="txnId" placeholder="Enter Transaction ID">
+      <button id="txnConfirmBtn">Confirm Payment</button>
+    </div>
+  </section>
+
+  <script src="js/purchase.js"></script>
+</body>
+</html>

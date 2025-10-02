@@ -1,0 +1,75 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1a1a2e, #162447);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin: 30px 0;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #f25f5c;
+}
+
+header p {
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+.qr-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#qrcode {
+    padding: 20px;
+    background-color: #27293d;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+}
+
+#planInfo {
+    font-size: 1.2rem;
+    color: #ffd700;
+}
+
+.transaction {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    width: 250px;
+}
+
+.transaction input {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+}
+
+.transaction button {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #f25f5c;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.transaction button:hover {
+    background-color: #ff6f61;
+}
