@@ -1,4 +1,58 @@
  
+// panel/js/index.js ke subse upar add karein
+
+// --- START: SIDEBAR TOGGLE LOGIC (CRITICAL MISSING PART) ---
+const sidebar = document.getElementById('sidebar');
+const menuBtn = document.getElementById('menuBtn');
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+const sidebarLogoutBtn = document.getElementById('sidebarLogout');
+
+function toggleSidebar() {
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
+}
+
+if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+
+if(sidebarLogoutBtn) {
+    sidebarLogoutBtn.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) logoutBtn.click(); 
+    });
+}
+// --- END: SIDEBAR TOGGLE LOGIC ---
+
+// --- START: SUBSCRIPTION STATUS UPDATE LOGIC (From previous step) ---
+// Function to update the Dashboard UI with subscription status
+function updateSubscriptionStatus() {
+    // ... (Your getSubscription and isSubscribed functions are needed here)
+    const subStatusElement = document.getElementById('subscriptionStatus');
+    const subscriptionData = getSubscription(); 
+
+    if (subStatusElement) {
+        if (subscriptionData) {
+            const expiryDate = new Date(subscriptionData.expiry);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            const formattedDate = expiryDate.toLocaleDateString('en-IN', options);
+
+            subStatusElement.innerHTML = `Plan: <b>${subscriptionData.plan}</b> | Expires: <b>${formattedDate}</b>`;
+            subStatusElement.style.color = '#aaffaa'; // Green for active
+        } else {
+            subStatusElement.innerHTML = `Status: <b style="color:#ffaaaa;">Not Subscribed</b>`;
+            subStatusElement.style.color = '#ffaaaa'; // Red for inactive
+        }
+    }
+}
+// --- END: SUBSCRIPTION STATUS UPDATE LOGIC ---
+
+
+// Call the new function right after defining it
+updateSubscriptionStatus(); 
+
+// ... (Your existing code like refreshFeatureLocks, feature-card listeners, etc. will follow here)
 
     const usernameDisplay = document.getElementById('usernameDisplay');
     if(usernameDisplay) usernameDisplay.innerText = session.username;
@@ -92,28 +146,4 @@ updateSubscriptionStatus();
 
 
 // panel/js/index.js ke subse upar add karein
-
-// Sidebar Toggle Logic 
-const sidebar = document.getElementById('sidebar');
-const menuBtn = document.getElementById('menuBtn');
-const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-const sidebarLogoutBtn = document.getElementById('sidebarLogout');
-
-function toggleSidebar() {
-    if (sidebar) {
-        sidebar.classList.toggle('open');
-    }
-}
-
-if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
-
-if(sidebarLogoutBtn) {
-    sidebarLogoutBtn.addEventListener('click', (e) => {
-        e.preventDefault(); 
-        const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) logoutBtn.click(); 
-    });
-}
-
-// ... (Rest of your existing code follows below this block)
+ 

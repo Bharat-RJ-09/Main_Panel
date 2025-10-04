@@ -104,6 +104,8 @@ body {
   display: block;
   margin-bottom: 10px;
 }
+
+
 /* Sidebar Styles (ADD THESE STYLES AT THE END OF css/index.css) */
 
 /* Update Navbar Styles for Menu Button */
@@ -187,4 +189,21 @@ body {
     height: 1px;
     background: rgba(255,255,255,0.15);
     margin: 10px 0;
+}
+
+/* Feature Card Lock Badge & Lock Icon styles (For consistency) */
+.feature-card {
+    position: relative;
+}
+.lock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: #ff3b3b;
+}
+
+.feature-card.locked {
+    opacity: 0.6;
+    cursor: default;
 }
