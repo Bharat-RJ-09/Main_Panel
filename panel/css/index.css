@@ -1,114 +1,76 @@
 /* General theme */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, rgba(40,0,80,0.9), rgba(0,0,60,0.9));
-  color: #fff;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Deep Space Gradient with subtle animation */
+  background: linear-gradient(135deg, #0a0a1a, #1a0a2a); 
+  color: #e6eef8; /* Lighter text for dark theme */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* Navbar */
+/* --- Animated Background Layer (New) --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    mix-blend-mode: screen;
+    animation: slowPan 30s infinite alternate;
+}
+
+@keyframes slowPan {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-5%, 5%); }
+}
+/* -------------------------------------- */
+
+
+/* Navbar (Fixed and uses Glass effect) */
 .navbar {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(15, 15, 30, 0.6); /* Deeper dark blur */
+  backdrop-filter: blur(15px) saturate(1.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .logo {
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
 }
 .logo span {
-  color: #4db8ff;
+  color: #00e0ff; /* Neon Cyan Accent */
 }
 #logoutBtn {
-  background: red;
+  background: #ff0077; /* Neon Pink/Red */
   border: none;
   color: #fff;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Balance Card */
-.balance-card {
-  margin: 20px;
-  padding: 20px;
-  border-radius: 15px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-}
-.balance-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.logo-img {
-  width: 50px;
-  border-radius: 50%;
-}
-.add-btn {
-  background: #4db8ff;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 20px;
-  cursor: pointer;
-}
-.action-btns {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-.red-btn {
-  background: #ff3b3b;
-  border: none;
-  color: #fff;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba(255,0,119,0.5); /* Neon Glow */
+  transition: all 0.2s;
+}
+#logoutBtn:hover {
+    box-shadow: 0 0 15px rgba(255,0,119,0.8);
+    transform: translateY(-1px);
 }
 
-/* Features Grid */
-.features {
-  margin: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-.feature-card {
-  background: rgba(0,0,255,0.6);
-  border-radius: 15px;
-  padding: 25px;
-  text-align: center;
-  backdrop-filter: blur(8px);
-  transition: transform 0.2s;
-  cursor: pointer;
-}
-.feature-card:hover {
-  transform: translateY(-5px) scale(1.05);
-  background: rgba(0,0,255,0.8);
-}
-.feature-card i {
-  font-size: 28px;
-  display: block;
-  margin-bottom: 10px;
-}
-
-
-/* Sidebar Styles (ADD THESE STYLES AT THE END OF css/index.css) */
-
-/* Update Navbar Styles for Menu Button */
+/* Hamburger Menu Button (REQUIRED FOR TOGGLE) */
 .menu-btn {
     background: none;
     border: none;
@@ -118,24 +80,24 @@ body {
     padding: 0 5px;
 }
 
-/* -------------------- SIDEBAR STYLES -------------------- */
+/* -------------------- SIDEBAR STYLES (CRITICAL FIX) -------------------- */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 250px;
   height: 100%;
-  background: rgba(30, 30, 50, 0.95); /* Darker background */
+  background: rgba(10, 10, 20, 0.98); /* Very dark opaque sidebar */
   backdrop-filter: blur(15px);
   z-index: 1000;
-  transform: translateX(-100%); /* Hide it off-screen */
+  transform: translateX(-100%); /* Hidden by default */
   transition: transform 0.3s ease-out;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.8);
   padding: 20px;
 }
 
 .sidebar.open {
-  transform: translateX(0); /* Slide it into view */
+  transform: translateX(0); /* Slides into view */
 }
 
 .sidebar-header {
@@ -177,11 +139,12 @@ body {
 }
 
 .nav-item:hover {
-  background: rgba(77, 184, 255, 0.2);
+  background: rgba(0, 224, 255, 0.1);
 }
 
 .nav-item.active {
-  background: #4db8ff;
+  background: #00e0ff;
+  color: #1a0a2a;
   font-weight: bold;
 }
 
@@ -190,20 +153,120 @@ body {
     background: rgba(255,255,255,0.15);
     margin: 10px 0;
 }
+/* -------------------- END SIDEBAR STYLES -------------------- */
 
-/* Feature Card Lock Badge & Lock Icon styles (For consistency) */
-.feature-card {
-    position: relative;
+
+/* Balance Card (Frosted Glass Card) */
+.balance-card {
+  margin: 20px;
+  padding: 25px;
+  border-radius: 18px;
+  /* Glass effect background */
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #e6eef8;
 }
+.balance-left h2 {
+    font-size: 2.2rem;
+    color: #00e0ff; /* Highlight balance */
+}
+.balance-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.logo-img {
+  width: 50px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0,224,255,0.5); /* Subtle glow */
+}
+.add-btn {
+  background: #00e0ff;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 24px;
+  color: #1a0a2a; /* Dark text on bright button */
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(0,224,255,0.5);
+  transition: transform 0.1s;
+}
+.add-btn:active { transform: scale(0.95); }
+.action-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.red-btn {
+  background: #ff0077;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(255,0,119,0.3);
+}
+
+/* Features Grid */
+.features {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Better responsiveness */
+  gap: 15px;
+}
+.feature-card {
+  /* Glass effect for features */
+  background: rgba(255,255,255,0.06);
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  transition: transform 0.2s, background 0.2s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.feature-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 15px rgba(0,224,255,0.3); /* Subtle neon glow on hover */
+}
+.feature-card i, .feature-card p {
+    color: #fff;
+}
+.feature-card i {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 10px;
+  color: #00e0ff; /* Icon color */
+}
+
+/* Lock Badge Update */
 .lock-badge {
     position: absolute;
     top: 10px;
     right: 10px;
     font-size: 18px;
-    color: #ff3b3b;
+    color: #ff0077; /* Neon Pink/Red lock */
 }
 
-.feature-card.locked {
-    opacity: 0.6;
-    cursor: default;
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .balance-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .balance-right {
+        margin-top: 15px;
+    }
+    .features {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    }
 }
