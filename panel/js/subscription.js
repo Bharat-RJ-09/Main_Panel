@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
         button.addEventListener('click', (e)=>{
             e.preventDefault(); 
             
-            // Get data directly from the parent plan card (the easiest way to get the data-attributes)
             const card = button.closest('.plan-card');
             const planName = card.dataset.plan;
             const planPrice = card.dataset.price;
@@ -25,7 +24,34 @@ document.addEventListener('DOMContentLoaded', ()=>{
             document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
 
-            // Redirect to purchase.html with parameters
+            // --- START: NEW LOGIC FOR FREE PLAN ---
+            if (planPrice === '0' || planPrice === '0.00') {
+                const days = 7; // 1 Week Free Trial
+                const now = Date.now();
+                const expiry = now + days * 24 * 60 * 60 * 1000;
+                
+                // Activate Subscription directly
+                const subscription = {
+                    plan: planName, 
+                    price: planPrice, 
+                    txnId: 'FREE_TRIAL', // Mock transaction ID
+                    purchaseAt: now, 
+                    expiry: expiry
+                };
+                localStorage.setItem('subscription', JSON.stringify(subscription));
+
+                alert(`🎉 Free Trial Activated!\nPlan: ${planName}\nValid till: ${new Date(expiry).toLocaleString()}`);
+                
+                // Redirect to index or original feature
+                if(redirectFeature) window.location.href = `index.html?open=${encodeURIComponent(redirectFeature)}`;
+                else window.location.href = 'index.html';
+                
+                return; // Stop further execution
+            }
+            // --- END: NEW LOGIC FOR FREE PLAN ---
+
+
+            // Redirect to purchase.html for paid plans
             let url = `purchase.html?plan=${encodeURIComponent(planName)}&price=${encodeURIComponent(planPrice)}`;
             if(redirectFeature) url += `&redirect=${encodeURIComponent(redirectFeature)}`;
             
@@ -35,7 +61,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
     
     // --- 2. OPTIONAL: VISUAL HIGHLIGHT ON CARD CLICK ---
-    // This allows the user to click the whole card, not just the button, to highlight it.
     document.querySelectorAll('.plan-card').forEach(card => {
         card.addEventListener('click', () => {
             document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
@@ -61,5 +86,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
             window.location.href = 'login.html';
         });
     }
-
 });
