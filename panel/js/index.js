@@ -61,3 +61,30 @@
         }
     })();
  
+
+
+    // Sidebar Toggle Logic
+const sidebar = document.getElementById('sidebar');
+const menuBtn = document.getElementById('menuBtn');
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+const sidebarLogoutBtn = document.getElementById('sidebarLogout');
+
+function toggleSidebar() {
+    sidebar.classList.toggle('open');
+}
+
+if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+
+// Link sidebar logout button to main logout logic
+if(sidebarLogoutBtn) {
+    sidebarLogoutBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // To prevent default link navigation
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) logoutBtn.click(); // Programmatically click the existing logout button
+    });
+}
+
+
+// Existing code starts here... 
+    // ... rest of the existing code ...
