@@ -3,42 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subscription - Instant Panel</title>
+  <title>Subscription - NextEarnX</title>
   <link rel="stylesheet" href="css/subscription.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
-<body class="bdfont">
-  <header>
-    <h1>Choose Your Subscription Plan</h1>
-    <p>Pick a plan that suits you. First week is free!</p>
-  </header>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
 
-  <section class="plans">
-    <div class="plan-card" data-plan="Free" data-price="0">
-      <h2>1 Week Free</h2>
-      <p>₹0</p>
-    </div>
-    <div class="plan-card" data-plan="Free" data-price="1">
-      <h2>Testing</h2>
-      <p>₹1</p>
-    </div>
-    <div class="plan-card" data-plan="1 Month" data-price="29">
-      <h2>1 Month</h2>
-      <p>₹29</p>
-    </div>
-    <div class="plan-card" data-plan="3 Months" data-price="79">
-      <h2>3 Months</h2>
-      <p>₹79</p>
-    </div>
-    <div class="plan-card" data-plan="6 Months" data-price="159">
-      <h2>6 Months</h2>
-      <p>₹159</p>
-    </div>
-  </section>
+    <div class="container">
+        <h2 id="statusMessage">Choose Your Plan</h2>
+        
+        <section class="plan-grid">
+            <div class="plan-card" data-plan="1 Month" data-price="299">
+                <i class="ri-rocket-line"></i>
+                <h3>1 Month</h3>
+                <p class="price">₹299</p>
+                <button class="select-btn">Select Plan</button>
+            </div>
 
-  <section class="confirm-section">
-    <button id="confirmBtn">Confirm Subscription</button>
-  </section>
+            <div class="plan-card popular" data-plan="3 Months" data-price="799">
+                <i class="ri-sparkling-2-line"></i>
+                <h3>3 Months</h3>
+                <p class="price">₹799</p>
+                <p class="save-tag">Save 10%</p>
+                <button class="select-btn">Select Plan</button>
+            </div>
 
-  <script src="js/subscription.js"></script>
+            <div class="plan-card" data-plan="6 Months" data-price="1499">
+                <i class="ri-vip-line"></i>
+                <h3>6 Months</h3>
+                <p class="price">₹1499</p>
+                <button class="select-btn">Select Plan</button>
+            </div>
+        </section>
+
+        <p class="note">All plans include access to all features and 24/7 priority support.</p>
+    </div>
+
+    <script src="js/subscription.js"></script>
 </body>
 </html>
