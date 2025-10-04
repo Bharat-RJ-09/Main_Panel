@@ -167,8 +167,7 @@ body {
   font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: background 0.2s, color 0.2s;
+  gap: 10px; 
 }
 
 .nav-item i {
