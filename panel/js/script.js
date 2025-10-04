@@ -4,6 +4,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("password");
   const userLoginInput = document.getElementById("userLogin");
 
+  // panel/js/script.js ke DOMContentLoaded block ke andar add karein
+
+  // Password Toggle Logic
+  const togglePasswordBtn = document.getElementById("togglePassword");
+
+  if (togglePasswordBtn) {
+    togglePasswordBtn.addEventListener("click", () => {
+      // Check current type of the password input
+      const currentType = passwordInput.getAttribute("type");
+
+      // Toggle the type attribute
+      if (currentType === "password") {
+        passwordInput.setAttribute("type", "text");
+        togglePasswordBtn.textContent = "🔒"; // Change icon to lock/eye-off
+      } else {
+        passwordInput.setAttribute("type", "password");
+        togglePasswordBtn.textContent = "👁"; // Change icon back to eye
+      }
+    });
+  }
+
+// NOTE: passwordInput element is already defined at the start of the file.
+
   // OTP modal elements
   const otpModal = document.getElementById("otpModal");
   const otpInput = document.getElementById("otpInput");
@@ -143,3 +166,5 @@ loginBtn.addEventListener('click', () => {
     // redirect to dashboard
     window.location.href = "index.html";
 });
+
+
