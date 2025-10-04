@@ -1,28 +1,81 @@
+/* General theme */
 body {
-    font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #1a1a2e, #162447);
-    color: white;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Deep Space Gradient */
+    background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
+    color: #e6eef8;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    padding-top: 80px; /* Space for fixed navbar */
+}
+
+/* --- Animated Background Layer --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    mix-blend-mode: screen;
+    animation: slowPan 30s infinite alternate;
+}
+
+@keyframes slowPan {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-5%, 5%); }
+}
+/* -------------------------------------- */
+
+
+/* Navbar (Fixed and Glass effect) */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    background: rgba(15, 15, 30, 0.6); /* Deeper dark blur */
+    backdrop-filter: blur(15px) saturate(1.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.menu-btn { color: #fff; font-size: 24px; text-decoration: none; }
+.logo { font-size: 24px; font-weight: 700; color: #fff; }
+.logo span { color: #00e0ff; /* Neon Cyan Accent */ }
+
+#logoutBtn {
+    background: #ff0077; /* Neon Pink/Red */
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 header {
     text-align: center;
-    margin: 30px 0;
+    margin: 30px 0 20px;
 }
 
 header h1 {
     font-size: 2rem;
-    color: #f25f5c;
+    color: #00e0ff; /* Neon Cyan */
+    margin-bottom: 5px;
 }
 
 header p {
     font-size: 1rem;
-    color: #e0e0e0;
+    color: #aaa;
 }
 
 .qr-section {
@@ -30,46 +83,89 @@ header p {
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    max-width: 400px;
+    width: 90%;
 }
 
+/* Base Card Style (Frosted Glass) */
+.card {
+    margin-bottom: 20px;
+    padding: 25px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    backdrop-filter: blur(12px) saturate(1.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* QR Code Container Styling */
+/* In panel/css/purchase.css (Replace the existing #qrcode block) */
+
 #qrcode {
-    padding: 20px;
-    background-color: #27293d;
-    border-radius: 20px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.6);
+    padding: 15px;
+    background-color: #FFFFFF; /* Pure white background for high contrast with black code */
+    border-radius: 15px;
+    
+    /* Neon Border and Glow */
+    border: 3px solid #00e0ff; /* Neon Cyan Border */
+    box-shadow: 0 0 20px rgba(0,224,255,0.8), inset 0 0 10px rgba(0,224,255,0.4); /* Enhanced Neon glow */
+    transition: all 0.3s;
+}
+
+/* Optional: Add a subtle hover effect to the entire card */
+.qr-section:hover #qrcode {
+    box-shadow: 0 0 30px rgba(0,224,255,1), inset 0 0 15px rgba(0,224,255,0.6);
 }
 
 #planInfo {
     font-size: 1.2rem;
-    color: #ffd700;
+    color: #00e0ff; /* Neon Pink for amount */
+    font-weight: bold;
 }
 
 .transaction {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 20px;
-    width: 250px;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .transaction input {
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: white;
     font-size: 1rem;
 }
 
 .transaction button {
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
     border: none;
-    background-color: #f25f5c;
-    color: white;
+    background-color: #00e0ff; /* Neon Pink */
+    color: rgb(0, 0, 0);
     font-size: 1rem;
     cursor: pointer;
+    box-shadow: 0 0 10px rgba(255,0,119,0.5);
     transition: background 0.3s;
 }
 
 .transaction button:hover {
-    background-color: #ff6f61;
+    background-color: #ff3399;
+}
+
+.note {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 20px;
+    max-width: 400px;
+    text-align: center;
+}
+
+@media (max-width: 420px) {
+    .qr-section {
+        width: 95%;
+    }
 }

@@ -1,5 +1,21 @@
 // purchase.js
 document.addEventListener('DOMContentLoaded', ()=>{
+    
+    // panel/js/purchase.js ke DOMContentLoaded block ke andar add karein
+
+    // Logout Button Fix (For consistency)
+    const logoutBtn = document.getElementById('logoutBtn');
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('session');
+            localStorage.removeItem('nextEarnXCurrentUser');
+            alert("Logged out from NextEarnX!");
+            window.location.href = 'login.html';
+        });
+    }
+
+// ... (Rest of your purchase.js code)
+
     const params = {};
     location.search.slice(1).split('&').forEach(pair=>{
         if(!pair) return;
@@ -16,9 +32,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const upiID = "bharat-dass@ibl";
     const upiURL = `upi://pay?pa=${upiID}&pn=InstantPanel&am=${planPrice}&cu=INR`;
 
+   // panel/js/purchase.js ke DOMContentLoaded block ke andar
+
+    // UPI URL generation remains the same...
+
+    // Ensure the QR code generator uses high-contrast colors (Black on White) for scanning reliability
     new QRCode(document.getElementById("qrcode"),{
-        text: upiURL, width:200, height:200, colorDark:"#f25f5c", colorLight:"#1a1a2e", correctLevel:QRCode.CorrectLevel.H
+        text: upiURL, 
+        width: 200, 
+        height: 200, 
+        colorDark: "#000000", // Pure Black for the code blocks (best for scanning)
+        colorLight: "#FFFFFF", // Pure White for the background patch (best for scanning)
+        correctLevel: QRCode.CorrectLevel.H
     });
+
+// ... (Rest of the purchase.js code)
 
     document.getElementById('txnConfirmBtn').addEventListener('click',()=>{
         const txnId = document.getElementById('txnId').value.trim();

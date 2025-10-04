@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purchase - Instant Panel</title>
+  <title>Payment - NextEarnX</title>
   <link rel="stylesheet" href="css/purchase.css">
+  <link rel="shortcut icon" href="assets/logo.jpg" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
+  
+  <nav class="navbar">
+    <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+    <h1 class="logo">NextEarn<span>X</span></h1>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
   <header>
-    <h1>Complete Your Purchase</h1>
-    <p>Scan this QR code to pay for your subscription</p>
+    <h1>Secure Payment via UPI</h1>
+    <p>Scan the QR code or pay manually to complete your purchase.</p>
   </header>
 
-  <section class="qr-section">
+  <section class="qr-section card">
     <div id="qrcode"></div>
     <p id="planInfo"></p>
 
-    <!-- Transaction ID Input -->
     <div class="transaction">
-      <input type="text" id="txnId" placeholder="Enter Transaction ID">
+      <input type="text" id="txnId" placeholder="Enter Transaction ID (UTI/Ref Number)">
       <button id="txnConfirmBtn">Confirm Payment</button>
     </div>
   </section>
+
+  <p class="note">Payment is securely processed by the UPI network. Do not close this window until payment is confirmed.</p>
 
   <script src="js/purchase.js"></script>
 </body>

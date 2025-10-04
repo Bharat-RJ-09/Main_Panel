@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const amount = parseFloat(depositInput.value);
 
-        if (isNaN(amount) || amount < 100) {
-            alert("Deposit must be a minimum of ₹100.");
+        if (isNaN(amount) || amount < 60) {
+            alert("Deposit must be a minimum of ₹60.");
             return;
         }
 
