@@ -104,11 +104,10 @@ body {
   display: block;
   margin-bottom: 10px;
 }
+/* Sidebar Styles (ADD THESE STYLES AT THE END OF css/index.css) */
 
-
-/* Update Navbar Styles */
+/* Update Navbar Styles for Menu Button */
 .menu-btn {
-    /* Existing style: was 'div' now needs to be 'button' */
     background: none;
     border: none;
     color: #fff;
@@ -117,24 +116,24 @@ body {
     padding: 0 5px;
 }
 
-/* Sidebar Styles */
+/* -------------------- SIDEBAR STYLES -------------------- */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 250px;
   height: 100%;
-  background: rgba(30, 30, 50, 0.95); /* Darker background */
+  background: rgba(30, 30, 50, 0.95);
   backdrop-filter: blur(15px);
-  z-index: 1000; /* Ensure it's above other content */
-  transform: translateX(-100%); /* Hide it off-screen */
+  z-index: 1000;
+  transform: translateX(-100%);
   transition: transform 0.3s ease-out;
   box-shadow: 2px 0 10px rgba(0,0,0,0.5);
   padding: 20px;
 }
 
 .sidebar.open {
-  transform: translateX(0); /* Slide it into view */
+  transform: translateX(0);
 }
 
 .sidebar-header {
@@ -167,7 +166,8 @@ body {
   font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 10px; 
+  gap: 10px;
+  transition: background 0.2s, color 0.2s;
 }
 
 .nav-item i {

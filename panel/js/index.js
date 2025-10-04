@@ -63,28 +63,28 @@
  
 
 
-    // Sidebar Toggle Logic
+    // Sidebar Toggle Logic (ADD THIS AT THE VERY TOP)
 const sidebar = document.getElementById('sidebar');
 const menuBtn = document.getElementById('menuBtn');
 const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 const sidebarLogoutBtn = document.getElementById('sidebarLogout');
 
 function toggleSidebar() {
-    sidebar.classList.toggle('open');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
 }
 
 if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
 if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
 
-// Link sidebar logout button to main logout logic
 if(sidebarLogoutBtn) {
     sidebarLogoutBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // To prevent default link navigation
+        e.preventDefault(); 
         const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) logoutBtn.click(); // Programmatically click the existing logout button
+        if(logoutBtn) logoutBtn.click();
     });
 }
-
-
-// Existing code starts here... 
-    // ... rest of the existing code ...
+// --------------------------------------------------------------------------------------
+// Your existing code (const usernameDisplay = document.getElementById('usernameDisplay');...) 
+// should follow here.
