@@ -93,6 +93,7 @@ body::before {
     border-radius: 18px;
     transition: transform 0.3s, border-color 0.3s;
     position: relative;
+    cursor: pointer;
 }
 .plan-card:hover {
     transform: translateY(-5px);
@@ -101,7 +102,7 @@ body::before {
 
 .plan-card.popular {
     border-color: #ff0077;
-    box-shadow: 0 0 20px rgba(255,0,119,0.5); /* Special glow for popular */
+    box-shadow: 0 0 20px rgba(255,0,119,0.5);
     transform: scale(1.03);
 }
 
@@ -115,23 +116,51 @@ body::before {
     color: #fff;
     margin: 10px 0;
 }
+
+/* New: Original Price (Strikethrough) */
+.original-price {
+    font-size: 1rem;
+    color: #777;
+    text-decoration: line-through;
+    margin: 0;
+    line-height: 1; 
+}
+.plan-card.free .original-price {
+    display: none; 
+}
+
+/* Updated: Final Offer Price */
 .price {
     font-size: 2.5rem;
     font-weight: bold;
     color: #aaffaa; /* Green for pricing */
     margin: 5px 0 20px;
 }
+.plan-card.free .price {
+    font-size: 1.5rem; 
+}
+
 .save-tag {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: #ff0077;
-    padding: 5px 15px;
-    border-radius: 0 18px 0 18px;
+    /* Made it less intrusive, simple tag */
     font-size: 14px;
     font-weight: bold;
-    color: #fff;
+    color: #00e0ff;
+    margin-bottom: 15px;
+    display: block; /* Ensure it takes its own line */
 }
+.plan-card.popular .save-tag {
+    background: #ff0077;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    width: fit-content;
+    margin: 0 auto 15px; /* Center the tag */
+}
+.plan-card.free .save-tag {
+    color: #aaffaa;
+}
+
+
 .select-btn {
     width: 100%;
     padding: 12px;
