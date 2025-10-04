@@ -15,7 +15,35 @@
         } catch(e) { return null; }
     }
 
-    function isSubscribed() { return !!getSubscription(); }
+    // panel/js/index.js mein add karein
+
+// ... (existing getSubscription and isSubscribed functions)
+
+// Function to update the Dashboard UI with subscription status
+function updateSubscriptionStatus() {
+    const subStatusElement = document.getElementById('subscriptionStatus');
+    const subscriptionData = getSubscription(); // Reuses existing function
+
+    if (subStatusElement) {
+        if (subscriptionData) {
+            // Convert timestamp to human-readable date
+            const expiryDate = new Date(subscriptionData.expiry);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            const formattedDate = expiryDate.toLocaleDateString('en-IN', options);
+
+            subStatusElement.innerHTML = `Plan: <b>${subscriptionData.plan}</b> | Expires: <b>${formattedDate}</b>`;
+            subStatusElement.style.color = '#aaffaa'; // Green for active
+        } else {
+            subStatusElement.innerHTML = `Status: <b style="color:#ffaaaa;">Not Subscribed</b>`;
+            subStatusElement.style.color = '#ffaaaa'; // Red for inactive
+        }
+    }
+}
+
+// Call the new function right after defining it
+updateSubscriptionStatus(); 
+
+// ... (existing refreshFeatureLocks and other functions)
 
     function refreshFeatureLocks() {
         const subscribed = isSubscribed();
@@ -63,28 +91,28 @@
  
 
 
-    // Sidebar Toggle Logic (ADD THIS AT THE VERY TOP)
+    // Sidebar Toggle Logic
 const sidebar = document.getElementById('sidebar');
 const menuBtn = document.getElementById('menuBtn');
 const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 const sidebarLogoutBtn = document.getElementById('sidebarLogout');
 
 function toggleSidebar() {
-    if (sidebar) {
-        sidebar.classList.toggle('open');
-    }
+    sidebar.classList.toggle('open');
 }
 
 if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
 if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
 
+// Link sidebar logout button to main logout logic
 if(sidebarLogoutBtn) {
     sidebarLogoutBtn.addEventListener('click', (e) => {
-        e.preventDefault(); 
+        e.preventDefault(); // To prevent default link navigation
         const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) logoutBtn.click();
+        if(logoutBtn) logoutBtn.click(); // Programmatically click the existing logout button
     });
 }
-// --------------------------------------------------------------------------------------
-// Your existing code (const usernameDisplay = document.getElementById('usernameDisplay');...) 
-// should follow here.
+
+
+// Existing code starts here... 
+    // ... rest of the existing code ...
