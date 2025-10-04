@@ -1,7 +1,19 @@
  
 // panel/js/index.js ke subse upar add karein
 
-// --- START: SIDEBAR TOGGLE LOGIC (CRITICAL MISSING PART) ---
+// 1. Core Logout Functionality
+const logoutBtn = document.getElementById('logoutBtn');
+if(logoutBtn){
+    logoutBtn.addEventListener('click', ()=>{
+        localStorage.removeItem('session'); // Remove login session
+        localStorage.removeItem('instantPanelCurrentUser'); // Remove current user data
+        alert("Logged out from NextEarnX!");
+        window.location.href = 'login.html';
+    });
+}
+
+
+// 2. Sidebar Toggle Logic 
 const sidebar = document.getElementById('sidebar');
 const menuBtn = document.getElementById('menuBtn');
 const closeSidebarBtn = document.getElementById('closeSidebarBtn');
@@ -16,13 +28,8 @@ function toggleSidebar() {
 if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
 if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
 
-if(sidebarLogoutBtn) {
-    sidebarLogoutBtn.addEventListener('click', (e) => {
-        e.preventDefault(); 
-        const logoutBtn = document.getElementById('logoutBtn');
-        if(logoutBtn) logoutBtn.click(); 
-    });
-}
+// Sidebar Logout button will programmatically click the main logout button
+ 
 // --- END: SIDEBAR TOGGLE LOGIC ---
 
 // --- START: SUBSCRIPTION STATUS UPDATE LOGIC (From previous step) ---
@@ -125,14 +132,9 @@ updateSubscriptionStatus();
         });
     }
 
-    const logoutBtn = document.getElementById('logoutBtn');
-    if(logoutBtn){
-        logoutBtn.addEventListener('click', ()=>{
-            localStorage.removeItem('session');
-            alert("Logged out");
-            window.location.href = 'login.html';
-        });
-    }
+
+
+
 
     (function autoOpenFeature(){
         const params = new URLSearchParams(location.search);
@@ -146,4 +148,8 @@ updateSubscriptionStatus();
 
 
 // panel/js/index.js ke subse upar add karein
+
+
+
+
  
