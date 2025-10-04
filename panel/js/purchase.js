@@ -39,4 +39,50 @@ document.addEventListener('DOMContentLoaded', ()=>{
         if(redirectFeature) window.location.href = `index.html?open=${encodeURIComponent(redirectFeature)}`;
         else window.location.href = 'index.html';
     });
+
+    // Inside purchase.js, replace the entire document.getElementById('txnConfirmBtn').addEventListener block
+
+    document.getElementById('txnConfirmBtn').addEventListener('click',()=>{
+        const txnId = document.getElementById('txnId').value.trim();
+        const validTxn = /^[a-zA-Z0-9]{8,}$/;
+        if(!txnId){ alert("Enter Transaction ID"); return; }
+        if(!validTxn.test(txnId)){ alert("Invalid Transaction ID"); return; }
+
+        // --- CORE LOGIC: Handle Deposit vs. Subscription ---
+        
+        if (planName === 'Deposit') {
+            // Logic for Wallet Deposit
+            let balance = parseFloat(localStorage.getItem('nextEarnXBalance') || '0.00');
+            balance += parseFloat(planPrice);
+            localStorage.setItem('nextEarnXBalance', balance.toFixed(2));
+
+            let history = JSON.parse(localStorage.getItem('nextEarnXHistory') || '[]');
+            history.push({
+                date: Date.now(),
+                type: 'credit',
+                amount: parseFloat(planPrice),
+                txnId: txnId,
+                note: 'Wallet Deposit via UPI'
+            });
+            localStorage.setItem('nextEarnXHistory', JSON.stringify(history));
+
+            alert(`✅ Deposit Successful!\nAmount: ₹${planPrice}\nNew Balance: ₹${balance.toFixed(2)}`);
+            window.location.href = 'wallet.html'; // Redirect back to wallet
+            return;
+        }
+
+        // Logic for Subscription (Original Code)
+        const planMap = {"1 Month":30,"3 Months":90,"6 Months":180};
+        const days = planMap[planName] || 30;
+        const now = Date.now();
+        const expiry = now + days*24*60*60*1000;
+
+        const subscription = {plan:planName, price:planPrice, txnId, purchaseAt:now, expiry};
+        localStorage.setItem('subscription', JSON.stringify(subscription));
+
+        alert(`🎉 Subscription Activated!\nPlan: ${planName}\nAmount: ₹${planPrice}\nTXN ID: ${txnId}\nValid till: ${new Date(expiry).toLocaleString()}`);
+
+        if(redirectFeature) window.location.href = `index.html?open=${encodeURIComponent(redirectFeature)}`;
+        else window.location.href = 'index.html';
+    });
 });

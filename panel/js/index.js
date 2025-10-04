@@ -116,14 +116,27 @@ updateSubscriptionStatus();
     }
     refreshFeatureLocks();
 
-    document.querySelectorAll('.feature-card').forEach(card=>{
-        card.addEventListener('click', ()=>{
-            const feature = card.dataset.feature;
-            const target = card.dataset.target;
-            if(isSubscribed()) window.location.href = target;
-            else window.location.href = `subscription.html?redirect=${encodeURIComponent(feature)}`;
-        });
+   document.querySelectorAll('.feature-card').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+        const feature = card.dataset.feature;
+        const target = card.dataset.target;
+
+        // Essential check: If no target is set, stop (e.g., Camp Panel)
+        if (!target || target === '#') {
+             alert(`⚠️ ${feature} is under construction!`);
+             return;
+        }
+
+        // Redirect logic (It depends on the isSubscribed() function)
+        if(isSubscribed()) {
+            window.location.href = target;
+        } else {
+            // Stop default action and redirect to subscription page with a marker
+            e.preventDefault(); 
+            window.location.href = `subscription.html?redirect=${encodeURIComponent(feature)}`;
+        }
     });
+});
 
     const subscriptionBtn = document.getElementById('subscriptionBtn');
     if(subscriptionBtn){
@@ -148,6 +161,7 @@ updateSubscriptionStatus();
 
 
 // panel/js/index.js ke subse upar add karein
+
 
 
 

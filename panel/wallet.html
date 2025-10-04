@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallet - NextEarnX</title>
+  <link rel="stylesheet" href="css/wallet.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="wallet-container">
+        <section class="balance-display card">
+            <h2>Current Balance</h2>
+            <p id="currentBalance">₹ 0.00</p>
+            <button id="refreshBtn" class="action-btn"><i class="ri-refresh-line"></i> Refresh</button>
+        </section>
+
+        <section class="deposit-section card">
+            <h2>Add Funds (Deposit)</h2>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="depositAmount">Amount (Min ₹100):</label>
+                    <input type="number" id="depositAmount" min="100" placeholder="Enter amount" required>
+                </div>
+                <button type="submit" class="submit-btn"><i class="ri-wallet-3-line"></i> Proceed to Pay</button>
+            </form>
+        </section>
+
+        <section class="history-section card">
+            <h2>Transaction History</h2>
+            <div id="historyLog" class="log-area">
+                <p>No recent transactions.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/wallet.js"></script>
+</body>
+</html>
