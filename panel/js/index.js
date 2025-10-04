@@ -108,11 +108,23 @@ updateSubscriptionStatus();
 
     function refreshFeatureLocks() {
         const subscribed = isSubscribed();
-        document.querySelectorAll('.feature-card').forEach(card => {
-            const badge = card.querySelector('.lock-badge');
-            if(subscribed) { badge.textContent = ''; card.classList.remove('locked'); }
-            else { badge.textContent = '🔒'; card.classList.add('locked'); }
-        });
+        document.querySelectorAll('.feature-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        const feature = link.dataset.feature; // Get feature name from <a> tag
+
+        // 1. Subscription Check
+        if(!isSubscribed()) {
+            // Agar subscribed nahi hai:
+            e.preventDefault(); // Default redirection (href) ko rok do
+            
+            // Redirect to subscription page
+            window.location.href = `subscription.html?redirect=${encodeURIComponent(feature)}`;
+        }
+        // Agar subscribed hai, toh 'e.preventDefault()' call nahi hoga, 
+        // aur <a> tag apne href (link.href) pe apne aap redirect ho jayega.
+    });
+});
+
     }
     refreshFeatureLocks();
 

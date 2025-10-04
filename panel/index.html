@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Instant Panel</title>
+  <title>Dashboard - NextEarnX Panel</title>
   <link rel="stylesheet" href="css/index.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
@@ -11,7 +11,7 @@
   
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2 class="logo">Instant <span>Panel</span></h2>
+      <h2 class="logo">NextEarnX <span> Panel</span></h2>
       <button class="close-btn" id="closeSidebarBtn">✕</button>
     </div>
     <nav class="sidebar-nav">
@@ -28,7 +28,7 @@
   
   <nav class="navbar">
     <button class="menu-btn" id="menuBtn">☰</button> 
-    <h1 class="logo">Instant <span>Panel</span></h1>
+    <h1 class="logo">NextEarnX <span> Panel</span></h1>
     <button id="logoutBtn">Logout</button>
   </nav>
 
@@ -48,16 +48,21 @@
   </section>
 
   <section class="features">
-    <div class="feature-card" data-feature="Wallet" data-target="wallet.html">
-  <i class="ri-money-rupee-circle-line"></i>
-  <p>Wallet</p>
-  <span class="lock-badge"></span>
-</div>
-    <div class="feature-card" data-feature="Instant Panel" data-target="instant_panel.html">
-      <i>⚡</i>
-      <p>Instant Panel</p>
-      <span class="lock-badge"></span>
+    <a href="wallet.html" class="feature-link" data-feature="Wallet">
+    <div class="feature-card">
+        <i class="ri-money-rupee-circle-line"></i>
+        <p>Wallet</p>
+        <span class="lock-badge"></span>
     </div>
+</a>
+
+<a href="instant_panel.html" class="feature-link" data-feature="Instant Panel">
+    <div class="feature-card">
+        <i>⚡</i>
+        <p>Instant Panel</p>
+        <span class="lock-badge"></span>
+    </div>
+</a>
     <div class="feature-card" data-feature="Camp Panel" data-target="#">
       <i class="ri-bar-chart-box-ai-line"></i>
       <p>Camp Panel</p>
