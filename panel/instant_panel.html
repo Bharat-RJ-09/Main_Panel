@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instant Panel - Tool</title>
+  <link rel="stylesheet" href="css/instant_panel.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+  
+  <nav class="navbar">
+    <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+    <h1 class="logo">Instant <span>Panel</span></h1>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
+  <main class="panel-container">
+    <h2>Instant Service Tool</h2>
+    <p class="status-msg">Welcome! Select a service to begin.</p>
+    
+    <section class="tool-form-card">
+        <form id="serviceForm">
+            <div class="form-group">
+                <label for="targetInput">Enter Target ID/Link:</label>
+                <input type="text" id="targetInput" placeholder="e.g., username, video link" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="100" min="1" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Execute Service</button>
+        </form>
+    </section>
+
+    <section class="result-display">
+        <h3>Service Log</h3>
+        <div id="logArea">
+            <p>Ready to execute...</p>
+        </div>
+    </section>
+
+  </main>
+
+  <script src="js/instant_panel.js"></script>
+</body>
+</html>
