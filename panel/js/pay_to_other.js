@@ -1,4 +1,4 @@
-// panel/js/pay_to_other.js - Wallet Transfer Logic (Finalized)
+// panel/js/pay_to_other.js - Wallet Transfer Logic (Finalized & Robust)
 
 document.addEventListener('DOMContentLoaded', () => {
     const transferForm = document.getElementById('transferForm');
@@ -9,12 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const logArea = document.getElementById('logArea');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // TRANSFER LIMITS
-    const MAX_DAILY_TRANSFER = 100; // Rs 100 per day limit
+    // TRANSFER LIMITS (Business Rule)
+    const MAX_DAILY_TRANSFER = 100; 
     const DAILY_LIMIT_KEY = 'nextEarnXDailyTransfer'; 
 
     let senderUsername = '';
-    let recipientUser = null; // Store recipient user object if valid
+    let recipientUser = null; // Stores the object of the found recipient
+    let currentBalance = 0; // Sender's current balance
 
     // --- CRITICAL UTILITIES ---
     const USER_STORAGE_KEY = 'nextEarnXUsers';
@@ -22,12 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function getCurrentUserSession() {
         try {
             const user = JSON.parse(localStorage.getItem('nextEarnXCurrentUser'));
-            senderUsername = user ? user.username : ''; // Set sender username
+            senderUsername = user ? user.username : ''; 
             return user;
         } catch { return null; }
     }
 
-    // Balance and History must be per-user for transfer to work!
+    // Use username in the key for per-user data
     function getBalance(username) {
         return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00');
     }
@@ -55,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date().toDateString();
         try {
             const data = JSON.parse(localStorage.getItem(DAILY_LIMIT_KEY) || '{}');
-            // Check if the stored date matches today, otherwise reset
             if (data.date === today && data[username]) {
                 return data[username];
             }
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (data.date !== today) {
-            data = { date: today }; // Reset for a new day
+            data = { date: today }; 
         }
 
         data[username] = (data[username] || 0) + amount;
@@ -83,11 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- INITIALIZE & SECURITY ---
-    getCurrentUserSession();
+    // --- INITIALIZE & UI SYNC ---
+    getCurrentUserSession(); // Sets senderUsername
     
     function refreshBalanceUI() {
-        const currentBalance = getBalance(senderUsername);
+        currentBalance = getBalance(senderUsername); // CRITICAL: Sync balance here
         currentBalanceDisplay.textContent = `₹${currentBalance.toFixed(2)}`;
     }
     refreshBalanceUI(); // Sync Balance on Load
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- RECIPIENT VALIDATION LOGIC (Live Search) ---
+    // --- RECIPIENT VALIDATION LOGIC (Live Search by Mobile) ---
     recipientMobileInput.addEventListener('input', () => {
         const mobile = recipientMobileInput.value.trim();
         const users = loadUsers();
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recipientUsernameMsg.textContent = '';
         recipientUser = null;
 
-        if (mobile.length !== 10) return; // Only check on full 10 digits
+        if (mobile.length !== 10) return; 
 
         // Find recipient by mobile
         const userFound = users.find(user => user.mobile === mobile);
@@ -135,10 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         const amount = parseFloat(transferAmountInput.value);
-        const senderBalance = getBalance(senderUsername);
         const todayTransferred = getTodayTransferredAmount(senderUsername);
+        
+        // Refresh balance one last time for security check
+        currentBalance = getBalance(senderUsername); 
 
-        // 1. Basic Validation
+        // 1. Validation Checks
         if (!recipientUser) {
             appendLog('Error: Please enter a valid, registered mobile number.', 'error');
             return;
@@ -151,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
             appendLog(`Error: Transfer amount exceeds the ₹${MAX_DAILY_TRANSFER} limit.`, 'error');
             return;
         }
-        if (senderBalance < amount) {
-            appendLog(`Error: Insufficient funds. Available: ₹${senderBalance.toFixed(2)}`, 'error');
+        if (currentBalance < amount) {
+            appendLog(`Error: Insufficient funds. Available: ₹${currentBalance.toFixed(2)}`, 'error');
             return;
         }
 
@@ -169,13 +171,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // 4. Execution: Deduct/Credit & Record
-        const newSenderBalance = senderBalance - amount;
+        const newSenderBalance = currentBalance - amount;
         setBalance(senderUsername, newSenderBalance);
-
+        
         const newRecipientBalance = getBalance(recipientUser.username) + amount;
         setBalance(recipientUser.username, newRecipientBalance);
 
-        // 5. Transaction Logging (Sender DEBIT & Recipient CREDIT)
+        // 5. Transaction Logging (Both parties)
         let senderHistory = getHistory(senderUsername);
         senderHistory.push({ date: Date.now(), type: 'debit', amount: amount, txnId: 'TRANSFER_SENT_' + Date.now(), note: `Transfer to ${recipientUser.username}` });
         saveHistory(senderUsername, senderHistory);
@@ -193,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         appendLog(`SUCCESS: ₹${amount.toFixed(2)} transferred to ${recipientUser.username}. New balance: ₹${newSenderBalance.toFixed(2)}`, 'success');
         transferForm.reset();
         recipientUser = null;
-        recipientMobileInput.dispatchEvent(new Event('input')); // Clear validation message
+        // Re-run input to clear validation message
+        recipientMobileInput.dispatchEvent(new Event('input')); 
     });
 });

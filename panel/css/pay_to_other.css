@@ -1,13 +1,14 @@
-/* panel/css/pay_to_other.css - NextEarnX Wallet Transfer Styles */
+/* panel/css/pay_to_other.css - NextEarnX Wallet Transfer Styles (Finalized) */
 
-/* --- BASE STYLES (Copied from Instant Panel CSS) --- */
+/* --- BASE STYLES (Neon Dark Theme Consistency) --- */
+* { box-sizing: border-box; }
 body {
     margin: 0;
     font-family: Inter, sans-serif;
     background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
     color: #e6eef8;
     min-height: 100vh;
-    padding-top: 75px; /* CRITICAL FIX: Increased padding-top for fixed navbar and spacing */
+    padding-top: 75px; 
     position: relative;
     overflow-x: hidden;
 }
@@ -88,8 +89,9 @@ body::before {
 }
 .status-msg {
     margin-bottom: 20px;
-    color: #aaa;
+    color: #ff0077; /* Highlight max limit */
     font-size: 0.9rem;
+    font-weight: 600;
 }
 .form-group {
     margin-bottom: 15px;
@@ -100,7 +102,7 @@ label {
     font-weight: bold;
     color: #fff;
 }
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], input[type="tel"] { /* Added tel input */
     width: 100%;
     padding: 12px;
     border-radius: 8px;
@@ -114,7 +116,7 @@ small { display: block; margin-top: 5px; font-size: 0.8rem; }
 .submit-btn {
     width: 100%;
     padding: 12px;
-    background: #ff0077; /* Neon Pink/Red for primary action */
+    background: #ff0077; 
     color: #1a1a2a;
     border: none;
     border-radius: 8px;

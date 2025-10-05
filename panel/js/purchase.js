@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 txnId: txnId,
                 note: 'Wallet Deposit via UPI'
             });
+            
             localStorage.setItem('nextEarnXHistory', JSON.stringify(history));
 
             alert(`✅ Deposit Successful!\nAmount: ₹${planPrice}\nNew Balance: ₹${balance.toFixed(2)}`);
