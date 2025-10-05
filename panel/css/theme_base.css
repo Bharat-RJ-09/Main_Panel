@@ -1,0 +1,47 @@
+/* panel/css/theme_base.css - Centralized Theme for NextEarnX Panel */
+ 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'); 
+
+/* --- ROOT STYLES (Applies to all pages) --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html {
+    height: 100%; 
+}
+
+/* --- BASE BODY BACKGROUND --- */
+body {
+    /* CRITICAL CHANGE: Deep Black Background */
+    background: #00000a; 
+    position: relative;
+    overflow-x: hidden;
+    font-family: "Montserrat", sans-serif;
+}
+
+/* --- ANIMATED BACKGROUND LAYER (Aqua Blur Balls) --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    /* Aqua/Cyan Radial Gradients (Blur Balls) */
+    background: 
+        /* Large Aqua Ball (Top Left) */
+        radial-gradient(circle at 20% 15%, rgba(0, 255, 255, 0.25), transparent 45%),
+        /* Smaller Cyan Ball (Bottom Right) */
+        radial-gradient(circle at 85% 75%, rgba(0, 224, 255, 0.30), transparent 40%),
+        /* Medium Aqua Glow (Center) */
+        radial-gradient(circle at 50% 50%, rgba(0, 160, 255, 0.15), transparent 60%);
+    
+    mix-blend-mode: screen;
+    filter: blur(50px);
+    animation: aquaFloat 25s infinite ease-in-out alternate;
+}
+
+/* Keyframes for Floating Blur */
+@keyframes aquaFloat {
+    0% { transform: translate(0, 0) scale(1.0); }
+    50% { transform: translate(-5vw, 5vh) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1.0); }
+}
+
+

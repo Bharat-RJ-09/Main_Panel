@@ -1,7 +1,4 @@
-/* panel/css/signup.css - FINALIZED RESPONSIVE CODE */
-/* Reset + base */
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height: 100%; }
+ 
 body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   -webkit-font-smoothing: antialiased;
@@ -45,11 +42,7 @@ body {
     opacity: 1; /* Ensure full opacity */
 }
 /* Keyframes for Floating Blur - REPLACING old animation blocks */
-@keyframes aquaFloat {
-    0% { transform: translate(0, 0) scale(1.0); }
-    50% { transform: translate(-5vw, 5vh) scale(1.05); }
-    100% { transform: translate(0, 0) scale(1.0); }
-}
+ 
 /* -------------------------------------- */
 
 /* ---------- Glass Card (Signup) ---------- */

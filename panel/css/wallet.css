@@ -37,12 +37,7 @@ body::before {
     animation: aquaFloat 25s infinite ease-in-out alternate;
 }
 
-/* Keyframes for Floating Blur */
-@keyframes aquaFloat {
-    0% { transform: translate(0, 0) scale(1.0); }
-    50% { transform: translate(-5vw, 5vh) scale(1.05); }
-    100% { transform: translate(0, 0) scale(1.0); }
-} 
+ 
 
 /* --- NAVBAR (Fixed and Glass effect) --- */
 .navbar {

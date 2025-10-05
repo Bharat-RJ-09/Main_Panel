@@ -1,7 +1,4 @@
-* { box-sizing: border-box; }
-html {
-    height: 100%; /* New: Added for animation fix */
-}
+ 
 body {
     margin: 0;
     font-family: Inter, sans-serif;
@@ -35,11 +32,7 @@ body::before {
 }
 
 /* Keyframes for Floating Blur */
-@keyframes aquaFloat {
-    0% { transform: translate(0, 0) scale(1.0); }
-    50% { transform: translate(-5vw, 5vh) scale(1.05); }
-    100% { transform: translate(0, 0) scale(1.0); }
-}
+ 
 
 /* --- NAVBAR (Fixed and Glass effect) --- */
 .navbar {
