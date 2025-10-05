@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instant Panel - Tool</title>
+  <title>Instant Panel - NextEarnX</title>
   <link rel="stylesheet" href="css/instant_panel.css">
-  <link rel="shortcut icon" href="assets/logo.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="assets/logo.jpg">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
 <body>
   
   <nav class="navbar">
     <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
-    <h1 class="logo">Instant <span>Panel</span></h1>
+    <h1 class="logo">NextEarn<span>X</span></h1>
     <button id="logoutBtn">Logout</button>
   </nav>
 
   <main class="panel-container">
-    <h2>Instant Service Tool</h2>
-    <p class="status-msg">Welcome! Select a service to begin.</p>
+    <div class="header-section">
+        <h2>Instant Service Tool</h2>
+        <p class="balance-status">Balance: <span id="balanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
+    </div>
+    
+    <p class="status-msg">Cost: ₹5.00 per unit | Total Est: ₹0.00</p>
     
     <section class="tool-form-card">
         <form id="serviceForm">
@@ -28,8 +32,8 @@
             </div>
 
             <div class="form-group">
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" value="100" min="1" required>
+                <label for="quantity">Quantity (₹5.00/unit):</label>
+                <input type="number" id="quantity" value="10" min="1" required>
             </div>
 
             <button type="submit" class="submit-btn">Execute Service</button>
