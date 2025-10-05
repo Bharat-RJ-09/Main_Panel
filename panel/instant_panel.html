@@ -3,52 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instant Panel - NextEarnX</title>
-  <link rel="stylesheet" href="css/instant_panel.css">
-  <link rel="stylesheet" href="assets/logo.jpg">
+  <title>Pay to other / Lifafa - NextEarnX</title>
+  <link rel="stylesheet" href="css/pay_to_other.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
 <body>
-  
-  <nav class="navbar">
-    <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
-    <h1 class="logo">NextEarn<span>X</span></h1>
-    <button id="logoutBtn">Logout</button>
-  </nav>
-
-  <main class="panel-container">
-    <div class="header-section">
-        <h2>Instant Service Tool</h2>
-        <p class="balance-status">Balance: <span id="balanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
-    </div>
     
-    <p class="status-msg">Cost: ₹5.00 per unit | Total Est: ₹0.00</p>
-    
-    <section class="tool-form-card">
-        <form id="serviceForm">
-            <div class="form-group">
-                <label for="targetInput">Enter Target ID/Link:</label>
-                <input type="text" id="targetInput" placeholder="e.g., username, video link" required>
-            </div>
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
 
-            <div class="form-group">
-                <label for="quantity">Quantity (₹5.00/unit):</label>
-                <input type="number" id="quantity" value="10" min="1" required>
-            </div>
-
-            <button type="submit" class="submit-btn">Execute Service</button>
-        </form>
-    </section>
-
-    <section class="result-display">
-        <h3>Service Log</h3>
-        <div id="logArea">
-            <p>Ready to execute...</p>
+    <main class="transfer-container">
+        <div class="header-section">
+            <h2>Wallet Transfer / Lifafa</h2>
+            <p class="balance-status">Your Balance: <span id="currentBalanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
         </div>
-    </section>
 
-  </main>
+        <div class="tab-nav">
+            <button class="tab-btn active" data-target="transfer">Pay to other</button>
+            <button class="tab-btn" data-target="lifafa">Create Lifafa</button>
+        </div>
 
-  <script src="js/instant_panel.js"></script>
+        <section id="transferSection" class="transfer-form-card card tab-content active">
+            <p class="status-msg">Max transfer limit is ₹100 per user per day.</p>
+            <form id="transferForm">
+                
+                <div class="form-group">
+                    <label for="recipientMobile">Recipient Mobile Number:</label>
+                    <input type="tel" id="recipientMobile" placeholder="Enter 10-digit Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
+                    <small id="recipientUsernameMsg"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="transferAmount">Amount (₹):</label>
+                    <input type="number" id="transferAmount" min="1" max="100" placeholder="Max ₹100" required>
+                </div>
+
+                <button type="submit" id="sendFundsBtn" class="submit-btn"><i class="ri-send-plane-line"></i> Send Funds</button>
+            </form>
+        </section>
+
+
+        <section id="lifafaSection" class="transfer-form-card card tab-content" style="display: none;">
+            
+            <div class="lifafa-tabs-secondary">
+                <button class="lifafa-tab-secondary active" data-lifafa-type="Normal">Normal</button>
+                <button class="lifafa-tab-secondary" data-lifafa-type="Dice">Dice</button>
+                <button class="lifafa-tab-secondary" data-lifafa-type="Toss">Toss</button>
+                <button class="lifafa-tab-secondary blue-active" data-lifafa-type="Scratch">Scratch</button>
+            </div>
+            
+            <div id="lifafaFormsContainer">
+                
+                <form id="normalLifafaForm" data-type="Normal" class="lifafa-form-new" style="display: block;">
+                    <div class="form-group input-icon-group"><i class="ri-gift-line"></i><input type="text" id="lifafaTitle_Normal" placeholder="Giveaway Title" required></div>
+                    <div class="form-group grid-2">
+                        <div class="input-icon-group"><i class="ri-group-line"></i><input type="number" id="lifafaCount_Normal" min="2" placeholder="Total Users" required></div>
+                        <div class="input-icon-group"><i class="ri-money-rupee-circle-line"></i><input type="number" id="lifafaPerUserAmount_Normal" min="0.01" step="0.01" placeholder="Per User Amount (₹)" required></div>
+                    </div>
+                    <div class="form-group input-icon-group"><i class="ri-message-3-line"></i><input type="text" id="paymentComment_Normal" placeholder="Payment Comment" required></div>
+                    <div class="form-group input-icon-group"><i class="ri-external-link-line"></i><input type="url" id="redirectLink_Normal" placeholder="Redirect Link (Optional)"></div>
+                    <button type="submit" class="submit-btn"><i class="ri-coupon-line"></i> Create Lifafa Link</button>
+                </form>
+
+                <form id="diceLifafaForm" data-type="Dice" class="lifafa-form-new" style="display: none;">
+                    <div class="form-group input-icon-group"><i class="ri-gift-line"></i><input type="text" id="lifafaTitle_Dice" placeholder="Giveaway Title" required></div>
+                    <div class="form-group grid-2">
+                        <div class="input-icon-group"><i class="ri-group-line"></i><input type="number" id="lifafaCount_Dice" min="2" placeholder="Total Users" required></div>
+                        <div class="input-icon-group"><i class="ri-money-rupee-circle-line"></i><input type="number" id="lifafaPerUserAmount_Dice" min="0.01" step="0.01" placeholder="Per User Amount (₹)" required></div>
+                    </div>
+                    <div class="form-group input-icon-group"><i class="ri-message-3-line"></i><input type="text" id="paymentComment_Dice" placeholder="Payment Comment" required></div>
+                    <div class="form-group input-icon-group"><i class="ri-external-link-line"></i><input type="url" id="redirectLink_Dice" placeholder="Redirect Link (Optional)"></div>
+                    <button type="submit" class="submit-btn"><i class="ri-coupon-line"></i> Create Dice Lifafa</button>
+                </form>
+                
+                <form id="tossLifafaForm" data-type="Toss" class="lifafa-form-new" style="display: none;">
+                    <div class="form-group input-icon-group"><i class="ri-gift-line"></i><input type="text" id="lifafaTitle_Toss" placeholder="Giveaway Title" required></div>
+                    <div class="form-group grid-2">
+                        <div class="input-icon-group"><i class="ri-group-line"></i><input type="number" id="lifafaCount_Toss" min="2" placeholder="Total Users" required></div>
+                        <div class="input-icon-group"><i class="ri-money-rupee-circle-line"></i><input type="number" id="lifafaPerUserAmount_Toss" min="0.01" step="0.01" placeholder="Per User Amount (₹)" required></div>
+                    </div>
+                    <div class="form-group input-icon-group"><i class="ri-message-3-line"></i><input type="text" id="paymentComment_Toss" placeholder="Payment Comment" required></div>
+                    <div class="form-group input-icon-group"><i class="ri-external-link-line"></i><input type="url" id="redirectLink_Toss" placeholder="Redirect Link (Optional)"></div>
+                    <button type="submit" class="submit-btn"><i class="ri-coupon-line"></i> Create Toss Lifafa</button>
+                </form>
+
+                <form id="scratchLifafaForm" data-type="Scratch" class="lifafa-form-new" style="display: none;">
+                    <div class="form-group input-icon-group"><i class="ri-gift-line"></i><input type="text" id="lifafaTitle_Scratch" placeholder="Giveaway Title" required></div>
+                    <div class="form-group grid-2">
+                        <div class="input-icon-group"><i class="ri-group-line"></i><input type="number" id="lifafaCount_Scratch" min="2" placeholder="Total Users" required></div>
+                        <div class="input-icon-group"><i class="ri-money-rupee-circle-line"></i><input type="number" id="lifafaPerUserAmount_Scratch" min="0.01" step="0.01" placeholder="Per User Amount (₹)" required></div>
+                    </div>
+                    
+                    <div class="form-group slider-group">
+                        <label for="percentageSlider_Scratch" style="display:none;">Luck Percentage</label>
+                        <input type="range" id="percentageSlider_Scratch" min="10" max="100" value="100">
+                        <span id="sliderValue_Scratch">100% Luck</span>
+                    </div>
+
+                    <div class="form-group input-icon-group"><i class="ri-message-3-line"></i><input type="text" id="paymentComment_Scratch" placeholder="Payment Comment" required></div>
+                    <div class="form-group input-icon-group"><i class="ri-external-link-line"></i><input type="url" id="redirectLink_Scratch" placeholder="Redirect Link (Optional)"></div>
+                    <button type="submit" class="submit-btn"><i class="ri-coupon-line"></i> Create Scratch Lifafa</button>
+                </form>
+                
+            </div>
+
+
+            <div class="lifafa-log-area">
+                <h4>Active Lifafas:</h4>
+                <div id="activeLifafasList">
+                    <p>No active giveaways.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="result-display">
+            <h3>Activity Log</h3>
+            <div id="logArea">
+                <p>Ready to send...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/pay_to_other.js"></script>
 </body>
 </html>
