@@ -1,13 +1,36 @@
+// panel/js/wallet.js - Updated for Global Settings
+
 document.addEventListener('DOMContentLoaded', () => {
     const balanceElement = document.getElementById('currentBalance');
     const depositForm = document.getElementById('depositForm');
     const depositInput = document.getElementById('depositAmount');
     const historyLog = document.getElementById('historyLog');
     const refreshBtn = document.getElementById('refreshBtn');
-    const logoutBtn = document.getElementById('logoutBtn'); // For consistency
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // --- GLOBAL SETTINGS UTILITY ---
+    const DEFAULTS = { minDeposit: 60 };
+    function loadSettings() {
+        try {
+            const settings = JSON.parse(localStorage.getItem('nextEarnXGlobalSettings'));
+            return settings ? { ...DEFAULTS, ...settings } : DEFAULTS;
+        } catch {
+            return DEFAULTS;
+        }
+    }
+    const settings = loadSettings();
+    
+    // --- UI Update: Min Deposit Label ---
+    const depositLabel = document.querySelector('label[for="depositAmount"]');
+    if(depositLabel) {
+        depositLabel.textContent = `Amount (Min ₹${settings.minDeposit}):`;
+    }
+    if(depositInput) {
+        depositInput.setAttribute('min', settings.minDeposit);
+    }
+    
 
     // --- Utility Functions ---
-
     function getBalance() {
         try {
             return parseFloat(localStorage.getItem('nextEarnXBalance') || '0.00');
@@ -77,17 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
     depositForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const amount = parseFloat(depositInput.value);
-
-        if (isNaN(amount) || amount < 60) {
-            alert("Deposit must be a minimum of ₹60.");
+        
+        // --- DYNAMIC VALIDATION ---
+        if (isNaN(amount) || amount < settings.minDeposit) {
+            alert(`Deposit must be a minimum of ₹${settings.minDeposit}.`);
             return;
         }
 
         // --- Mock UPI/Payment Gateway Redirection ---
         const upiURL = `purchase.html?plan=Deposit&price=${amount}&redirect=wallet`;
         window.location.href = upiURL;
-        
-        // Note: The actual credit logic will happen in purchase.js
-        // We will need to update purchase.js to handle 'Deposit' plan type.
     });
 });
