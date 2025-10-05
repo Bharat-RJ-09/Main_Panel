@@ -1,22 +1,33 @@
-// panel/js/instant_panel.js - CORE SERVICE LOGIC
+// panel/js/instant_panel.js - CORE SERVICE LOGIC with Dynamic Pricing
 
 document.addEventListener('DOMContentLoaded', () => {
     const serviceForm = document.getElementById('serviceForm');
     const targetInput = document.getElementById('targetInput');
     const quantityInput = document.getElementById('quantity');
     const logArea = document.getElementById('logArea');
-    const balanceDisplay = document.getElementById('balanceDisplay'); // Balance Display Element
+    const balanceDisplay = document.getElementById('balanceDisplay'); 
     const statusMsg = document.querySelector('.status-msg');
 
-    // --- SERVICE CONSTANTS (MOCK) ---
-    const PRICE_PER_UNIT = 5.00; // Mock Price: ₹5 per unit/quantity
+    // --- GLOBAL SETTINGS UTILITY ---
+    const DEFAULT_SERVICE_PRICE = 5.00; // Fallback price
+    const DEFAULTS = { instantPanelPrice: DEFAULT_SERVICE_PRICE };
     
-    // --- UTILITIES ---
+    function loadSettings() {
+        try {
+            const settings = JSON.parse(localStorage.getItem('nextEarnXGlobalSettings'));
+            return settings ? { ...DEFAULTS, ...settings } : DEFAULTS;
+        } catch {
+            return DEFAULTS;
+        }
+    }
+    const settings = loadSettings();
+    const PRICE_PER_UNIT = settings.instantPanelPrice || DEFAULT_SERVICE_PRICE;
+    
+    // --- UTILITIES (getBalance, saveBalance, etc. remain the same) ---
     
     function getBalance() {
-        try {
-            return parseFloat(localStorage.getItem('nextEarnXBalance') || '0.00');
-        } catch(e) { return 0.00; }
+        try { return parseFloat(localStorage.getItem('nextEarnXBalance') || '0.00'); }
+        catch { return 0.00; }
     }
     
     function saveBalance(balance) {
@@ -67,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const target = targetInput.value.trim();
         const quantity = parseInt(quantityInput.value);
-        const unitPrice = PRICE_PER_UNIT;
+        const unitPrice = PRICE_PER_UNIT; // Use dynamic price
         const totalCost = quantity * unitPrice;
 
         if (!target || quantity < 1 || isNaN(quantity)) { 
@@ -83,12 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 1. Deduct balance and update UI
+        // Deduct balance and update UI
         const newBalance = currentBalance - totalCost;
         saveBalance(newBalance);
         updateBalanceUI(); 
 
-        // 2. Record transaction (DEBIT)
+        // Record transaction (DEBIT)
         let history = getHistory();
         history.push({
             date: Date.now(),
@@ -102,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appendLog(`Processing ${quantity} units for ${target}. Cost: ₹${totalCost.toFixed(2)}.`, 'loading');
         
-        // 3. Simulate service delay
+        // Simulate service delay
         setTimeout(() => {
             appendLog(`Success: Order placed! TXN Cost: ₹${totalCost.toFixed(2)}`, 'success');
             appendLog(`New Balance: ₹${newBalance.toFixed(2)}`, 'success');
@@ -112,13 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             quantityInput.dispatchEvent(new Event('input')); // Update cost display
             
-        }, 3000); 
+        }, 3000); // 3 second delay
     });
 
     // --- DISPLAY COST ON QUANTITY CHANGE (Better UX) ---
     quantityInput.addEventListener('input', () => {
         const quantity = parseInt(quantityInput.value) || 0;
-        const totalCost = quantity * PRICE_PER_UNIT;
+        const totalCost = quantity * PRICE_PER_UNIT; // Use dynamic price
         
         if(statusMsg) {
              statusMsg.innerHTML = `Cost: <span style="color: #ff0077;">₹${PRICE_PER_UNIT.toFixed(2)}</span> per unit | Total Est: <span style="color: #00e0ff;">₹${totalCost.toFixed(2)}</span>`;

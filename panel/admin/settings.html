@@ -62,5 +62,26 @@
 
     <script src="js/admin_auth.js"></script>
     <script src="js/global_settings.js"></script>
+
+    <div id="settingsOtpModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content admin-otp-card">
+        <button id="closeOtpBtn" class="close-modal-btn">✕</button>
+        <h3>Settings Verification</h3>
+        <p id="otpMessage">An OTP has been sent to the Super Admin's device.</p>
+
+        <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" />
+
+        <div class="otp-actions">
+          <button id="verifyOtpBtn" type="button" class="action-btn verify-btn">Verify OTP</button>
+        </div>
+
+        <div class="otp-meta">
+          <small id="otpTimer">05:00</small>
+          <button id="resendOtpBtn" type="button" class="resend-btn">Resend OTP</button>
+        </div>
+        
+        <p class="dev-note">NOTE: Check the console for the DEV OTP.</p>
+    </div>
+</div>
 </body>
 </html>

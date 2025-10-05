@@ -1,22 +1,27 @@
-/* admin/css/admin_dashboard.css - NextEarnX Manager Dashboard Styles */
+/* admin/css/admin_dashboard.css - NextEarnX Manager Dashboard & Management Styles (RESPONSIVE FIX) */
 
-/* --- BASE STYLES --- */
+/* --- BASE STYLES AND SCROLL FIX (CRITICAL) --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html {
+    height: 100%;
+    overflow-y: scroll; 
+}
 body {
-    background: #1a1a2a; /* Solid dark background */
+    background: #1a1a2a; 
     font-family: Inter, sans-serif;
     color: #e6eef8;
-    overflow-y: auto;
-    padding-top: 60px; /* Space for fixed navbar */
+    min-height: 100%; 
+    overflow-x: hidden; 
+    padding-top: 60px; 
 }
 
-/* --- ADMIN NAVBAR (Gold Admin Style) --- */
+/* --- ADMIN NAVBAR (Dashboard & Management) --- */
 .admin-navbar {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 10;
     background: #111122;
-    border-bottom: 2px solid #ffcc00; /* Gold divider */
+    border-bottom: 2px solid #ffcc00; 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,7 +33,7 @@ body {
     color: #ffcc00;
 }
 .admin-navbar .logo span {
-    color: #ff6600; /* Orange secondary accent */
+    color: #ff6600; 
 }
 .admin-logout-btn {
     background: #ff0000;
@@ -55,7 +60,9 @@ body {
     margin-bottom: 30px;
 }
 
-/* --- STATS GRID --- */
+/* ---------------------------------------------------- */
+/* --- DASHBOARD SPECIFIC STYLES (STAT CARDS) --- */
+/* ---------------------------------------------------- */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -88,11 +95,7 @@ body {
     color: rgba(255,204,0,0.2);
 }
 
-/* --- MANAGEMENT LINKS --- */
-.management-links h3 {
-    color: #ffcc00;
-    margin-bottom: 20px;
-}
+/* --- MANAGEMENT LINKS (Dashboard) --- */
 .link-grid {
     display: flex;
     gap: 20px;
@@ -123,16 +126,119 @@ body {
 }
 
 
+/* ---------------------------------------------------- */
+/* --- USER MANAGEMENT & TRANSACTION STYLES (TABLES) --- */
+/* ---------------------------------------------------- */
+
+.back-link {
+    color: #ffcc00;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+.back-link:hover { text-decoration: underline; }
+
+.search-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+#userSearchInput, #txnSearchInput, .filter-select {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ffcc00;
+    background: #2a2a44;
+    color: #fff;
+}
+.filter-select {
+    flex-grow: 0;
+}
+.action-btn {
+    background: #ffcc00;
+    color: #1a1a2a;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.action-btn:hover { background: #ff9900; }
+
+.user-table-container {
+    /* Ensures tables are horizontally scrollable on mobile */
+    overflow-x: auto; 
+    background: #2a2a44;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+#userTable, #txnTable {
+    width: 100%;
+    min-width: 700px; /* Ensures table headers stay together on scroll */
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#userTable th, #userTable td, #txnTable th, #txnTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #333355;
+}
+
+#userTable th, #txnTable th {
+    background: #111122;
+    color: #ffcc00;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+#userTable tbody tr:hover, #txnTable tbody tr:hover {
+    background: #333355;
+}
+
+/* Transaction specific colors */
+.txn-credit { background-color: rgba(0, 255, 0, 0.1); }
+.txn-debit { background-color: rgba(255, 0, 0, 0.1); }
+.txn-credit td { color: #00ff00; }
+.txn-debit td { color: #ff0000; }
 
 
+/* Action Buttons (User Management) */
+.action-buttons button {
+    background: none;
+    border: 1px solid #ffcc00;
+    color: #ffcc00;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background 0.2s;
+}
+.action-buttons button:hover {
+    background: #ffcc00;
+    color: #1a1a2a;
+}
+.action-buttons .delete-btn {
+    border-color: #ff0000;
+    color: #ff0000;
+}
+.action-buttons .delete-btn:hover {
+    background: #ff0000;
+    color: #fff;
+}
 
+.table-info {
+    margin-top: 15px;
+    color: #aaa;
+}
 
-
-
-
-/* admin/css/admin_dashboard.css: APPEND these styles */
-
+/* ---------------------------------------------------- */
 /* --- MODAL STYLES (Edit User) --- */
+/* ---------------------------------------------------- */
 
 .modal-overlay {
     position: fixed;
@@ -196,4 +302,182 @@ body {
 .save-btn {
     margin-top: 20px;
     width: 100%;
+}
+
+/* ---------------------------------------------------- */
+/* --- GLOBAL SETTINGS STYLES --- */
+/* ---------------------------------------------------- */
+
+.settings-card {
+    background: #2a2a44;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border-left: 5px solid #ffcc00;
+    margin-bottom: 30px;
+}
+.settings-card h3 {
+    color: #ffcc00;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+.settings-card .form-group {
+    margin-bottom: 15px;
+}
+.settings-card label {
+    display: block;
+    color: #fff;
+    margin-bottom: 5px;
+}
+.settings-card input[type="text"], 
+.settings-card input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #333355;
+    color: #fff;
+}
+.settings-card .action-btn {
+    margin-top: 10px;
+    width: auto;
+}
+
+/* ---------------------------------------------------- */
+/* --- MOBILE RESPONSIVENESS FIXES (CRITICAL) --- */
+/* ---------------------------------------------------- */
+
+@media (max-width: 768px) {
+    
+    /* Navbar Adjustment */
+    .admin-navbar {
+        padding: 10px 15px;
+    }
+    .admin-navbar .logo {
+        font-size: 22px;
+    }
+    
+    /* Main Content Padding */
+    .main-content {
+        padding: 0 10px;
+        margin-top: 20px;
+    }
+    
+    /* Grid Stacking for Stats */
+    .stats-grid {
+        grid-template-columns: 1fr; /* Stack into a single column */
+        gap: 15px;
+    }
+    
+    /* Management Links Stacking */
+    .link-grid {
+        flex-direction: column; /* Stack vertically */
+        gap: 15px;
+    }
+    
+    /* Search and Filter Stacking */
+    .search-controls {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    #userSearchInput, #txnSearchInput {
+        flex-basis: 100%; /* Take full width */
+    }
+    .filter-select {
+        flex-basis: calc(50% - 5px); /* Share width with search button */
+    }
+    .action-btn {
+        flex-basis: 100%;
+    }
+    
+    /* Modal Adjustment */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+
+
+
+/* admin/css/admin_dashboard.css: APPEND these styles */
+
+/* --- OTP MODAL STYLES (Admin Gold Theme) --- */
+
+.modal-overlay { /* Base overlay already defined, but good to ensure opacity */
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000; /* Ensure it's above the edit modal */
+}
+
+.admin-otp-card {
+    max-width: 380px;
+    padding: 25px;
+    text-align: center;
+    border: 2px solid #ffcc00;
+    background: #1a1a2a;
+    box-shadow: 0 0 40px rgba(255,204,0,0.6);
+}
+
+.admin-otp-card h3 { 
+    color: #ffcc00; 
+    margin-bottom: 5px;
+}
+.admin-otp-card #otpMessage { 
+    color: #ccc; 
+    margin-bottom: 15px; 
+}
+
+.admin-otp-card input {
+    width: 100%; 
+    padding: 12px; 
+    border-radius: 8px; 
+    margin-bottom: 15px;
+    background: #333355; 
+    border: 1px solid #ffcc00;
+    color: #fff; 
+    font-size: 16px;
+    text-align: center;
+}
+
+.otp-actions { 
+    display:flex; 
+    gap:10px; 
+    justify-content:center; 
+    margin-bottom:15px; 
+}
+
+.otp-actions .verify-btn {
+    width: 100%;
+    background: #ffcc00; /* Gold */
+    color: #1a1a2a;
+    font-weight: 700;
+}
+.otp-actions .verify-btn:hover {
+    background: #ff9900;
+}
+
+.otp-meta { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    gap:10px; 
+}
+
+#otpTimer { 
+    color: #ff0000; 
+    font-weight: bold;
+}
+
+.resend-btn { 
+    background: none; 
+    border: none; 
+    color: #ffcc00; 
+    font-size: 12px; 
+    cursor: pointer; 
+}
+.dev-note {
+    font-size: 11px;
+    color: #ff0000;
+    margin-top: 10px;
 }
