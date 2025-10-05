@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - NextEarnX Manager</title>
+  <link rel="stylesheet" href="css/admin_dashboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="admin-navbar">
+        <h1 class="logo">NextEarn<span>X</span> Manager</h1>
+        <button id="adminLogoutBtn" class="admin-logout-btn">Logout</button>
+    </nav>
+
+    <div class="main-content">
+        <h2>Admin Dashboard</h2>
+        <p class="welcome-msg">Welcome, NextEarnX Admin. Manage your users and system settings here.</p>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p id="totalUsers">0</p>
+                <i class="ri-user-line"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Active Subs</h3>
+                <p id="activeSubs">0</p>
+                <i class="ri-vip-line"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Total Revenue (Mock)</h3>
+                <p id="totalRevenue">₹0</p>
+                <i class="ri-wallet-3-line"></i>
+            </div>
+        </section>
+
+        <section class="management-links">
+            <h3>Management Modules</h3>
+            <div class="link-grid">
+                <a href="users.html" class="manage-link">
+                    <i class="ri-group-line"></i>
+                    <h4>User Management</h4>
+                </a>
+                <a href="transactions.html" class="manage-link">
+                    <i class="ri-money-line"></i>
+                    <h4>Transactions Audit</h4>
+                </a>
+                <a href="settings.html" class="manage-link">
+                    <i class="ri-settings-line"></i>
+                    <h4>Global Settings</h4>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/admin_dashboard.js"></script>
+</body>
+</html>
