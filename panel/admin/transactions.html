@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Audit - NextEarnX Manager</title>
+  <link rel="stylesheet" href="css/admin_dashboard.css">
+  <link rel="stylesheet" href="css/admin_transaction.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="admin-navbar">
+        <h1 class="logo">NextEarn<span>X</span> Manager</h1>
+        <button id="adminLogoutBtn" class="admin-logout-btn">Logout</button>
+    </nav>
+
+    <div class="main-content">
+        <a href="dashboard.html" class="back-link"><i class="ri-arrow-left-line"></i> Back to Dashboard</a>
+        
+        <h2>Transaction Audit</h2>
+        <p class="welcome-msg">Review all deposits (credit) and subscription payments (debit).</p>
+
+        <div class="search-controls">
+            <input type="text" id="txnSearchInput" placeholder="Search by TXN ID or Note">
+            <select id="txnTypeFilter" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="credit">Credit (Deposit)</option>
+                <option value="debit">Debit (Subscription)</option>
+            </select>
+            <button id="searchBtn" class="action-btn"><i class="ri-filter-line"></i> Apply Filter</button>
+        </div>
+
+        <div class="user-table-container">
+            <table id="txnTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>TXN ID</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody id="txnTableBody">
+                    </tbody>
+            </table>
+        </div>
+        
+        <p id="txnCount" class="table-info"></p>
+    </div>
+
+    <script src="js/admin_auth.js"></script>
+    <script src="js/transaction_audit.js"></script>
+</body>
+</html>

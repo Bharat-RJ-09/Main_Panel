@@ -1,13 +1,24 @@
-// admin/js/user_manager.js
+// admin/js/user_manager.js - WITH EDIT/UPDATE LOGIC
 
 document.addEventListener('DOMContentLoaded', () => {
     const ADMIN_SESSION_KEY = 'nextEarnXAdminSession';
+    const USER_STORAGE_KEY = "nextEarnXUsers";
     const userTableBody = document.getElementById('userTableBody');
     const userSearchInput = document.getElementById('userSearchInput');
     const searchBtn = document.getElementById('searchBtn');
     const userCountElement = document.getElementById('userCount');
+    
+    // Modal Elements
+    const modal = document.getElementById('editUserModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalUsername = document.getElementById('modalUsername');
+    const editUsernameHidden = document.getElementById('editUsernameHidden');
+    const editUserForm = document.getElementById('editUserForm');
+    const newPasswordInput = document.getElementById('newPassword');
+    const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
+    const expiryDateInput = document.getElementById('expiryDate');
 
-    // --- 1. SECURITY CHECK (Copied from dashboard.js) ---
+    // --- 1. SECURITY CHECK ---
     function checkAdminSession() {
         if (localStorage.getItem(ADMIN_SESSION_KEY) !== 'true') {
             alert('Access Denied. Please log in.');
@@ -16,19 +27,121 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     checkAdminSession();
 
-    // --- 2. DATA UTILITY (Reads User Data) ---
+    // --- 2. DATA UTILITY (CRUD CORE) ---
     function loadUsers() {
         try {
-            // NOTE: We rely on the key set by panel/js/signup.js
-            return JSON.parse(localStorage.getItem("nextEarnXUsers") || "[]");
+            return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "[]");
         } catch {
             return [];
         }
     }
+    
+    function saveUsers(users) {
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+    }
 
-    // --- 3. RENDERING ---
+    function deleteUser(usernameToDelete) {
+        let users = loadUsers();
+        const initialLength = users.length;
+        users = users.filter(user => user.username !== usernameToDelete);
+        
+        if (users.length < initialLength) {
+            saveUsers(users);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // NEW: Function to find user by username
+    function findUser(username) {
+        return loadUsers().find(user => user.username === username);
+    }
+    
+    // NEW: Function to update user details
+    function updateUser(usernameToUpdate, updates) {
+        let users = loadUsers();
+        let userIndex = users.findIndex(user => user.username === usernameToUpdate);
+
+        if (userIndex !== -1) {
+            // Apply updates
+            users[userIndex] = { ...users[userIndex], ...updates };
+            saveUsers(users);
+            return true;
+        }
+        return false;
+    }
+
+    // --- 3. MODAL HANDLERS ---
+    function openEditModal(username) {
+        const user = findUser(username);
+        if (!user) {
+            alert("Error: User data not found.");
+            return;
+        }
+        
+        modalUsername.textContent = username;
+        editUsernameHidden.value = username;
+        newPasswordInput.value = ''; // Clear password field on open
+
+        // Mock: Set current subscription status based on a simple 'subscription' property
+        // NOTE: Since the subscription is stored globally in user panel, this is a mock representation.
+        // We assume admin panel will manage the user's subscription property.
+        
+        // Find saved plan/expiry or default to none
+        const currentPlan = user.plan || 'none';
+        const currentExpiry = user.expiry ? new Date(user.expiry).toISOString().substring(0, 10) : '';
+
+        subscriptionPlanSelect.value = currentPlan;
+        expiryDateInput.value = currentExpiry;
+
+        modal.style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        modal.style.display = 'none';
+        editUserForm.reset();
+    }
+    
+    closeModalBtn.addEventListener('click', closeEditModal);
+
+    editUserForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = editUsernameHidden.value;
+        const updates = {};
+        
+        // 1. Password Update
+        if (newPasswordInput.value.trim() !== '') {
+            updates.password = newPasswordInput.value.trim();
+        }
+
+        // 2. Subscription Update
+        const selectedPlan = subscriptionPlanSelect.value;
+        const expiryDate = expiryDateInput.value;
+
+        if (selectedPlan === 'none') {
+            updates.plan = null;
+            updates.expiry = null;
+        } else {
+            updates.plan = selectedPlan;
+            // Convert expiry date string to timestamp for consistency with user panel logic
+            updates.expiry = new Date(expiryDate).getTime();
+        }
+
+        if (updateUser(username, updates)) {
+            alert(`✅ User ${username} updated successfully!`);
+            closeEditModal();
+            renderUserTable(loadUsers()); // Re-render table
+        } else {
+            alert('❌ Failed to update user.');
+        }
+    });
+
+
+    // --- 4. RENDERING & INITIALIZATION ---
     function renderUserTable(users) {
-        userTableBody.innerHTML = ''; // Clear table
+        // ... (Rendering logic remains the same) ...
+        userTableBody.innerHTML = ''; 
         
         if (users.length === 0) {
             userTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No users found.</td></tr>';
@@ -38,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         users.forEach((user, index) => {
             const row = userTableBody.insertRow();
-            // Simple unique ID based on index + 1
             const userId = index + 1; 
 
             row.innerHTML = `
@@ -55,11 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         userCountElement.textContent = `${users.length} users displayed. Total registered users: ${loadUsers().length}`;
 
-        // Re-attach event listeners after rendering
         attachActionListeners();
     }
 
-    // --- 4. SEARCH/FILTERING ---
+    // --- 5. SEARCH/FILTERING (Remains the same) ---
     function searchUsers() {
         const query = userSearchInput.value.toLowerCase();
         const allUsers = loadUsers();
@@ -74,23 +185,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchBtn.addEventListener('click', searchUsers);
-    userSearchInput.addEventListener('keyup', searchUsers); // Live search
+    userSearchInput.addEventListener('keyup', searchUsers); 
 
-    // --- 5. ACTION LISTENERS (MOCK FUNCTIONS) ---
+    // --- 6. ACTION LISTENERS (UPDATED EDIT LOGIC) ---
     function attachActionListeners() {
+        // Edit button listener (NOW OPENS MODAL)
         document.querySelectorAll('.edit-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const username = e.currentTarget.dataset.username;
-                alert(`MOCK: Editing user ${username}. (Future feature: Modal for changing password/subscription status)`);
+                openEditModal(username); // Call the new modal function
             });
         });
 
+        // Delete button listener (Remains the same)
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const username = e.currentTarget.dataset.username;
                 if (confirm(`WARNING: Are you sure you want to delete user "${username}"? This cannot be undone.`)) {
-                    alert(`MOCK: Deleting user ${username}. (Future feature: implement actual deletion)`);
-                    // TODO: Implement actual deletion logic here
+                    if (deleteUser(username)) {
+                        alert(`✅ User ${username} deleted successfully!`);
+                        renderUserTable(loadUsers());
+                    } else {
+                        alert(`❌ Error: User ${username} not found.`);
+                    }
                 }
             });
         });

@@ -1,0 +1,31 @@
+/* admin/css/admin_dashboard.css: APPEND these styles */
+
+/* --- TRANSACTION AUDIT STYLES --- */
+
+.filter-select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ffcc00;
+    background: #2a2a44;
+    color: #fff;
+}
+.search-controls #txnSearchInput {
+    flex-grow: 1;
+}
+
+/* Specific Transaction Row Colors */
+.txn-credit {
+    background-color: rgba(0, 255, 0, 0.1); /* Light green tint for credit */
+}
+.txn-debit {
+    background-color: rgba(255, 0, 0, 0.1); /* Light red tint for debit */
+}
+.txn-credit td {
+    color: #00ff00; /* Neon Green text */
+}
+.txn-debit td {
+    color: #ff0000; /* Neon Red text */
+}
+#txnTable tbody tr:hover {
+    background: #333355 !important; /* Override hover for clear viewing */
+}

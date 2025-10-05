@@ -48,5 +48,39 @@
 
     <script src="js/admin_auth.js"></script>
     <script src="js/user_manager.js"></script>
+
+    <div id="editUserModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <button class="close-modal-btn" id="closeModalBtn">✕</button>
+        <h3>Edit User: <span id="modalUsername"></span></h3>
+        <p class="modal-info">Update credentials and subscription status.</p>
+
+        <form id="editUserForm">
+            <input type="hidden" id="editUsernameHidden">
+
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="text" id="newPassword" placeholder="Leave blank to keep current password">
+            </div>
+
+            <div class="form-group">
+                <label for="subscriptionPlan">Subscription Plan</label>
+                <select id="subscriptionPlan">
+                    <option value="none">None/Inactive</option>
+                    <option value="1 Month">1 Month</option>
+                    <option value="3 Months">3 Months</option>
+                    <option value="6 Months">6 Months</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="date" id="expiryDate" required>
+            </div>
+
+            <button type="submit" class="action-btn save-btn"><i class="ri-save-line"></i> Save Changes</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
