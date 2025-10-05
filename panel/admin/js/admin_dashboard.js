@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const USER_STORAGE_KEY = 'nextEarnXUsers';
     const logoutBtn = document.getElementById('adminLogoutBtn');
 
-    // --- SECURITY CHECK (Must run first) ---
+    // --- 1. SECURITY CHECK (Must run first) ---
     function checkAdminSession() {
         if (localStorage.getItem(ADMIN_SESSION_KEY) !== 'true') {
             alert('Access Denied. Please log in.');
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to load per-user history
     function loadUserHistory(username) {
         try { 
+            // CRITICAL FIX: Use the per-user history key
             return JSON.parse(localStorage.getItem(`nextEarnXHistory_${username}`) || "[]"); 
         }
         catch { return []; }
@@ -30,8 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to check global subscription status
     function isSubscriptionActive(subscription) {
-        // Since subscription is stored globally, this checks if the one saved subscription is valid. 
-        // For a full system, this would require iterating through user.subscription objects.
         if (!subscription) return false;
         return Date.now() < subscription.expiry;
     }
@@ -41,41 +40,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const allUsers = loadUsers();
         
         const totalUsers = allUsers.length;
-        let totalRevenue = 0;
-        let activeSubsCount = 0;
-        
-        // Load the global subscription object (for the active user on a client, which is a flaw)
-        // For a more accurate count, we iterate through all users and mock the check.
-        
-        // Mocked check for Active Subs (Based on a flag the Admin could set via User Manager)
-        // We'll calculate revenue based on ALL transaction history records.
-        
-        const subscriptionDaysMap = {"1 Month":30,"3 Months":90,"6 Months":180, "1 Week Free Trial": 7};
+        let totalRevenue = 0; // Will sum up all deposits
+        let activeSubsCount = 0; 
 
+        
         allUsers.forEach(user => {
             const username = user.username;
             const history = loadUserHistory(username);
 
             // 1. Calculate Revenue from Deposits (Credit transactions)
             history.forEach(tx => {
-                if (tx.type === 'credit' && tx.note.includes('Deposit')) {
-                    totalRevenue += tx.amount;
+                // Check for 'credit' type transactions (Deposits/Lifafa Claims Received)
+                if (tx.type === 'credit') {
+                    // Only count money coming INTO the system (Deposits via UPI)
+                    if (tx.note.includes('Deposit via UPI')) {
+                         totalRevenue += tx.amount;
+                    }
+                    // NOTE: Lifafa claims received are revenue for the user, not the admin/system, so we only count Deposits.
                 }
             });
             
-            // 2. Check for Active Subscription (MOCK/SIMULATION)
-            // We check the user's profile for the last subscription entry made via Admin Panel
+            // 2. Check for Active Subscription (Based on Admin Panel Edit feature)
             if (user.plan && user.expiry && Date.now() < user.expiry) {
                  activeSubsCount++;
             }
         });
         
-        // Fallback: If Admin hasn't set any users' subscriptions, check the global key as a backup
-        const globalSubscription = JSON.parse(localStorage.getItem('subscription') || 'null');
-        if (activeSubsCount === 0 && globalSubscription && isSubscriptionActive(globalSubscription)) {
-             activeSubsCount = 1; // At least one active subscription (the admin/current user's)
-        }
-
         // --- DISPLAY STATS ---
         document.getElementById('totalUsers').textContent = totalUsers;
         document.getElementById('activeSubs').textContent = activeSubsCount; 
