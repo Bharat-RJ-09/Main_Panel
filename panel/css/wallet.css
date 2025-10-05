@@ -1,16 +1,39 @@
+/* panel/css/wallet.css - NextEarnX Wallet Styles (Fully Responsive) */
+
+/* --- BASE STYLES --- */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: Inter, sans-serif;
     /* Deep Space Gradient */
     background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
     color: #e6eef8;
     min-height: 100vh;
-    padding-top: 60px; /* Space for fixed navbar */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    /* CRITICAL FIX: Add padding-top for fixed navbar */
+    padding-top: 60px; 
+    position: relative;
 }
 
-/* Navbar (Copied from index.css for consistency) */
+/* --- Animated Background Layer --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    mix-blend-mode: screen;
+    animation: slowPan 30s infinite alternate;
+}
+@keyframes slowPan {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-5%, 5%); }
+}
+
+/* --- NAVBAR (Fixed and Glass effect) --- */
 .navbar {
-    position: fixed; /* Changed to fixed for wallet page */
+    position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 10;
     background: rgba(15, 15, 30, 0.6);
@@ -21,9 +44,19 @@ body {
     padding: 12px 20px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.menu-btn { color: #00e0ff; font-size: 24px; text-decoration: none; }
-.logo { font-size: 24px; font-weight: 700; color: #fff; }
-.logo span { color: #00e0ff; }
+.menu-btn { 
+    color: #00e0ff; 
+    font-size: 24px; 
+    text-decoration: none; 
+}
+.logo { 
+    font-size: 24px; 
+    font-weight: 700; 
+    color: #fff; 
+}
+.logo span { 
+    color: #00e0ff; 
+}
 #logoutBtn {
     background: #ff0077; 
     border: none;
@@ -33,6 +66,7 @@ body {
     cursor: pointer;
 }
 
+/* --- MAIN CONTAINER & CARDS --- */
 .wallet-container {
     max-width: 600px;
     margin: 20px auto;
@@ -58,7 +92,7 @@ body {
 #currentBalance {
     font-size: 3rem;
     font-weight: bold;
-    color: #aaffaa; /* Green for money */
+    color: #aaffaa; 
     margin-bottom: 15px;
 }
 .action-btn {
@@ -104,7 +138,11 @@ input {
 
 /* History Section */
 .history-section h2 { color: #e6eef8; margin-bottom: 15px; }
-.log-area { max-height: 250px; overflow-y: auto; }
+.log-area { 
+    max-height: 250px; 
+    overflow-y: auto; 
+    padding-right: 5px; /* Space for scrollbar */
+}
 .transaction-item {
     padding: 10px 0;
     border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -113,3 +151,18 @@ input {
 .transaction-item:last-child { border-bottom: none; }
 .status-credit { color: #aaffaa; }
 .status-debit { color: #ffaaaa; }
+
+/* ---------------------------------------------------- */
+/* --- MOBILE RESPONSIVENESS FIXES (CRITICAL) --- */
+/* ---------------------------------------------------- */
+@media (max-width: 600px) {
+    .wallet-container {
+        padding: 0 10px;
+    }
+    #currentBalance {
+        font-size: 2.5rem;
+    }
+    .log-area {
+        max-height: 350px; /* Give more height for better viewing */
+    }
+}

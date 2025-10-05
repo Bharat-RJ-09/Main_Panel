@@ -3,91 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - NextEarnX</title>
-  <link rel="stylesheet" href="css/index.css">
-  <link rel="shortcut icon" href="assets/logo.jpg" type="image/x-icon">
+  <title>Wallet - NextEarnX</title>
+  <link rel="stylesheet" href="css/wallet.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
-  <style>
-    a{
-      text-decoration: none;
-    }
-  </style>
 </head>
 <body>
-  
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h2 class="logo">NextEarn<span>X</span></h2>
-      <button class="close-btn" id="closeSidebarBtn">✕</button>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="index.html" class="nav-item active"><i class="ri-dashboard-line"></i> Dashboard</a>
-      <a href="wallet.html" class="nav-item"><i class="ri-money-rupee-circle-line"></i> Wallet</a>
-      <a href="instant_panel.html" class="nav-item">⚡ Instant Panel</a>
-      <a href="#" class="nav-item"><i class="ri-bar-chart-box-ai-line"></i> Camp Panel</a>
-      <a href="#" class="nav-item"><i class="ri-notification-3-line"></i> Bot Alert</a>
-      <div class="separator"></div>
-      <a href="subscription.html" class="nav-item"><i class="ri-vip-line"></i> Subscription</a>
-      <a href="#" id="sidebarLogout" class="nav-item"><i class="ri-logout-box-r-line"></i> Logout</a>
+    
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
     </nav>
-  </aside>
 
-  <nav class="navbar">
-    <button class="menu-btn" id="menuBtn">☰</button> 
-    <h1 class="logo">NextEarn<span>X</span></h1>
-    <button id="logoutBtn">Logout</button>
-  </nav>
+    <main class="wallet-container">
+        <section class="balance-display card">
+            <h2>Current Balance</h2>
+            <p id="currentBalance">₹ 0.00</p>
+            <button id="refreshBtn" class="action-btn"><i class="ri-refresh-line"></i> Refresh</button>
+        </section>
 
-  <section class="balance-card">
-    <div class="balance-left">
-      <img src="logo.png" alt="logo" class="logo-img" id="logoImg" title="Click to change logo">
-      
-      <input type="file" id="customLogoInput" accept="image/*" style="display:none;">
+        <section class="deposit-section card">
+            <h2>Add Funds (Deposit)</h2>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="depositAmount">Amount (Min ₹60):</label> 
+                    <input type="number" id="depositAmount" min="60" placeholder="Enter amount" required>
+                </div>
+                <button type="submit" class="submit-btn"><i class="ri-wallet-3-line"></i> Proceed to Pay</button>
+            </form>
+        </section>
 
-      <h2><span id="balanceDisplay">₹0</span></h2>
-      
-      <button class="add-btn" id="addFundsBtn">+</button>
-    </div>
-    <div class="balance-right">
-      <p><b>User:</b> <span id="username">Bharat</span></p>
-      <p id="subscriptionStatus" style="font-size:13px; margin-top:5px; color:#aaffaa;"></p> 
-      <div class="action-btns"> 
-        <a href="subscription.html"><button class="red-btn" id="subscriptionBtn">Subscription</button></a>
-      </div>
-    </div>
-  </section>
+        <section class="history-section card">
+            <h2>Transaction History</h2>
+            <div id="historyLog" class="log-area">
+                <p>No recent transactions.</p>
+            </div>
+        </section>
 
-  <section class="features">
-    <a href="wallet.html" class="feature-link" data-feature="Wallet">
-        <div class="feature-card">
-            <i class="ri-money-rupee-circle-line"></i>
-            <p>Wallet</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    <a href="instant_panel.html" class="feature-link" data-feature="Instant Panel">
-        <div class="feature-card">
-            <i>⚡</i>
-            <p>Instant Panel</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    <a href="#" class="feature-link" data-feature="Camp Panel">
-        <div class="feature-card">
-            <i class="ri-bar-chart-box-ai-line"></i>
-            <p>Camp Panel</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    <a href="#" class="feature-link" data-feature="Bot Alert">
-        <div class="feature-card">
-            <i class="ri-notification-3-line"></i>
-            <p>Bot Alert</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-</section>
+    </main>
 
-  <script src="js/index.js"></script>
+    <script src="js/wallet.js"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+/* panel/css/login.css - FINAL RESPONSIVE & NEON OTP THEME */
+
 /* Reset + base */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html,body { height: 100%; }
@@ -5,8 +7,13 @@ body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden; /* keep background visuals contained */
-  background: #0f172a; /* fallback */
+  /* CRITICAL FIX: Ensure scroll is possible and use flex for centering */
+  overflow-y: auto; 
+  background: #0f172a; 
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  padding: 50px 0; /* Add padding for breathing room on small screens */
 }
 
 /* ---------- Background layers ---------- */
@@ -77,11 +84,9 @@ body {
 
 /* ---------- Login container (frosted card) ---------- */
 .login-container {
-    width: auto;
-    margin: auto;
-    margin-top: 10%;
+    /* REMOVED fixed positioning and margin */
     position: relative;
-    z-index: 2; /* above bg */
+    z-index: 2; 
     width: 360px;   
     padding: 32px;
     border-radius: 18px;
@@ -155,6 +160,8 @@ input:focus {
 .btn:active { transform: translateY(1px) scale(.998); box-shadow: 0 6px 18px rgba(37,117,252,0.12); }
 .signup-text { margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.75); }
 .signup-text a { color: #cbe0ff; text-decoration: none; font-weight: 600; }
+
+/* CRITICAL FIX: Ensure full width on small screens */
 @media (max-width: 420px){
   .login-container { width: calc(100% - 36px); padding: 22px; border-radius: 14px; }
   .bg-image, .bg-gradient, .bg-blur { animation-duration: 26s; }
@@ -172,9 +179,10 @@ input:focus {
   position: fixed;
   inset: 0;
   z-index: 9999;
+  /* CRITICAL FIX: Use flexbox for centering */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; 
+  justify-content: center; 
   background: rgba(3,6,16,0.8); /* Darker overlay */
   backdrop-filter: blur(4px);
 }
