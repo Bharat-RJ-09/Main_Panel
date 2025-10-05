@@ -1,33 +1,45 @@
-/* panel/css/instant_panel.css - Updated for NextEarnX Neon Theme */
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html {
+    height: 100%; /* New: Added for animation fix */
+}
 body {
     margin: 0;
     font-family: Inter, sans-serif;
-    /* Deep Space Gradient */
-    background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
+    /* CRITICAL CHANGE: Deep Black Background */
+    background: #00000a;
     color: #e6eef8;
     min-height: 100vh;
     padding-top: 60px; /* Space for fixed navbar */
     position: relative;
 }
 
-/* --- Animated Background Layer (Copied from index.css for consistency) --- */
+/* --- Animated Background Layer (Aqua Blur Balls) --- */
 body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: -1;
+    /* Aqua/Cyan Radial Gradients (Blur Balls) */
     background: 
-        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
-        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+        /* Large Aqua Ball (Top Left) */
+        radial-gradient(circle at 20% 15%, rgba(0, 255, 255, 0.25), transparent 45%),
+        /* Smaller Cyan Ball (Bottom Right) */
+        radial-gradient(circle at 85% 75%, rgba(0, 224, 255, 0.30), transparent 40%),
+        /* Medium Aqua Glow (Center) */
+        radial-gradient(circle at 50% 50%, rgba(0, 160, 255, 0.15), transparent 60%);
+    
     mix-blend-mode: screen;
-    animation: slowPan 30s infinite alternate;
+    filter: blur(50px);
+    animation: aquaFloat 25s infinite ease-in-out alternate;
 }
 
-@keyframes slowPan {
-    from { transform: translate(0, 0); }
-    to { transform: translate(-5%, 5%); }
+/* Keyframes for Floating Blur */
+@keyframes aquaFloat {
+    0% { transform: translate(0, 0) scale(1.0); }
+    50% { transform: translate(-5vw, 5vh) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1.0); }
 }
+
 /* -------------------------------------- */
 
 

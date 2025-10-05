@@ -1,22 +1,21 @@
-/* panel/css/login.css - FINAL RESPONSIVE & NEON OTP THEME */
-
-/* Reset + base */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html,body { height: 100%; }
+html { height: 100%; } /* Changed from html,body */
 body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* CRITICAL FIX: Ensure scroll is possible and use flex for centering */
   overflow-y: auto; 
-  background: #0f172a; 
+  /* CRITICAL CHANGE: Deep Black Background */
+  background: #00000a; 
   display: flex;
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  padding: 50px 0; /* Add padding for breathing room on small screens */
+  align-items: center; 
+  justify-content: center; 
+  padding: 50px 0;
+  position: relative; /* Added for body::before context */
+  height: 100%; /* Added for animation context */
 }
 
-/* ---------- Background layers ---------- */
+/* --- Animated Background Layer (Aqua Blur Balls) - Replacing all .bg-wrap styles --- */
 .bg-wrap {
   position: fixed;
   inset: 0;
@@ -24,62 +23,31 @@ body {
   pointer-events: none;
   overflow: hidden;
 }
-.bg-image {
-  position: absolute;
-  inset: -10%; 
-  background-image: url('assets/bg.jpg'); 
-  background-size: cover;
-  background-position: center;
-  transform-origin: center;
-  filter: blur(18px) saturate(1.05) contrast(1.02);
-  will-change: transform;
-  animation: slowZoom 18s linear infinite;
-  opacity: 0.85;
-}
-.bg-gradient {
-  position: absolute;
-  inset: -20%;
-  background:
-    radial-gradient(40% 40% at 10% 20%, rgba(106,17,203,0.20), transparent 20%),
-    radial-gradient(30% 30% at 90% 80%, rgba(37,117,252,0.18), transparent 20%),
-    linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  mix-blend-mode: screen;
-  transform-origin: center;
-  filter: blur(6px);
-  will-change: transform;
-  animation: slowPan 22s ease-in-out infinite;
-  opacity: 0.95;
-}
-.bg-blur {
-  position: absolute;
-  inset: -10%;
-  background: rgba(255,255,255,0.02);
-  backdrop-filter: blur(28px) saturate(1.1);
-  -webkit-backdrop-filter: blur(28px) saturate(1.1);
-  will-change: transform, opacity;
-  transform-origin: center;
-  animation: subtleFloat 10s ease-in-out infinite;
-  pointer-events: none;
-}
-@supports not ((-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px))) {
-  .bg-blur { background: linear-gradient(180deg, rgba(12,18,39,0.6), rgba(2,6,23,0.6)); }
+
+.bg-wrap::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    /* Aqua/Cyan Radial Gradients (Blur Balls) */
+    background: 
+        /* Large Aqua Ball (Top Left) */
+        radial-gradient(circle at 20% 15%, rgba(0, 255, 255, 0.25), transparent 45%),
+        /* Smaller Cyan Ball (Bottom Right) */
+        radial-gradient(circle at 85% 75%, rgba(0, 224, 255, 0.30), transparent 40%),
+        /* Medium Aqua Glow (Center) */
+        radial-gradient(circle at 50% 50%, rgba(0, 160, 255, 0.15), transparent 60%);
+    
+    mix-blend-mode: screen;
+    filter: blur(50px);
+    animation: aquaFloat 25s infinite ease-in-out alternate;
 }
 
-/* ---------- Animations ---------- */
-@keyframes slowZoom {
-  0% { transform: scale(1) translate(0,0); }
-  50% { transform: scale(1.08) translate(-2%, 1%); }
-  100% { transform: scale(1) translate(0,0); }
-}
-@keyframes slowPan {
-  0% { transform: translateX(0) rotate(0deg); }
-  50% { transform: translateX(-6%) rotate(0.2deg); }
-  100% { transform: translateX(0) rotate(0deg); }
-}
-@keyframes subtleFloat {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  50% { transform: translateY(-6px) scale(1.01); opacity: 0.98; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
+/* Keyframes for Floating Blur - REPLACING old animation blocks */
+@keyframes aquaFloat {
+    0% { transform: translate(0, 0) scale(1.0); }
+    50% { transform: translate(-5vw, 5vh) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1.0); }
 }
 
 /* ---------- Login container (frosted card) ---------- */
