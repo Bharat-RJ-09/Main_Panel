@@ -1,4 +1,4 @@
-// panel/js/subscription.js - Finalized Logic with One-Time Free Trial Check
+// panel/js/subscription.js - Finalized Logic with Robust One-Time Free Trial Check
 
 document.addEventListener('DOMContentLoaded', ()=>{
     const urlParams = new URLSearchParams(location.search);
@@ -74,26 +74,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
     updatePlanPricesUI();
     
-    // --- NEW: HIDE FREE TRIAL IF ALREADY TAKEN ---
+    // --- CRITICAL FIX: HIDE FREE TRIAL IF ALREADY TAKEN ---
     function hideFreeTrialIfTaken() {
         const user = getCurrentUser();
-        if (user && user.hasTakenFreeTrial) {
+        
+        // We check for the flag only. If the key exists and is true, it's been taken.
+        if (user && user.hasTakenFreeTrial === true) { 
             const freeCard = document.querySelector('.plan-card.free');
             if (freeCard) {
-                freeCard.style.opacity = '0.5';
+                // Disable visuals and pointer events
+                freeCard.style.opacity = '0.4';
                 freeCard.style.pointerEvents = 'none';
-                freeCard.querySelector('.save-tag').textContent = 'Trial Taken';
+                freeCard.style.boxShadow = 'none';
+                
+                // Update text to clearly indicate status
+                const saveTag = freeCard.querySelector('.save-tag');
+                if (saveTag) saveTag.textContent = 'Trial Used';
                 const selectBtn = freeCard.querySelector('.select-btn');
                 if(selectBtn) selectBtn.textContent = 'Trial Taken';
+                
+                // Remove the special 'popular' class if it was somehow added
+                freeCard.classList.remove('popular');
             }
+            
             const statusMessage = document.getElementById('statusMessage');
             if(statusMessage && !redirectFeature) {
                  statusMessage.innerHTML += '<br><small style="color:#ffcc00;">Note: Free trial has already been used on this account.</small>';
             }
         }
     }
-    hideFreeTrialIfTaken();
-    // --- END HIDE FREE TRIAL ---
+    hideFreeTrialIfTaken(); // Call this immediately on load
+    // --- END CRITICAL FIX ---
 
 
     // Utility function to get current wallet balance
@@ -136,8 +147,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const user = getCurrentUser();
             if (user) {
                 user.hasTakenFreeTrial = true;
-                saveCurrentUser(user); // Update session
-                updateMainUserList(user); // Update central user list (for Admin Panel)
+                saveCurrentUser(user); 
+                updateMainUserList(user); 
             }
         }
         
@@ -159,9 +170,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const priceString = card.dataset.price;
             const planPrice = parseFloat(priceString);
             
-            // Re-check for already taken trial before proceeding to payment/activation
             const user = getCurrentUser();
-            if (planPrice === 0 && user && user.hasTakenFreeTrial) {
+            
+            // Re-check for already taken trial before proceeding
+            if (planPrice === 0 && user && user.hasTakenFreeTrial === true) {
                  alert('Error: Free trial has already been used on this account.');
                  return; // Block activation
             }
