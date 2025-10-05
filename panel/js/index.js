@@ -173,11 +173,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 8. FEATURE CARD REDIRECTION LISTENER ---
 
+    // panel/js/index.js: REPLACE the existing feature-link listener block
+
     document.querySelectorAll('.feature-link').forEach(link => {
         link.addEventListener('click', (e) => {
             const feature = link.dataset.feature; 
             const target = link.getAttribute('href'); 
+            const lockStatus = link.dataset.lock; // NEW: Check for data-lock="no"
 
+            // 1. Check if the link is a placeholder (href="#") or is excluded from lock
+            if (target === '#') {
+                 e.preventDefault(); 
+                 alert(`⚠️ ${feature} is currently under construction!`);
+                 return;
+            }
+            
+            // If lockStatus is explicitly "no", let the link pass without subscription check
+            if (lockStatus === 'no') {
+                 // For external links, we allow the default action (no preventDefault)
+                 return; 
+            }
+
+            // 2. Subscription Check (Only for links without data-lock="no")
+            if(!isSubscribed()) {
+                e.preventDefault(); // Stop default <a> tag redirection
+                
+                // Redirect to subscription page
+                window.location.href = `subscription.html?redirect=${encodeURIComponent(feature)}`;
+            }
+            // If subscribed, the <a> tag handles redirection automatically.
+        });
+    });
             if (target === '#') {
                  e.preventDefault(); 
                  alert(`⚠️ ${feature} is currently under construction!`);
@@ -188,8 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 window.location.href = `subscription.html?redirect=${encodeURIComponent(feature)}`;
             }
-        });
-    });
+        }); 
 
     // --- 9. HANDLE AUTO-OPEN AFTER PURCHASE ---
     (function autoOpenFeature(){
@@ -199,5 +224,4 @@ document.addEventListener('DOMContentLoaded', () => {
             const link = document.querySelector(`.feature-link[data-feature="${feature}"]`);
             if(link) window.location.href = link.href;
         }
-    })();
-});
+    })(); 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay to other - NextEarnX</title>
+  <link rel="stylesheet" href="css/pay_to_other.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="transfer-container">
+        <div class="header-section">
+            <h2>Wallet Transfer</h2>
+            <p class="balance-status">Your Balance: <span id="currentBalance" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
+        </div>
+        
+        <section class="transfer-form-card card">
+            <p class="status-msg">Transfer funds instantly to any registered NextEarnX user.</p>
+            <form id="transferForm">
+                
+                <div class="form-group">
+                    <label for="recipientUsername">Recipient Username:</label>
+                    <input type="text" id="recipientUsername" placeholder="Enter NextEarnX Username" required>
+                    <small id="usernameCheckMsg"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="transferAmount">Amount (₹):</label>
+                    <input type="number" id="transferAmount" min="1" placeholder="Enter amount to send" required>
+                </div>
+
+                <button type="submit" class="submit-btn"><i class="ri-send-plane-line"></i> Send Funds</button>
+            </form>
+        </section>
+
+        <section class="result-display">
+            <h3>Transfer Log</h3>
+            <div id="logArea">
+                <p>Ready to send...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/pay_to_other.js"></script>
+</body>
+</html>

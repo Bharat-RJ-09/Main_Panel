@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - NextEarnX</title>
   <link rel="stylesheet" href="css/index.css">
-  <link rel="shortcut icon" href="assets/logo.jpg" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
   <style>
     a{
@@ -23,7 +22,7 @@
     <nav class="sidebar-nav">
       <a href="index.html" class="nav-item active"><i class="ri-dashboard-line"></i> Dashboard</a>
       <a href="wallet.html" class="nav-item"><i class="ri-money-rupee-circle-line"></i> Wallet</a>
-      <a href="instant_panel.html" class="nav-item">⚡ Instant Panel</a>
+      <a href="instant_panel.html" class="nav-item"><i class="ri-flash-line"></i> Instant Panel</a>
       <a href="#" class="nav-item"><i class="ri-bar-chart-box-ai-line"></i> Camp Panel</a>
       <a href="#" class="nav-item"><i class="ri-notification-3-line"></i> Bot Alert</a>
       <div class="separator"></div>
@@ -41,11 +40,8 @@
   <section class="balance-card">
     <div class="balance-left">
       <img src="logo.png" alt="logo" class="logo-img" id="logoImg" title="Click to change logo">
-      
       <input type="file" id="customLogoInput" accept="image/*" style="display:none;">
-
       <h2><span id="balanceDisplay">₹0</span></h2>
-      
       <button class="add-btn" id="addFundsBtn">+</button>
     </div>
     <div class="balance-right">
@@ -58,6 +54,7 @@
   </section>
 
   <section class="features">
+    
     <a href="wallet.html" class="feature-link" data-feature="Wallet">
         <div class="feature-card">
             <i class="ri-money-rupee-circle-line"></i>
@@ -83,6 +80,36 @@
         <div class="feature-card">
             <i class="ri-notification-3-line"></i>
             <p>Bot Alert</p>
+            <span class="lock-badge"></span>
+        </div>
+    </a>
+    
+    <a href="YOUR_TELEGRAM_CHANNEL_LINK" class="feature-link" data-feature="Telegram Channel" data-lock="no">
+        <div class="feature-card">
+            <i class="ri-telegram-line"></i>
+            <p>Join Telegram</p>
+        </div>
+    </a>
+    
+    <a href="affiliate.html" class="feature-link" data-feature="Affiliate Panel">
+        <div class="feature-card">
+            <i class="ri-group-line"></i>
+            <p>Affiliate Panel</p>
+            <span class="lock-badge"></span>
+        </div>
+    </a>
+    
+    <a href="YOUR_TELEGRAM_CONTACT_LINK" class="feature-link" data-feature="Contact Us" data-lock="no">
+        <div class="feature-card">
+            <i class="ri-chat-4-line"></i>
+            <p>Contact Us</p>
+        </div>
+    </a>
+    
+    <a href="pay_to_other.html" class="feature-link" data-feature="Pay to other">
+        <div class="feature-card">
+            <i class="ri-send-plane-line"></i>
+            <p>Pay to other</p>
             <span class="lock-badge"></span>
         </div>
     </a>
