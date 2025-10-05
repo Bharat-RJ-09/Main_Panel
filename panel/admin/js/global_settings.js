@@ -12,7 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const planPriceInputs = document.querySelectorAll('.plan-price');
     const logoutBtn = document.getElementById('adminLogoutBtn');
 
-    // Default Settings (Matching your current hardcoded values)
+    // --- NEW: OTP MODAL ELEMENTS ---
+    const otpModal = document.getElementById('settingsOtpModal');
+    const closeOtpBtn = otpModal ? otpModal.querySelector('#closeOtpBtn') : null;
+    const otpInput = otpModal ? otpModal.querySelector('#otpInput') : null;
+    const verifyOtpBtn = otpModal ? otpModal.querySelector('#verifyOtpBtn') : null;
+    const resendOtpBtn = otpModal ? otpModal.querySelector('#resendOtpBtn') : null;
+    const otpTimer = otpModal ? otpModal.querySelector('#otpTimer') : null;
+
+    // --- OTP STATE ---
+    let generatedOtp = null;
+    let otpExpires = null;
+    let otpTimerInterval = null;
+    let pendingSaveData = null; // Store data pending for save after OTP verification
+    let pendingSaveType = null; // 'general' or 'price'
+
+    // Default Settings
     const DEFAULTS = {
         upiId: "bharat-dass@ibl",
         minDeposit: 60,
@@ -23,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- 1. SECURITY & LOGOUT ---
+    // --- 1. SECURITY & LOGOUT (unchanged) ---
     function checkAdminSession() {
         if (localStorage.getItem(ADMIN_SESSION_KEY) !== 'true') {
             alert('Access Denied. Please log in.');
@@ -49,12 +64,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Actual save function, called only after OTP verification
     function saveSettings(settings) {
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
         alert('✅ Settings saved successfully!');
     }
 
-    // --- 3. UI INITIALIZATION ---
+    // --- NEW: OTP LOGIC FUNCTIONS ---
+    function startOtpTimer() {
+        if (!otpTimer || !resendOtpBtn) return;
+        clearInterval(otpTimerInterval);
+        otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes validity
+        resendOtpBtn.disabled = true;
+        
+        otpTimerInterval = setInterval(() => {
+            const diff = Math.max(0, otpExpires - Date.now());
+            const sec = Math.ceil(diff / 1000);
+            const mm = String(Math.floor(sec / 60)).padStart(2, "0");
+            const ss = String(sec % 60).padStart(2, "0");
+            otpTimer.textContent = `${mm}:${ss}`;
+            
+            if (diff <= 0) {
+                clearInterval(otpTimerInterval);
+                alert("OTP expired. Please resend.");
+                resendOtpBtn.disabled = false;
+                generatedOtp = null; 
+            }
+        }, 500);
+    }
+
+    function generateAndShowOtp() {
+        generatedOtp = Math.floor(100000 + Math.random() * 900000);
+        console.log("DEV ADMIN SETTINGS OTP:", generatedOtp); // DEV-ONLY
+        
+        if (otpModal && otpInput) {
+            otpModal.style.display = 'flex';
+            otpInput.value = '';
+            otpInput.style.borderColor = '#444'; // Reset border color
+            startOtpTimer();
+        }
+    }
+
+    // --- 3. UI INITIALIZATION (unchanged) ---
     function initializeUI() {
         const settings = loadSettings();
         
@@ -70,8 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initializeUI();
 
-    // --- 4. FORM SUBMISSION HANDLERS ---
+    // --- 4. FORM SUBMISSION HANDLERS (UPDATED WITH OTP) ---
     
+    // General Settings Submit
     generalSettingsForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const settings = loadSettings();
@@ -79,23 +131,74 @@ document.addEventListener('DOMContentLoaded', () => {
         settings.upiId = upiIdInput.value.trim();
         settings.minDeposit = parseFloat(minDepositInput.value);
         
-        saveSettings(settings);
+        pendingSaveData = settings; // Store the data to be saved
+        pendingSaveType = 'general';
+        generateAndShowOtp(); // Trigger OTP
     });
 
+    // Price Settings Submit
     priceSettingsForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const settings = loadSettings();
+        const newPrices = {};
         
         planPriceInputs.forEach(input => {
             const plan = input.dataset.plan;
-            settings.prices[plan] = parseFloat(input.value);
+            newPrices[plan] = parseFloat(input.value);
         });
-        
-        saveSettings(settings);
+
+        // Merge prices into settings before saving
+        const settingsToSave = { ...settings, prices: newPrices };
+
+        pendingSaveData = settingsToSave; // Store the data to be saved
+        pendingSaveType = 'price';
+        generateAndShowOtp(); // Trigger OTP
     });
 
-    // --- 5. REQUIRED: INTEGRATION HINTS ---
-    // NOTE: After implementing this, remember to update the User Panel files
-    // (purchase.js, subscription.js, wallet.js) to load settings from
-    // localStorage.getItem(SETTINGS_KEY) instead of using hardcoded values.
+    // --- 5. OTP MODAL EVENT LISTENERS ---
+    
+    if (closeOtpBtn) {
+        closeOtpBtn.addEventListener('click', () => {
+            otpModal.style.display = 'none';
+            clearInterval(otpTimerInterval);
+            pendingSaveData = null;
+            pendingSaveType = null;
+        });
+    }
+    
+    if (resendOtpBtn) {
+        resendOtpBtn.addEventListener('click', generateAndShowOtp);
+    }
+
+    if (verifyOtpBtn) {
+        verifyOtpBtn.addEventListener('click', () => {
+            const entered = otpInput.value.trim();
+            
+            if (!generatedOtp) {
+                alert("Please request a new OTP.");
+                return;
+            }
+            if (Date.now() > otpExpires) {
+                alert("OTP expired. Please request a new OTP.");
+                return;
+            }
+            
+            if (Number(entered) === generatedOtp) {
+                // SUCCESS: Save the pending data and close modal
+                saveSettings(pendingSaveData);
+                
+                // Final UI refresh is crucial here, as inputs might have been changed before save
+                initializeUI(); 
+                
+                otpModal.style.display = 'none';
+                clearInterval(otpTimerInterval);
+                
+                pendingSaveData = null;
+                pendingSaveType = null;
+            } else {
+                alert("❌ Invalid OTP. Try again.");
+                otpInput.style.borderColor = 'red';
+            }
+        });
+    }
 });

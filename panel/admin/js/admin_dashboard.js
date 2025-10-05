@@ -3,6 +3,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const ADMIN_SESSION_KEY = 'nextEarnXAdminSession';
     const USER_STORAGE_KEY = 'nextEarnXUsers';
+    // CRITICAL FIX: Global History Key ko define karein, jahan deposits store hote hain
+    const GLOBAL_HISTORY_KEY = 'nextEarnXHistory'; 
     const logoutBtn = document.getElementById('adminLogoutBtn');
 
     // --- 1. SECURITY CHECK (Must run first) ---
@@ -20,49 +22,39 @@ document.addEventListener('DOMContentLoaded', () => {
         catch { return []; }
     }
     
-    // Function to load per-user history
-    function loadUserHistory(username) {
+    // NEW UTILITY: Function to load GLOBAL history (The actual source of deposits)
+    function loadGlobalHistory() {
         try { 
-            // CRITICAL FIX: Use the per-user history key
-            return JSON.parse(localStorage.getItem(`nextEarnXHistory_${username}`) || "[]"); 
+            return JSON.parse(localStorage.getItem(GLOBAL_HISTORY_KEY) || "[]"); 
         }
         catch { return []; }
     }
     
-    // Function to check global subscription status
-    function isSubscriptionActive(subscription) {
-        if (!subscription) return false;
-        return Date.now() < subscription.expiry;
-    }
-
     // --- STATS CALCULATION (CRITICAL FIX) ---
     function calculateStats() {
         const allUsers = loadUsers();
+        // CRITICAL FIX: Saare transactions global history se load karein
+        const globalHistory = loadGlobalHistory(); 
         
         const totalUsers = allUsers.length;
         let totalRevenue = 0; // Will sum up all deposits
         let activeSubsCount = 0; 
 
         
+        // 1. Calculate Active Subscriptions (Iterate through users)
         allUsers.forEach(user => {
-            const username = user.username;
-            const history = loadUserHistory(username);
-
-            // 1. Calculate Revenue from Deposits (Credit transactions)
-            history.forEach(tx => {
-                // Check for 'credit' type transactions (Deposits/Lifafa Claims Received)
-                if (tx.type === 'credit') {
-                    // Only count money coming INTO the system (Deposits via UPI)
-                    if (tx.note.includes('Deposit via UPI')) {
-                         totalRevenue += tx.amount;
-                    }
-                    // NOTE: Lifafa claims received are revenue for the user, not the admin/system, so we only count Deposits.
-                }
-            });
-            
-            // 2. Check for Active Subscription (Based on Admin Panel Edit feature)
+            // Check for Active Subscription (Based on data saved by Admin User Manager)
             if (user.plan && user.expiry && Date.now() < user.expiry) {
                  activeSubsCount++;
+            }
+        });
+        
+        // 2. Calculate Revenue from Deposits (Check global transactions)
+        globalHistory.forEach(tx => {
+            // Only count 'credit' type transactions which are deposits (Subscription payments are 'debit' in user's history, but don't have a deposit note here)
+            // The Deposit transaction created in purchase.js has the note 'Wallet Deposit via UPI'
+            if (tx.type === 'credit' && tx.note.includes('Wallet Deposit via UPI')) {
+                totalRevenue += tx.amount;
             }
         });
         
