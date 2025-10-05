@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - NextEarnX Panel</title>
+  <title>Dashboard - NextEarnX</title>
   <link rel="stylesheet" href="css/index.css">
-  <link rel="shortcut icon" href="assets/logo.jpg" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
 <body>
   
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2 class="logo">NextEarnX <span> Panel</span></h2>
+      <h2 class="logo">NextEarn<span>X</span></h2>
       <button class="close-btn" id="closeSidebarBtn">✕</button>
     </div>
     <nav class="sidebar-nav">
@@ -26,18 +25,22 @@
       <a href="#" id="sidebarLogout" class="nav-item"><i class="ri-logout-box-r-line"></i> Logout</a>
     </nav>
   </aside>
-  
+
   <nav class="navbar">
     <button class="menu-btn" id="menuBtn">☰</button> 
-    <h1 class="logo">NextEarnX <span> Panel</span></h1>
+    <h1 class="logo">NextEarn<span>X</span></h1>
     <button id="logoutBtn">Logout</button>
   </nav>
 
   <section class="balance-card">
     <div class="balance-left">
-      <img src="logo.png" alt="logo" class="logo-img">
-      <h2>₹0</h2>
-      <button class="add-btn">+</button>
+      <img src="logo.png" alt="logo" class="logo-img" id="logoImg" title="Click to change logo">
+      
+      <input type="file" id="customLogoInput" accept="image/*" style="display:none;">
+
+      <h2><span id="balanceDisplay">₹0</span></h2>
+      
+      <button class="add-btn" id="addFundsBtn">+</button>
     </div>
     <div class="balance-right">
       <p><b>User:</b> <span id="username">Bharat</span></p>
@@ -49,7 +52,6 @@
   </section>
 
   <section class="features">
-    
     <a href="wallet.html" class="feature-link" data-feature="Wallet">
         <div class="feature-card">
             <i class="ri-money-rupee-circle-line"></i>
@@ -57,7 +59,6 @@
             <span class="lock-badge"></span>
         </div>
     </a>
-    
     <a href="instant_panel.html" class="feature-link" data-feature="Instant Panel">
         <div class="feature-card">
             <i>⚡</i>
@@ -65,7 +66,6 @@
             <span class="lock-badge"></span>
         </div>
     </a>
-    
     <a href="#" class="feature-link" data-feature="Camp Panel">
         <div class="feature-card">
             <i class="ri-bar-chart-box-ai-line"></i>
@@ -73,7 +73,6 @@
             <span class="lock-badge"></span>
         </div>
     </a>
-    
     <a href="#" class="feature-link" data-feature="Bot Alert">
         <div class="feature-card">
             <i class="ri-notification-3-line"></i>

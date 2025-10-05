@@ -1,6 +1,14 @@
 // panel/js/index.js - Final Merged Code for NextEarnX Dashboard
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- 0. NEW: WALLET UTILITY (Required to show balance) ---
+    function getBalance() {
+        try {
+            return parseFloat(localStorage.getItem('nextEarnXBalance') || '0.00');
+        } catch(e) { return 0.00; }
+    }
+
 
     // --- 1. CORE LOGOUT LOGIC ---
     const logoutBtn = document.getElementById('logoutBtn');
@@ -14,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. SIDEBAR TOGGLE LOGIC (REQUIRED FOR HAMBURGER MENU) ---
+    // --- 2. SIDEBAR TOGGLE LOGIC ---
     const sidebar = document.getElementById('sidebar');
     const menuBtn = document.getElementById('menuBtn');
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
@@ -36,12 +44,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- 3. SUBSCRIPTION UTILITIES ---
+    // --- 3. LOGO CUSTOMIZATION LOGIC ---
+    const logoImg = document.getElementById('logoImg');
+    const customLogoInput = document.getElementById('customLogoInput');
+
+    function loadCustomLogo() {
+        const savedLogo = localStorage.getItem('nextEarnXCustomLogo');
+        if (savedLogo && logoImg) {
+            logoImg.src = savedLogo;
+        }
+    }
+
+    if (logoImg && customLogoInput) {
+        // Trigger file input when image is clicked
+        logoImg.addEventListener('click', () => {
+            customLogoInput.click();
+        });
+
+        // Handle file selection and save to localStorage
+        customLogoInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    localStorage.setItem('nextEarnXCustomLogo', e.target.result);
+                    logoImg.src = e.target.result;
+                    alert("Logo updated successfully!");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        loadCustomLogo(); // Load on page initialization
+    }
+    
+    // --- 4. SUBSCRIPTION UTILITIES ---
 
     function getSubscription() {
         try {
             const sub = JSON.parse(localStorage.getItem('subscription'));
-            // Check expiry: If expired, remove and return null
             if (!sub || Date.now() > sub.expiry) { 
                 localStorage.removeItem('subscription');
                 return null;
@@ -52,7 +92,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function isSubscribed() { return !!getSubscription(); }
 
-    // --- 4. DASHBOARD UI UPDATES (STATUS & LOCKS) ---
+    // --- 5. USERNAME UTILITY ---
+    function getCurrentUsername() {
+        try {
+            const user = JSON.parse(localStorage.getItem('nextEarnXCurrentUser'));
+            return user ? user.username : 'Guest'; 
+        } catch(e) { 
+            return 'Guest'; 
+        }
+    }
+
+    // --- 6. DASHBOARD UI UPDATES (STATUS, BALANCE & LOCKS) ---
+
+    function updateUsernameUI() {
+        const usernameElement = document.getElementById('username');
+        if (usernameElement) {
+            const currentUsername = getCurrentUsername();
+            usernameElement.textContent = currentUsername.charAt(0).toUpperCase() + currentUsername.slice(1);
+        }
+    }
+    
+    function updateBalanceUI() {
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        if (balanceDisplay) {
+            balanceDisplay.textContent = `₹${getBalance().toFixed(2)}`;
+        }
+    }
 
     function updateSubscriptionStatus() {
         const subStatusElement = document.getElementById('subscriptionStatus');
@@ -72,11 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    updateSubscriptionStatus(); // Run once on load
+    
+    // --- INITIAL CALLS ---
+    updateUsernameUI();
+    updateBalanceUI(); // Show current balance
+    updateSubscriptionStatus();
+    refreshFeatureLocks(); 
 
     function refreshFeatureLocks() {
         const subscribed = isSubscribed();
-        // Target the feature-card divs inside the feature-link a tags
         document.querySelectorAll('.feature-link').forEach(link => {
             const card = link.querySelector('.feature-card');
             const badge = card ? card.querySelector('.lock-badge') : null;
@@ -93,34 +162,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    refreshFeatureLocks();
 
-    // --- 5. FEATURE CARD REDIRECTION LISTENER (THE FIX FOR REDIRECT) ---
+    // --- 7. NEW: ADD FUNDS BUTTON LOGIC ---
+    const addFundsBtn = document.getElementById('addFundsBtn');
+    if (addFundsBtn) {
+        addFundsBtn.addEventListener('click', () => {
+            window.location.href = 'wallet.html';
+        });
+    }
+
+    // --- 8. FEATURE CARD REDIRECTION LISTENER ---
 
     document.querySelectorAll('.feature-link').forEach(link => {
         link.addEventListener('click', (e) => {
             const feature = link.dataset.feature; 
             const target = link.getAttribute('href'); 
 
-            // 1. Check if the link is a placeholder (href="#")
             if (target === '#') {
                  e.preventDefault(); 
                  alert(`⚠️ ${feature} is currently under construction!`);
                  return;
             }
 
-            // 2. Subscription Check
             if(!isSubscribed()) {
-                e.preventDefault(); // Stop default <a> tag redirection
-                
-                // Redirect to subscription page
+                e.preventDefault();
                 window.location.href = `subscription.html?redirect=${encodeURIComponent(feature)}`;
             }
-            // If subscribed, the <a> tag handles redirection automatically.
         });
     });
 
-    // --- 6. HANDLE AUTO-OPEN AFTER PURCHASE (index.html?open=feature) ---
+    // --- 9. HANDLE AUTO-OPEN AFTER PURCHASE ---
     (function autoOpenFeature(){
         const params = new URLSearchParams(location.search);
         if(params.has('open') && isSubscribed()){
