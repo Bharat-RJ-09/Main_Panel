@@ -18,25 +18,25 @@
     <main class="transfer-container">
         <div class="header-section">
             <h2>Wallet Transfer</h2>
-            <p class="balance-status">Your Balance: <span id="currentBalance" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
+            <p class="balance-status">Your Balance: <span id="currentBalanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
         </div>
         
         <section class="transfer-form-card card">
-            <p class="status-msg">Transfer funds instantly to any registered NextEarnX user.</p>
+            <p class="status-msg">Max transfer limit is ₹100 per user per day.</p>
             <form id="transferForm">
                 
                 <div class="form-group">
-                    <label for="recipientUsername">Recipient Username:</label>
-                    <input type="text" id="recipientUsername" placeholder="Enter NextEarnX Username" required>
-                    <small id="usernameCheckMsg"></small>
+                    <label for="recipientMobile">Recipient Mobile Number:</label>
+                    <input type="tel" id="recipientMobile" placeholder="Enter 10-digit Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
+                    <small id="recipientUsernameMsg"></small>
                 </div>
 
                 <div class="form-group">
                     <label for="transferAmount">Amount (₹):</label>
-                    <input type="number" id="transferAmount" min="1" placeholder="Enter amount to send" required>
+                    <input type="number" id="transferAmount" min="1" max="100" placeholder="Max ₹100" required>
                 </div>
 
-                <button type="submit" class="submit-btn"><i class="ri-send-plane-line"></i> Send Funds</button>
+                <button type="submit" id="sendFundsBtn" class="submit-btn"><i class="ri-send-plane-line"></i> Send Funds</button>
             </form>
         </section>
 

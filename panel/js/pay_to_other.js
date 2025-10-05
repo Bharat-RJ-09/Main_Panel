@@ -1,39 +1,39 @@
-// panel/js/pay_to_other.js - Wallet Transfer Logic
+// panel/js/pay_to_other.js - Wallet Transfer Logic (Finalized)
 
 document.addEventListener('DOMContentLoaded', () => {
     const transferForm = document.getElementById('transferForm');
-    const recipientUsernameInput = document.getElementById('recipientUsername');
+    const recipientMobileInput = document.getElementById('recipientMobile');
     const transferAmountInput = document.getElementById('transferAmount');
-    const usernameCheckMsg = document.getElementById('usernameCheckMsg');
-    const currentBalanceDisplay = document.getElementById('currentBalance');
+    const recipientUsernameMsg = document.getElementById('recipientUsernameMsg');
+    const currentBalanceDisplay = document.getElementById('currentBalanceDisplay');
     const logArea = document.getElementById('logArea');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    let isRecipientValid = false;
+    // TRANSFER LIMITS
+    const MAX_DAILY_TRANSFER = 100; // Rs 100 per day limit
+    const DAILY_LIMIT_KEY = 'nextEarnXDailyTransfer'; 
+
     let senderUsername = '';
+    let recipientUser = null; // Store recipient user object if valid
 
-    // --- UTILITIES ---
+    // --- CRITICAL UTILITIES ---
     const USER_STORAGE_KEY = 'nextEarnXUsers';
+    
+    function getCurrentUserSession() {
+        try {
+            const user = JSON.parse(localStorage.getItem('nextEarnXCurrentUser'));
+            senderUsername = user ? user.username : ''; // Set sender username
+            return user;
+        } catch { return null; }
+    }
 
+    // Balance and History must be per-user for transfer to work!
     function getBalance(username) {
         return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00');
     }
     
     function setBalance(username, balance) {
         localStorage.setItem(`nextEarnXBalance_${username}`, balance.toFixed(2));
-    }
-
-    function loadUsers() {
-        try { return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "[]"); }
-        catch { return []; }
-    }
-
-    function getCurrentUserSession() {
-        try {
-            const user = JSON.parse(localStorage.getItem('nextEarnXCurrentUser'));
-            senderUsername = user ? user.username : ''; // Set sender username globally
-            return user;
-        } catch { return null; }
     }
     
     function getHistory(username) {
@@ -44,22 +44,53 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveHistory(username, history) {
         localStorage.setItem(`nextEarnXHistory_${username}`, JSON.stringify(history));
     }
-
-    function appendLog(message, type = 'info') {
-        const p = document.createElement('p');
-        p.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
-        p.style.color = type === 'success' ? '#aaffaa' : type === 'error' ? '#ffaaaa' : '#e0e0e0';
-        logArea.prepend(p);
+    
+    function loadUsers() {
+        try { return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "[]"); }
+        catch { return []; }
     }
+
+    // --- DAILY LIMIT UTILITIES ---
+    function getTodayTransferredAmount(username) {
+        const today = new Date().toDateString();
+        try {
+            const data = JSON.parse(localStorage.getItem(DAILY_LIMIT_KEY) || '{}');
+            // Check if the stored date matches today, otherwise reset
+            if (data.date === today && data[username]) {
+                return data[username];
+            }
+            return 0;
+        } catch {
+            return 0;
+        }
+    }
+
+    function recordTransfer(username, amount) {
+        const today = new Date().toDateString();
+        let data;
+        try {
+            data = JSON.parse(localStorage.getItem(DAILY_LIMIT_KEY) || '{}');
+        } catch {
+            data = {};
+        }
+
+        if (data.date !== today) {
+            data = { date: today }; // Reset for a new day
+        }
+
+        data[username] = (data[username] || 0) + amount;
+        localStorage.setItem(DAILY_LIMIT_KEY, JSON.stringify(data));
+    }
+
+
+    // --- INITIALIZE & SECURITY ---
+    getCurrentUserSession();
     
     function refreshBalanceUI() {
         const currentBalance = getBalance(senderUsername);
         currentBalanceDisplay.textContent = `₹${currentBalance.toFixed(2)}`;
     }
-
-    // --- INITIALIZE & SECURITY ---
-    getCurrentUserSession();
-    refreshBalanceUI();
+    refreshBalanceUI(); // Sync Balance on Load
 
     // Logout Button (For consistency)
     if(logoutBtn) {
@@ -71,31 +102,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- RECIPIENT VALIDATION LOGIC ---
-    recipientUsernameInput.addEventListener('input', () => {
-        const username = recipientUsernameInput.value.trim();
+    // --- RECIPIENT VALIDATION LOGIC (Live Search) ---
+    recipientMobileInput.addEventListener('input', () => {
+        const mobile = recipientMobileInput.value.trim();
         const users = loadUsers();
         
-        usernameCheckMsg.textContent = '';
-        isRecipientValid = false;
+        recipientUsernameMsg.textContent = '';
+        recipientUser = null;
 
-        if (username.length < 3) return; // Wait for minimum chars
+        if (mobile.length !== 10) return; // Only check on full 10 digits
 
-        if (username.toLowerCase() === senderUsername.toLowerCase()) {
-            usernameCheckMsg.textContent = "❌ Cannot transfer funds to yourself.";
-            usernameCheckMsg.style.color = 'red';
-            return;
-        }
+        // Find recipient by mobile
+        const userFound = users.find(user => user.mobile === mobile);
 
-        const recipientExists = users.some(user => user.username.toLowerCase() === username.toLowerCase());
-
-        if (recipientExists) {
-            usernameCheckMsg.textContent = "✅ User found and ready for transfer.";
-            usernameCheckMsg.style.color = 'limegreen';
-            isRecipientValid = true;
+        if (userFound) {
+            if (userFound.username.toLowerCase() === senderUsername.toLowerCase()) {
+                recipientUsernameMsg.textContent = "❌ Cannot transfer funds to yourself.";
+                recipientUsernameMsg.style.color = 'red';
+                return;
+            }
+            recipientUser = userFound;
+            recipientUsernameMsg.textContent = `✅ Sending to: ${userFound.username}`;
+            recipientUsernameMsg.style.color = 'limegreen';
         } else {
-            usernameCheckMsg.textContent = "❌ User not found on NextEarnX.";
-            usernameCheckMsg.style.color = 'red';
+            recipientUsernameMsg.textContent = "❌ Mobile number not found on NextEarnX.";
+            recipientUsernameMsg.style.color = 'red';
         }
     });
 
@@ -103,71 +134,65 @@ document.addEventListener('DOMContentLoaded', () => {
     transferForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const recipientUsername = recipientUsernameInput.value.trim();
         const amount = parseFloat(transferAmountInput.value);
         const senderBalance = getBalance(senderUsername);
+        const todayTransferred = getTodayTransferredAmount(senderUsername);
 
         // 1. Basic Validation
-        if (!isRecipientValid) {
-            appendLog('Error: Please enter a valid, existing recipient username.', 'error');
+        if (!recipientUser) {
+            appendLog('Error: Please enter a valid, registered mobile number.', 'error');
             return;
         }
         if (isNaN(amount) || amount < 1) {
             appendLog('Error: Transfer amount must be at least ₹1.', 'error');
             return;
         }
+        if (amount > MAX_DAILY_TRANSFER) {
+            appendLog(`Error: Transfer amount exceeds the ₹${MAX_DAILY_TRANSFER} limit.`, 'error');
+            return;
+        }
         if (senderBalance < amount) {
             appendLog(`Error: Insufficient funds. Available: ₹${senderBalance.toFixed(2)}`, 'error');
-            alert('Insufficient balance for transfer.');
             return;
         }
 
-        // 2. Confirmation
-        if (!confirm(`Confirm transfer of ₹${amount.toFixed(2)} to ${recipientUsername}?`)) {
+        // 2. Daily Limit Check
+        const totalAfterTransfer = todayTransferred + amount;
+        if (totalAfterTransfer > MAX_DAILY_TRANSFER) {
+            appendLog(`Error: Daily transfer limit exceeded. Remaining limit: ₹${(MAX_DAILY_TRANSFER - todayTransferred).toFixed(2)}`, 'error');
+            return;
+        }
+
+        // 3. Confirmation
+        if (!confirm(`Confirm transfer of ₹${amount.toFixed(2)} to ${recipientUser.username}?`)) {
             return;
         }
         
-        // 3. Execution: Deduct from Sender
+        // 4. Execution: Deduct/Credit & Record
         const newSenderBalance = senderBalance - amount;
         setBalance(senderUsername, newSenderBalance);
 
-        // 4. Execution: Credit to Recipient (NOTE: We assume the user's initial balance is 0 if not set)
-        const recipientBalance = getBalance(recipientUsername);
-        const newRecipientBalance = recipientBalance + amount;
-        setBalance(recipientUsername, newRecipientBalance);
+        const newRecipientBalance = getBalance(recipientUser.username) + amount;
+        setBalance(recipientUser.username, newRecipientBalance);
 
-        // 5. Transaction Logging (Sender DEBIT)
+        // 5. Transaction Logging (Sender DEBIT & Recipient CREDIT)
         let senderHistory = getHistory(senderUsername);
-        senderHistory.push({
-            date: Date.now(),
-            type: 'debit',
-            amount: amount,
-            txnId: 'TRANSFER_SENT_' + Date.now(),
-            note: `Transfer to ${recipientUsername}`
-        });
+        senderHistory.push({ date: Date.now(), type: 'debit', amount: amount, txnId: 'TRANSFER_SENT_' + Date.now(), note: `Transfer to ${recipientUser.username}` });
         saveHistory(senderUsername, senderHistory);
 
-        // 6. Transaction Logging (Recipient CREDIT)
-        let recipientHistory = getHistory(recipientUsername);
-        recipientHistory.push({
-            date: Date.now(),
-            type: 'credit',
-            amount: amount,
-            txnId: 'TRANSFER_RECEIVED_' + Date.now(),
-            note: `Received from ${senderUsername}`
-        });
-        saveHistory(recipientUsername, recipientHistory);
+        let recipientHistory = getHistory(recipientUser.username);
+        recipientHistory.push({ date: Date.now(), type: 'credit', amount: amount, txnId: 'TRANSFER_RECEIVED_' + Date.now(), note: `Received from ${senderUsername}` });
+        saveHistory(recipientUser.username, recipientHistory);
+        
+        // 6. Record Daily Limit
+        recordTransfer(senderUsername, amount);
 
 
         // 7. Final UI Update
         refreshBalanceUI();
-        appendLog(`SUCCESS: ₹${amount.toFixed(2)} transferred to ${recipientUsername}. New balance: ₹${newSenderBalance.toFixed(2)}`, 'success');
+        appendLog(`SUCCESS: ₹${amount.toFixed(2)} transferred to ${recipientUser.username}. New balance: ₹${newSenderBalance.toFixed(2)}`, 'success');
         transferForm.reset();
-        recipientUsernameInput.value = '';
-        usernameCheckMsg.textContent = '';
-        isRecipientValid = false;
-        
-        // Ensure recipient username check re-runs immediately after reset for clean slate
-        recipientUsernameInput.dispatchEvent(new Event('input')); 
+        recipientUser = null;
+        recipientMobileInput.dispatchEvent(new Event('input')); // Clear validation message
     });
 });
