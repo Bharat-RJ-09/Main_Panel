@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const recipientMobileInput = document.getElementById('recipientMobile');
     const transferAmountInput = document.getElementById('transferAmount');
     const recipientUsernameMsg = document.getElementById('recipientUsernameMsg');
-    const currentBalanceDisplay = document.getElementById('currentBalanceDisplay');
+    const currentBalanceDisplay = document.getElementById('currentBalanceDisplay'); // CRITICAL: Correct ID
     const logArea = document.getElementById('logArea');
     const logoutBtn = document.getElementById('logoutBtn');
     
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let senderUsername = '';
     let recipientUser = null; // Stores the object of the found recipient
-    let currentBalance = 0; // Sender's current balance
 
     // --- CRITICAL UTILITIES ---
     const USER_STORAGE_KEY = 'nextEarnXUsers';
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const user = JSON.parse(localStorage.getItem('nextEarnXCurrentUser'));
             senderUsername = user ? user.username : ''; 
-            return user;
         } catch { return null; }
     }
 
@@ -84,24 +82,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- INITIALIZE & UI SYNC ---
-    getCurrentUserSession(); // Sets senderUsername
     
     function refreshBalanceUI() {
-        currentBalance = getBalance(senderUsername); // CRITICAL: Sync balance here
+        const currentBalance = getBalance(senderUsername); 
         currentBalanceDisplay.textContent = `₹${currentBalance.toFixed(2)}`;
     }
-    refreshBalanceUI(); // Sync Balance on Load
 
-    // Logout Button (For consistency)
-    if(logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('session');
-            localStorage.removeItem('nextEarnXCurrentUser');
-            alert("Logged out from NextEarnX!");
-            window.location.href = 'login.html';
-        });
+    function appendLog(message, type = 'info') {
+        const p = document.createElement('p');
+        p.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+        p.style.color = type === 'success' ? '#aaffaa' : type === 'error' ? '#ffaaaa' : '#e0e0e0';
+        logArea.prepend(p);
     }
-
+    
     // --- RECIPIENT VALIDATION LOGIC (Live Search by Mobile) ---
     recipientMobileInput.addEventListener('input', () => {
         const mobile = recipientMobileInput.value.trim();
@@ -110,7 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
         recipientUsernameMsg.textContent = '';
         recipientUser = null;
 
-        if (mobile.length !== 10) return; 
+        if (mobile.length !== 10 || isNaN(mobile)) {
+             recipientUsernameMsg.textContent = 'Enter a valid 10-digit number.';
+             recipientUsernameMsg.style.color = '#ffcc00';
+             return;
+        }
 
         // Find recipient by mobile
         const userFound = users.find(user => user.mobile === mobile);
@@ -135,10 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         const amount = parseFloat(transferAmountInput.value);
+        const currentBalance = getBalance(senderUsername);
         const todayTransferred = getTodayTransferredAmount(senderUsername);
-        
-        // Refresh balance one last time for security check
-        currentBalance = getBalance(senderUsername); 
 
         // 1. Validation Checks
         if (!recipientUser) {
@@ -177,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const newRecipientBalance = getBalance(recipientUser.username) + amount;
         setBalance(recipientUser.username, newRecipientBalance);
 
-        // 5. Transaction Logging (Both parties)
+        // 5. Transaction Logging 
         let senderHistory = getHistory(senderUsername);
         senderHistory.push({ date: Date.now(), type: 'debit', amount: amount, txnId: 'TRANSFER_SENT_' + Date.now(), note: `Transfer to ${recipientUser.username}` });
         saveHistory(senderUsername, senderHistory);
@@ -195,7 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
         appendLog(`SUCCESS: ₹${amount.toFixed(2)} transferred to ${recipientUser.username}. New balance: ₹${newSenderBalance.toFixed(2)}`, 'success');
         transferForm.reset();
         recipientUser = null;
-        // Re-run input to clear validation message
-        recipientMobileInput.dispatchEvent(new Event('input')); 
+        recipientMobileInput.dispatchEvent(new Event('input')); // Clear validation message
     });
+
+    // --- INITIALIZE ---
+    getCurrentUserSession(); 
+    refreshBalanceUI(); 
 });
