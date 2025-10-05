@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pay to other - NextEarnX</title>
+  <title>Pay to other / Lifafa - NextEarnX</title>
   <link rel="stylesheet" href="css/pay_to_other.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
@@ -17,12 +17,17 @@
 
     <main class="transfer-container">
         <div class="header-section">
-            <h2>Wallet Transfer</h2>
+            <h2>Wallet Transfer / Lifafa</h2>
             <p class="balance-status">Your Balance: <span id="currentBalanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
         </div>
-        
-        <section class="transfer-form-card card">
-            <p class="status-msg">Transfer funds instantly to any registered NextEarnX user.</p>
+
+        <div class="tab-nav">
+            <button class="tab-btn active" data-target="transfer">Pay to other</button>
+            <button class="tab-btn" data-target="lifafa">Create Lifafa</button>
+        </div>
+
+        <section id="transferSection" class="transfer-form-card card tab-content active">
+            <p class="status-msg">Max transfer limit is ₹100 per user per day.</p>
             <form id="transferForm">
                 
                 <div class="form-group">
@@ -40,8 +45,63 @@
             </form>
         </section>
 
+
+        <section id="lifafaSection" class="transfer-form-card card tab-content" style="display: none;">
+            
+            <div class="lifafa-tabs-secondary">
+                <button class="lifafa-tab-secondary active">Normal</button>
+                <button class="lifafa-tab-secondary">Dice</button>
+                <button class="lifafa-tab-secondary">Toss</button>
+                <button class="lifafa-tab-secondary blue-active">Scratch</button>
+            </div>
+
+            <form id="lifafaForm" class="lifafa-form-new">
+                
+                <div class="form-group input-icon-group">
+                    <i class="ri-gift-line"></i>
+                    <input type="text" id="lifafaTitle" placeholder="Giveaway Title" required>
+                </div>
+                
+                <div class="form-group grid-2">
+                    <div class="input-icon-group">
+                        <i class="ri-group-line"></i>
+                        <input type="number" id="lifafaCount" min="2" placeholder="Total Users" required>
+                    </div>
+                    <div class="input-icon-group">
+                        <i class="ri-money-rupee-circle-line"></i>
+                        <input type="number" id="lifafaPerUserAmount" min="0.01" step="0.01" placeholder="Per User Amount (₹)" required>
+                    </div>
+                </div>
+                
+                <div class="form-group slider-group">
+                    <input type="range" id="percentageSlider" min="0" max="100" value="100" disabled>
+                    <span id="sliderValue">100%</span>
+                </div>
+
+                <div class="form-group input-icon-group">
+                    <i class="ri-message-3-line"></i>
+                    <input type="text" id="paymentComment" placeholder="Payment Comment" required>
+                </div>
+                
+                <div class="form-group input-icon-group">
+                    <i class="ri-external-link-line"></i>
+                    <input type="url" id="redirectLink" placeholder="Redirect Link (Optional)">
+                </div>
+
+                <button type="submit" id="createLifafaBtn" class="submit-btn"><i class="ri-coupon-line"></i> Create Lifafa Link</button>
+            </form>
+            
+            <div class="lifafa-log-area">
+                <h4>Active Lifafas:</h4>
+                <div id="activeLifafasList">
+                    <p>No active giveaways.</p>
+                </div>
+            </div>
+        </section>
+
+
         <section class="result-display">
-            <h3>Transfer Log</h3>
+            <h3>Activity Log</h3>
             <div id="logArea">
                 <p>Ready to send...</p>
             </div>

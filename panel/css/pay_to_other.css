@@ -154,3 +154,336 @@ small { display: block; margin-top: 5px; font-size: 0.8rem; }
         padding: 0 10px;
     }
 }
+
+
+/* panel/css/pay_to_other.css: APPEND these styles */
+
+/* --- TAB NAVIGATION STYLES --- */
+.tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 8px 15px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover {
+    color: #00e0ff;
+}
+
+.tab-btn.active {
+    color: #ff0077;
+    border-bottom-color: #ff0077;
+}
+
+/* Lifafa Specific Log */
+.lifafa-log-area {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.lifafa-log-area h4 {
+    color: #00e0ff;
+    margin-bottom: 10px;
+}
+#activeLifafasList {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.lifafa-item {
+    padding: 8px 0;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    word-break: break-all; /* To handle long links */
+}
+.lifafa-item span.link {
+    color: #ffcc00;
+    font-weight: 500;
+    cursor: pointer;
+}
+.lifafa-item span.claimed {
+    color: #ff0077;
+}
+
+
+
+/* panel/css/pay_to_other.css: APPEND these styles */
+
+/* --- LIFAFA TAB STYLES --- */
+.lifafa-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.lifafa-tab {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 10px 5px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.2s, border-color 0.2s;
+}
+.lifafa-tab.active {
+    color: #00e0ff;
+    border-bottom-color: #ff0077;
+}
+
+.lifafa-info-msg {
+    color: #00e0ff;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* --- ACCORDION (ADVANCED OPTIONS) STYLES --- */
+.accordion-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+    color: #fff;
+}
+
+/* Red Accent for Restriction Blocks */
+.red-header {
+    background: linear-gradient(90deg, #ff0077, rgba(255,0,119,0.7));
+    box-shadow: 0 4px 10px rgba(255,0,119,0.3);
+}
+
+.accordion-header i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.accordion-header .arrow-icon {
+    margin-left: auto;
+    transition: transform 0.3s;
+}
+
+/* Accordion Content (Hidden by default) */
+.accordion-content {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 15px;
+    display: none;
+    overflow: hidden;
+}
+
+/* Form Layout Fixes */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.input-icon-group {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.input-icon-group i {
+    position: absolute;
+    left: 10px;
+    color: #00e0ff;
+    font-size: 1.1rem;
+    z-index: 2;
+}
+.input-icon-group input {
+    padding-left: 35px; /* Adjust input padding for icon */
+}
+
+.mock-feature {
+    color: #ffcc00;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Active State for Accordion */
+.accordion-header.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+
+
+
+
+
+/* panel/css/pay_to_other.css: APPEND these styles */
+
+/* --- LIFAFA TAB STYLES --- */
+.tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 8px 15px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover {
+    color: #00e0ff;
+}
+
+.tab-btn.active {
+    color: #ff0077;
+    border-bottom-color: #ff0077;
+}
+
+/* Secondary Tabs (New styles for Image look) */
+.lifafa-tabs-secondary {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.lifafa-tab-secondary {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.lifafa-tab-secondary.active {
+    color: #fff;
+    background: #4682B4; /* Default active blue */
+    font-weight: 600;
+}
+.lifafa-tab-secondary.blue-active {
+    background: #4169E1; /* Strong blue for "Scratch" */
+    color: #fff;
+    font-weight: 600;
+}
+
+/* --- ACCORDION (REMOVED: Old accordion styles removed) --- */
+
+/* Form Layout Fixes */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.lifafa-form-new .form-group {
+    margin-bottom: 10px;
+}
+.input-icon-group {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 0; /* Resetting padding if copied */
+}
+.input-icon-group i {
+    position: absolute;
+    left: 10px;
+    color: #00e0ff;
+    font-size: 1.1rem;
+    z-index: 2;
+}
+.input-icon-group input {
+    padding-left: 35px; /* Adjust input padding for icon */
+}
+
+/* --- SLIDER STYLES --- */
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
+#percentageSlider {
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    cursor: default; /* Disabled in this version */
+}
+#percentageSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #00e0ff;
+    cursor: default;
+}
+#sliderValue {
+    color: #00e0ff;
+    font-weight: bold;
+    width: 50px;
+    text-align: right;
+}
+
+/* Existing Lifafa Log Area Styles */
+.lifafa-log-area {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255,255,255,0.1);
+}
+.lifafa-log-area h4 {
+    color: #00e0ff;
+    margin-bottom: 10px;
+}
+#activeLifafasList {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.lifafa-item {
+    padding: 8px 0;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+.lifafa-item span.link {
+    color: #ffcc00;
+    font-weight: 500;
+    cursor: pointer;
+}
+.lifafa-item span.claimed {
+    color: #ff0077;
+}

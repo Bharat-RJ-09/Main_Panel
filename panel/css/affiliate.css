@@ -1,0 +1,159 @@
+/* panel/css/affiliate.css - NextEarnX Affiliate Panel Styles */
+
+/* --- BASE STYLES (Neon Dark Theme Consistency) --- */
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    background: linear-gradient(135deg, #0a0a1a, #1a0a2a);
+    color: #e6eef8;
+    min-height: 100vh;
+    padding-top: 75px; 
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* --- Animated Background Layer & Navbar (Copied from Wallet) --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    mix-blend-mode: screen;
+    animation: slowPan 30s infinite alternate;
+}
+@keyframes slowPan {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-5%, 5%); }
+}
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    background: rgba(15, 15, 30, 0.6); backdrop-filter: blur(15px) saturate(1.2);
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.menu-btn { color: #fff; font-size: 24px; text-decoration: none; }
+.logo { font-size: 24px; font-weight: 700; color: #fff; }
+.logo span { color: #00e0ff; }
+#logoutBtn { background: #ff0077; border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+
+
+/* --- AFFILIATE CONTAINER & CARDS --- */
+.affiliate-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+.affiliate-container h2 {
+    color: #00e0ff;
+    margin-bottom: 5px;
+}
+.welcome-msg {
+    color: #aaa;
+    margin-bottom: 25px;
+}
+
+/* Base Card Style (Frosted Glass) */
+.card {
+    margin-bottom: 25px;
+    padding: 25px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    backdrop-filter: blur(12px) saturate(1.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Earnings Card Specific */
+.earnings-card h3 {
+    color: #ffcc00;
+    margin-bottom: 10px;
+}
+#totalEarnings {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #aaffaa; /* Green for money */
+    margin-bottom: 5px;
+}
+.note {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Referral Link Card Specific */
+.referral-link-card h3 {
+    color: #00e0ff;
+    margin-bottom: 15px;
+}
+.link-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+#referralLinkInput {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: #00e0ff;
+    font-size: 0.9rem;
+    cursor: text;
+    user-select: all;
+}
+.action-btn {
+    background: #00e0ff;
+    color: #1a1a2a;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#referralCount {
+    color: #ffcc00;
+}
+
+/* Withdrawal Section (Form) */
+.withdrawal-card h3 {
+    color: #ff0077;
+    margin-bottom: 20px;
+}
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 5px; color: #fff; font-weight: 500; }
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: white;
+    font-size: 16px;
+}
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ff0077;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 0 10px rgba(255,0,119,0.5);
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+    .affiliate-container {
+        padding: 0 10px;
+    }
+    .link-box {
+        flex-direction: column;
+    }
+    .action-btn {
+        width: 100%;
+    }
+}
