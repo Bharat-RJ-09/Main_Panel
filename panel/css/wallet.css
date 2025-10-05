@@ -9,8 +9,8 @@ body {
     color: #e6eef8;
     min-height: 100vh;
     overflow-x: hidden; /* Prevent horizontal scroll */
-    /* CRITICAL FIX: Add padding-top for fixed navbar */
-    padding-top: 60px; 
+    /* CRITICAL FIX: Increased padding-top for fixed navbar and spacing */
+    padding-top: 75px; 
     position: relative;
 }
 
@@ -69,7 +69,8 @@ body::before {
 /* --- MAIN CONTAINER & CARDS --- */
 .wallet-container {
     max-width: 600px;
-    margin: 20px auto;
+    /* CRITICAL FIX: Removed margin-top and kept horizontal margin/padding */
+    margin: 0 auto 20px; 
     padding: 0 20px;
 }
 
@@ -141,7 +142,7 @@ input {
 .log-area { 
     max-height: 250px; 
     overflow-y: auto; 
-    padding-right: 5px; /* Space for scrollbar */
+    padding-right: 5px; 
 }
 .transaction-item {
     padding: 10px 0;
@@ -153,7 +154,7 @@ input {
 .status-debit { color: #ffaaaa; }
 
 /* ---------------------------------------------------- */
-/* --- MOBILE RESPONSIVENESS FIXES (CRITICAL) --- */
+/* --- MOBILE RESPONSIVENESS FIXES --- */
 /* ---------------------------------------------------- */
 @media (max-width: 600px) {
     .wallet-container {
@@ -161,8 +162,5 @@ input {
     }
     #currentBalance {
         font-size: 2.5rem;
-    }
-    .log-area {
-        max-height: 350px; /* Give more height for better viewing */
     }
 }
