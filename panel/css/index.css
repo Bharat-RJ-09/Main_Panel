@@ -1,5 +1,9 @@
 /* General theme */
-/* General theme */
+* { box-sizing: border-box; } /* Added for consistency */
+html {
+    height: 100%; /* CRITICAL FIX: Root element ki height define ki */
+}
+
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -31,8 +35,8 @@ body::before {
         radial-gradient(circle at 50% 50%, rgba(0, 160, 255, 0.15), transparent 60%);
     
     mix-blend-mode: screen;
-    filter: blur(50px); /* Heavy blur for the "blur ball" effect */
-    animation: aquaFloat 25s infinite ease-in-out alternate;
+    filter: blur(50px);
+    animation: aquaFloat 10s infinite ease-in-out alternate;
 }
 
 /* CRITICAL CHANGE: New Keyframes for Floating Blur */
