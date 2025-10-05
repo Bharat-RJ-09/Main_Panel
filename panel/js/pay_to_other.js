@@ -9,27 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const logArea = document.getElementById('logArea');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // NEW: Lifafa Elements
+    // NEW: Lifafa Elements (Rest of Lifafa elements are used later in the file)
     const lifafaForm = document.getElementById('lifafaForm');
-    const lifafaTotalAmountInput = document.getElementById('lifafaTotalAmount');
-    const lifafaCountInput = document.getElementById('lifafaCount');
+    const lifafaCountInput = document.getElementById('lifafaCount'); // Lifafa Count Input
+    const lifafaPerUserAmountInput = document.getElementById('lifafaPerUserAmount'); // Per User Amount Input
     const activeLifafasList = document.getElementById('activeLifafasList');
-
-    // NEW: Tab Elements
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const transferSection = document.getElementById('transferSection');
-    const lifafaSection = document.getElementById('lifafaSection');
 
     // TRANSFER/LIFAFA LIMITS
     const MAX_DAILY_TRANSFER = 100; 
     const MIN_LIFAFA_AMOUNT = 10;
     const DAILY_LIMIT_KEY = 'nextEarnXDailyTransfer'; 
     const LIFAFA_STORAGE_KEY = 'nextEarnXLifafas'; 
+    
+    // CRITICAL FIX: Global Balance and History Keys
+    const GLOBAL_BALANCE_KEY = 'nextEarnXBalance'; 
+    const GLOBAL_HISTORY_KEY = 'nextEarnXHistory'; 
 
     let senderUsername = '';
     let recipientUser = null; 
 
-    // --- UTILITIES (Refactored to handle Lifafa Data) ---
+    // --- UTILITIES (Refactored to handle GLOBAL Keys for sender) ---
     const USER_STORAGE_KEY = 'nextEarnXUsers';
     
     function getCurrentUserSession() {
@@ -39,23 +38,40 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch { return null; }
     }
 
+    // CRITICAL FIX: Sender always uses the GLOBAL_BALANCE_KEY
     function getBalance(username) {
-        return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00');
+        // If checking sender's balance, use the global key. Otherwise, assume recipient check.
+        if (username === senderUsername) {
+            return parseFloat(localStorage.getItem(GLOBAL_BALANCE_KEY) || '0.00');
+        }
+        // For recipients, we must use per-user keys to ensure separation (if they exist)
+        return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00'); 
     }
     
+    // CRITICAL FIX: Sender always uses the GLOBAL_BALANCE_KEY
     function setBalance(username, balance) {
+        if (username === senderUsername) {
+            localStorage.setItem(GLOBAL_BALANCE_KEY, balance.toFixed(2));
+            return;
+        }
+        // For recipients, use per-user keys
         localStorage.setItem(`nextEarnXBalance_${username}`, balance.toFixed(2));
     }
     
+    // CRITICAL FIX: Sender always uses the GLOBAL_HISTORY_KEY
     function getHistory(username) {
-        try { return JSON.parse(localStorage.getItem(`nextEarnXHistory_${username}`) || '[]'); }
+        const key = (username === senderUsername) ? GLOBAL_HISTORY_KEY : `nextEarnXHistory_${username}`;
+        try { return JSON.parse(localStorage.getItem(key) || '[]'); }
         catch { return []; }
     }
 
+    // CRITICAL FIX: Sender always uses the GLOBAL_HISTORY_KEY
     function saveHistory(username, history) {
-        localStorage.setItem(`nextEarnXHistory_${username}`, JSON.stringify(history));
+        const key = (username === senderUsername) ? GLOBAL_HISTORY_KEY : `nextEarnXHistory_${username}`;
+        localStorage.setItem(key, JSON.stringify(history));
     }
     
+    // NOTE: loadUsers, loadLifafas, saveLifafas are fine as they are.
     function loadUsers() {
         try { return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "[]"); }
         catch { return []; }
@@ -70,6 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(LIFAFA_STORAGE_KEY, JSON.stringify(lifafas));
     }
     
+    // Utility to get today's transferred amount (for daily limit check)
+    function getTodayTransferredAmount(username) {
+        const todayKey = `${DAILY_LIMIT_KEY}_${username}_${new Date().toDateString()}`;
+        return parseFloat(localStorage.getItem(todayKey) || '0.00');
+    }
+
+    function recordTransfer(username, amount) {
+        const todayKey = `${DAILY_LIMIT_KEY}_${username}_${new Date().toDateString()}`;
+        const current = getTodayTransferredAmount(username);
+        localStorage.setItem(todayKey, (current + amount).toFixed(2));
+    }
+
 
     // --- INITIALIZE & UI SYNC ---
     function refreshBalanceUI() {
@@ -101,10 +129,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const claimedCount = l.claims.length;
             const statusText = (claimedCount === l.count) ? 'CLOSED' : `${claimedCount}/${l.count} Claimed`;
             
+            // CRITICAL FIX: Lifafa per-user amount calculation
+            const totalAmount = l.perClaim * l.count;
+
             item.innerHTML = `
                 <p>
-                    <strong>₹${l.totalAmount.toFixed(2)}</strong> | ${statusText}
-                    <br>Link: <span class="link" data-link="${l.id}" title="Click to copy">${window.location.origin}/claim.html?id=${l.id}</span>
+                    <strong>₹${totalAmount.toFixed(2)}</strong> | ${statusText}
+                    <br>Link: <span class="link" data-link="${window.location.origin}/claim.html?id=${l.id}" title="Click to copy">${window.location.origin}/claim.html?id=${l.id}</span>
                 </p>
                 <p style="color:#777; font-size:11px;">Created: ${new Date(l.date).toLocaleString()}</p>
             `;
@@ -112,32 +143,26 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Attach copy listener
             item.querySelector('.link').addEventListener('click', (e) => {
-                navigator.clipboard.writeText(e.target.dataset.link);
+                const linkToCopy = e.target.dataset.link;
+                navigator.clipboard.writeText(linkToCopy);
                 alert('Lifafa Link copied to clipboard!');
             });
         });
     }
 
-    // --- INITIALIZE ---
+    // --- INITIALIZE & TAB SWITCHING LOGIC (UNCHANGED) ---
     getCurrentUserSession(); 
     refreshBalanceUI();
     renderLifafas();
 
-
-    // --- TAB SWITCHING LOGIC ---
-    tabBtns.forEach(btn => {
+    // Tab Switching Logic (Fine)
+    document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const target = btn.dataset.target;
-            
-            // Remove active class from all buttons and sections
-            tabBtns.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
-            
-            // Add active class to the clicked button and display target section
             btn.classList.add('active');
             document.getElementById(target + 'Section').style.display = 'block';
-            
-            // Update log area for context
             const logType = (target === 'transfer') ? 'Ready to send...' : 'Ready to create Lifafa...';
             logArea.innerHTML = `<p>${logType}</p>`;
         });
@@ -145,10 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ------------------------------------------
-    // --- TRANSFER LOGIC (Remains the same) ---
+    // --- TRANSFER LOGIC ---
     // ------------------------------------------
 
-    // ... (All existing validation and transfer submission logic) ...
     transferForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -156,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentBalance = getBalance(senderUsername);
         const todayTransferred = getTodayTransferredAmount(senderUsername);
 
-        // ... (Validation and Limit Checks) ...
+        // Validation and Limit Checks
         if (!recipientUser) { appendLog('Error: Please enter a valid, registered mobile number.', 'error'); return; }
         if (isNaN(amount) || amount < 1) { appendLog('Error: Transfer amount must be at least ₹1.', 'error'); return; }
         if (amount > MAX_DAILY_TRANSFER) { appendLog(`Error: Transfer amount exceeds the ₹${MAX_DAILY_TRANSFER} limit.`, 'error'); return; }
@@ -167,13 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!confirm(`Confirm transfer of ₹${amount.toFixed(2)} to ${recipientUser.username}?`)) return;
         
-        // Execution
+        // Execution (Uses fixed getBalance/setBalance logic)
         const newSenderBalance = currentBalance - amount;
         setBalance(senderUsername, newSenderBalance);
         const newRecipientBalance = getBalance(recipientUser.username) + amount;
         setBalance(recipientUser.username, newRecipientBalance);
 
-        // Logging
+        // Logging (Uses fixed getHistory/saveHistory logic)
         let senderHistory = getHistory(senderUsername);
         senderHistory.push({ date: Date.now(), type: 'debit', amount: amount, txnId: 'TRANSFER_SENT_' + Date.now(), note: `Transfer to ${recipientUser.username}` });
         saveHistory(senderUsername, senderHistory);
@@ -191,8 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recipientMobileInput.dispatchEvent(new Event('input')); 
     });
     
-    // ... (Recipient Input Listener remains the same) ...
-
+    // Recipient Input Listener (UNCHANGED)
     recipientMobileInput.addEventListener('input', () => {
         const mobile = recipientMobileInput.value.trim();
         const users = loadUsers();
@@ -224,27 +247,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ------------------------------------------
-    // --- NEW: LIFAFA CREATION LOGIC ---
+    // --- LIFAFA CREATION LOGIC (UPDATED) ---
     // ------------------------------------------
 
     lifafaForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const totalAmount = parseFloat(lifafaTotalAmountInput.value);
+        // CRITICAL FIX: Total amount is calculated from per-user amount * count
+        const perUserAmount = parseFloat(lifafaPerUserAmountInput.value);
         const count = parseInt(lifafaCountInput.value);
+        const totalAmount = perUserAmount * count; // Calculate total amount
+        
         const currentBalance = getBalance(senderUsername);
 
         // 1. Validation
-        if (isNaN(totalAmount) || totalAmount < MIN_LIFAFA_AMOUNT) {
-            appendLog(`Error: Minimum Lifafa amount is ₹${MIN_LIFAFA_AMOUNT}.`, 'error');
+        if (isNaN(perUserAmount) || perUserAmount < 0.01) {
+            appendLog(`Error: Per user amount must be at least ₹0.01.`, 'error');
             return;
         }
         if (isNaN(count) || count < 2) {
             appendLog('Error: Minimum claims/users is 2.', 'error');
             return;
         }
+        if (totalAmount < MIN_LIFAFA_AMOUNT) {
+             appendLog(`Error: Minimum Lifafa total amount is ₹${MIN_LIFAFA_AMOUNT}.`, 'error');
+             return;
+        }
         if (currentBalance < totalAmount) {
-            appendLog(`Error: Insufficient balance. Available: ₹${currentBalance.toFixed(2)}.`, 'error');
+            appendLog(`Error: Insufficient balance. Available: ₹${currentBalance.toFixed(2)}. Total Cost: ₹${totalAmount.toFixed(2)}`, 'error');
             return;
         }
 
@@ -263,9 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
             id: uniqueId,
             creator: senderUsername,
             date: Date.now(),
-            totalAmount: totalAmount,
+            totalAmount: totalAmount, // Save total amount
             count: count,
-            perClaim: totalAmount / count,
+            perClaim: perUserAmount, // Save per user amount
             claims: [] // Array of {username, date, amount}
         };
 
@@ -292,11 +322,13 @@ document.addEventListener('DOMContentLoaded', () => {
         lifafaForm.reset();
     });
 
-    // --- INITIALIZE (Final call) ---
-    getCurrentUserSession(); 
-    refreshBalanceUI();
-    renderLifafas();
-
-    // Logout Button and Initial Setup
-    // ... (Logout logic already set up in the beginning)
+    // Logout Button (For consistency)
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('session');
+            localStorage.removeItem('nextEarnXCurrentUser');
+            alert("Logged out from NextEarnX!");
+            window.location.href = 'login.html';
+        });
+    }
 });
