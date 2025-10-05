@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Settings - NextEarnX Manager</title>
+  <link rel="stylesheet" href="css/admin_dashboard.css">
+  <link rel="stylesheet" href="css/admin_style.css">
+  <link rel="stylesheet" href="css/setting.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="admin-navbar">
+        <h1 class="logo">NextEarn<span>X</span> Manager</h1>
+        <button id="adminLogoutBtn" class="admin-logout-btn">Logout</button>
+    </nav>
+
+    <div class="main-content">
+        <a href="dashboard.html" class="back-link"><i class="ri-arrow-left-line"></i> Back to Dashboard</a>
+        
+        <h2>Global System Settings</h2>
+        <p class="welcome-msg">Manage core system parameters and prices.</p>
+
+        <section class="settings-card">
+            <h3>Payment Gateway & Wallet</h3>
+            <form id="generalSettingsForm">
+                <div class="form-group">
+                    <label for="upiId">Current UPI ID:</label>
+                    <input type="text" id="upiId" placeholder="e.g., nextadmin@ibl" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="minDeposit">Minimum Wallet Deposit (₹):</label>
+                    <input type="number" id="minDeposit" min="1" placeholder="60" required>
+                </div>
+                
+                <button type="submit" class="action-btn"><i class="ri-save-line"></i> Save General Settings</button>
+            </form>
+        </section>
+
+        <section class="settings-card">
+            <h3>Subscription Prices (₹)</h3>
+            <form id="priceSettingsForm">
+                <div id="priceInputsContainer">
+                    <div class="form-group">
+                        <label>1 Month Price (₹):</label>
+                        <input type="number" data-plan="1 Month" class="plan-price" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>3 Months Price (₹):</label>
+                        <input type="number" data-plan="3 Months" class="plan-price" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>6 Months Price (₹):</label>
+                        <input type="number" data-plan="6 Months" class="plan-price" min="1" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="action-btn"><i class="ri-save-line"></i> Save Prices</button>
+            </form>
+        </section>
+    </div>
+
+    <script src="js/admin_auth.js"></script>
+    <script src="js/global_settings.js"></script>
+</body>
+</html>
