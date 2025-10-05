@@ -1,10 +1,41 @@
-// panel/js/subscription.js - Updated for Global Settings and Dynamic Prices
+// panel/js/subscription.js - Finalized Logic with One-Time Free Trial Check
 
 document.addEventListener('DOMContentLoaded', ()=>{
     const urlParams = new URLSearchParams(location.search);
     const redirectFeature = urlParams.get('redirect') || null;
 
-    // --- GLOBAL SETTINGS UTILITY ---
+    // --- USER UTILITIES (For Free Trial Flag) ---
+    const USER_STORAGE_KEY = 'nextEarnXUsers';
+    const CURRENT_USER_KEY = 'nextEarnXCurrentUser';
+
+    function getCurrentUser() {
+        try {
+            return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+        } catch { return null; }
+    }
+    
+    function saveCurrentUser(user) {
+        if (user) {
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+        }
+    }
+
+    function updateMainUserList(updatedUser) {
+        let allUsers;
+        try {
+            allUsers = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '[]');
+        } catch {
+            allUsers = [];
+        }
+        
+        const index = allUsers.findIndex(u => u.username === updatedUser.username);
+        if (index !== -1) {
+            allUsers[index] = updatedUser;
+            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(allUsers));
+        }
+    }
+
+    // --- GLOBAL SETTINGS UTILITY (Remains the same) ---
     const DEFAULTS = { 
         prices: {"1 Month": 59,"3 Months": 109,"6 Months": 159}
     };
@@ -19,34 +50,50 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const settings = loadSettings();
     
 
-    // --- UI Update: Dynamic Prices (MUST RUN BEFORE LISTENERS) ---
+    // --- UI Update: Dynamic Prices (Remains the same) ---
     function updatePlanPricesUI() {
         const planCards = document.querySelectorAll('.plan-card');
-        
         planCards.forEach(card => {
             const planName = card.dataset.plan;
             const newPrice = settings.prices[planName];
             
             if (newPrice !== undefined && planName !== "1 Week Free Trial") {
-                // Update the visible price and the data-price attribute for JS logic
                 const priceElement = card.querySelector('.price');
-                const originalPriceElement = card.querySelector('.original-price');
-                
                 if (priceElement) priceElement.textContent = `₹${newPrice}`;
+
+                const originalPriceElement = card.querySelector('.original-price');
                 if (originalPriceElement) {
-                    // This is a simplified discount calculation for UI text
                     const defaultOriginal = planName === "1 Month" ? 99 : planName === "3 Months" ? 179 : 269;
                     const discount = Math.round(((defaultOriginal - newPrice) / defaultOriginal) * 100);
                     const saveTag = card.querySelector('.save-tag');
                     if (saveTag) saveTag.textContent = `Save ${discount}%`;
                 }
-
-                // Update the data attribute used by the logic below
                 card.dataset.price = newPrice;
             }
         });
     }
     updatePlanPricesUI();
+    
+    // --- NEW: HIDE FREE TRIAL IF ALREADY TAKEN ---
+    function hideFreeTrialIfTaken() {
+        const user = getCurrentUser();
+        if (user && user.hasTakenFreeTrial) {
+            const freeCard = document.querySelector('.plan-card.free');
+            if (freeCard) {
+                freeCard.style.opacity = '0.5';
+                freeCard.style.pointerEvents = 'none';
+                freeCard.querySelector('.save-tag').textContent = 'Trial Taken';
+                const selectBtn = freeCard.querySelector('.select-btn');
+                if(selectBtn) selectBtn.textContent = 'Trial Taken';
+            }
+            const statusMessage = document.getElementById('statusMessage');
+            if(statusMessage && !redirectFeature) {
+                 statusMessage.innerHTML += '<br><small style="color:#ffcc00;">Note: Free trial has already been used on this account.</small>';
+            }
+        }
+    }
+    hideFreeTrialIfTaken();
+    // --- END HIDE FREE TRIAL ---
 
 
     // Utility function to get current wallet balance
@@ -84,6 +131,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
             localStorage.setItem('nextEarnXHistory', JSON.stringify(history));
         }
         
+        // --- CRITICAL: SET FREE TRIAL FLAG HERE ---
+        if (planName === "1 Week Free Trial") {
+            const user = getCurrentUser();
+            if (user) {
+                user.hasTakenFreeTrial = true;
+                saveCurrentUser(user); // Update session
+                updateMainUserList(user); // Update central user list (for Admin Panel)
+            }
+        }
+        
         alert(`🎉 Subscription Activated!\nPlan: ${planName}\nValid till: ${new Date(expiry).toLocaleString()}`);
         if(redirectFeature) window.location.href = `index.html?open=${encodeURIComponent(redirectFeature)}`;
         else window.location.href = 'index.html';
@@ -101,6 +158,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const planName = card.dataset.plan;
             const priceString = card.dataset.price;
             const planPrice = parseFloat(priceString);
+            
+            // Re-check for already taken trial before proceeding to payment/activation
+            const user = getCurrentUser();
+            if (planPrice === 0 && user && user.hasTakenFreeTrial) {
+                 alert('Error: Free trial has already been used on this account.');
+                 return; // Block activation
+            }
             
             if(isNaN(planPrice)){
                 alert("Error: Invalid plan price.");
@@ -157,7 +221,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     if(logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('session');
-            localStorage.removeItem('nextEarnXCurrentUser');
+            localStorage.removeItem(CURRENT_USER_KEY);
             alert("Logged out from NextEarnX!");
             window.location.href = 'login.html';
         });
