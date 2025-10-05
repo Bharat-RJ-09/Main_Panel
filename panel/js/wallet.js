@@ -1,4 +1,4 @@
-// panel/js/wallet.js - FINALIZED WITH PER-USER BALANCE
+// panel/js/wallet.js - Updated for Global Settings
 
 document.addEventListener('DOMContentLoaded', () => {
     const balanceElement = document.getElementById('currentBalance');
@@ -8,51 +8,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshBtn = document.getElementById('refreshBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // --- USER/BALANCE UTILITIES ---
-    let currentUsername = '';
-
-    function getCurrentUsername() {
+    // --- GLOBAL SETTINGS UTILITY ---
+    const DEFAULTS = { minDeposit: 60 };
+    function loadSettings() {
         try {
-            const user = JSON.parse(localStorage.getItem('nextEarnXCurrentUser'));
-            currentUsername = user ? user.username : '';
-            return currentUsername;
-        } catch { return ''; }
+            const settings = JSON.parse(localStorage.getItem('nextEarnXGlobalSettings'));
+            return settings ? { ...DEFAULTS, ...settings } : DEFAULTS;
+        } catch {
+            return DEFAULTS;
+        }
+    }
+    const settings = loadSettings();
+    
+    // --- UI Update: Min Deposit Label ---
+    const depositLabel = document.querySelector('label[for="depositAmount"]');
+    if(depositLabel) {
+        depositLabel.textContent = `Amount (Min ₹${settings.minDeposit}):`;
+    }
+    if(depositInput) {
+        depositInput.setAttribute('min', settings.minDeposit);
     }
     
-    // NOTE: All financial data now uses the unique per-user key
+
+    // --- Utility Functions ---
     function getBalance() {
-        const username = getCurrentUsername();
         try {
-            // Use username in the key
-            return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00'); 
+            return parseFloat(localStorage.getItem('nextEarnXBalance') || '0.00');
         } catch(e) { return 0.00; }
     }
 
     function saveBalance(balance) {
-        const username = getCurrentUsername();
-        localStorage.setItem(`nextEarnXBalance_${username}`, balance.toFixed(2));
+        localStorage.setItem('nextEarnXBalance', balance.toFixed(2));
     }
 
     function getHistory() {
-        const username = getCurrentUsername();
         try {
-            return JSON.parse(localStorage.getItem(`nextEarnXHistory_${username}`) || '[]');
+            return JSON.parse(localStorage.getItem('nextEarnXHistory') || '[]');
         } catch(e) { return []; }
     }
 
     function saveHistory(history) {
-        const username = getCurrentUsername();
-        localStorage.setItem(`nextEarnXHistory_${username}`, JSON.stringify(history));
+        localStorage.setItem('nextEarnXHistory', JSON.stringify(history));
     }
-    
-    // --- UI Logic ---
+
     function updateBalanceUI() {
         balanceElement.textContent = `₹ ${getBalance().toFixed(2)}`;
     }
 
     function updateHistoryUI() {
-        const history = getHistory().reverse(); 
-        historyLog.innerHTML = ''; 
+        const history = getHistory().reverse(); // Show newest first
+        historyLog.innerHTML = ''; // Clear existing log
 
         if (history.length === 0) {
             historyLog.innerHTML = '<p>No recent transactions.</p>';
@@ -71,31 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
             historyLog.appendChild(item);
         });
     }
-    
-    // --- INITIALIZE ---
-    getCurrentUsername(); // Initialize username
+
+    // --- Event Handlers ---
+
+    // Initial load
     updateBalanceUI();
     updateHistoryUI();
 
-    // --- Global Settings Load (Remains the same) ---
-    const DEFAULTS = { minDeposit: 60 };
-    function loadSettings() {
-        try {
-            const settings = JSON.parse(localStorage.getItem('nextEarnXGlobalSettings'));
-            return settings ? { ...DEFAULTS, ...settings } : DEFAULTS;
-        } catch { return DEFAULTS; }
-    }
-    const settings = loadSettings();
-    
-    // Update Min Deposit Label
-    const depositLabel = document.querySelector('label[for="depositAmount"]');
-    if(depositLabel) {
-        depositLabel.textContent = `Amount (Min ₹${settings.minDeposit}):`;
-    }
-    if(depositInput) {
-        depositInput.setAttribute('min', settings.minDeposit);
-    }
-    
     // Logout Button (For consistency)
     if(logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -114,11 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const amount = parseFloat(depositInput.value);
         
+        // --- DYNAMIC VALIDATION ---
         if (isNaN(amount) || amount < settings.minDeposit) {
             alert(`Deposit must be a minimum of ₹${settings.minDeposit}.`);
             return;
         }
 
+        // --- Mock UPI/Payment Gateway Redirection ---
         const upiURL = `purchase.html?plan=Deposit&price=${amount}&redirect=wallet`;
         window.location.href = upiURL;
     });
