@@ -4,28 +4,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("password");
   const userLoginInput = document.getElementById("userLogin");
 
-  // panel/js/script.js ke DOMContentLoaded block ke andar add karein
-
-  // Password Toggle Logic
+  // Password Toggle Logic (Remains same)
   const togglePasswordBtn = document.getElementById("togglePassword");
 
   if (togglePasswordBtn) {
     togglePasswordBtn.addEventListener("click", () => {
-      // Check current type of the password input
       const currentType = passwordInput.getAttribute("type");
-
-      // Toggle the type attribute
       if (currentType === "password") {
         passwordInput.setAttribute("type", "text");
-        togglePasswordBtn.textContent = "🔒"; // Change icon to lock/eye-off
+        togglePasswordBtn.textContent = "🔒"; // Changed from 👁 to 🔒 for toggled state
       } else {
         passwordInput.setAttribute("type", "password");
-        togglePasswordBtn.textContent = "👁"; // Change icon back to eye
+        togglePasswordBtn.textContent = "👁"; // Changed from 🔒 to 👁 for default state
       }
     });
   }
-
-// NOTE: passwordInput element is already defined at the start of the file.
 
   // OTP modal elements
   const otpModal = document.getElementById("otpModal");
@@ -42,8 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let otpTimerInterval = null;
   let currentUser = null;
 
+  // CRITICAL FIX: Use the correct user list key: nextEarnXUsers
   const loadUsers = () => {
-    try { return JSON.parse(localStorage.getItem("instantPanelUsers") || "[]"); }
+    try { return JSON.parse(localStorage.getItem("nextEarnXUsers") || "[]"); }
     catch { return []; }
   };
 
@@ -58,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startOtpTimer() {
     clearInterval(otpTimerInterval);
+    otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
     otpTimerInterval = setInterval(() => {
       const diff = Math.max(0, otpExpires - Date.now());
       const sec = Math.ceil(diff / 1000);
@@ -108,8 +103,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!generatedOtp) { alert("No OTP generated. Please resend."); return; }
     if (Date.now() > otpExpires) { alert("OTP expired. Please resend."); return; }
     if (Number(entered) === generatedOtp) {
-      // success: save current user session and redirect
-      localStorage.setItem("instantPanelCurrentUser", JSON.stringify(currentUser));
+      // CRITICAL FIX: Use the correct session key: nextEarnXCurrentUser
+      localStorage.setItem("nextEarnXCurrentUser", JSON.stringify(currentUser));
+      // NOTE: We also keep the 'session' key for compatibility with other files (index.js, pay_to_other.js)
+      localStorage.setItem("session", JSON.stringify({ username: currentUser.username, loginAt: Date.now(), expiry: Date.now() + 24*60*60*1000 }));
+      
       alert("✅ Login successful!");
       // close modal and redirect
       otpModal.style.display = "none";
@@ -136,35 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
     otpModal.style.display = "none";
     clearInterval(otpTimerInterval);
   });
+  
+  // CRITICAL FIX: Remove the redundant simple login code at the end of the file.
 });
-
-
-
-
-
-
-// Simple front-end login
-const loginBtn = document.getElementById('loginBtn');
-
-loginBtn.addEventListener('click', () => {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if(!user || !pass) {
-        alert("⚠️ Enter username and password");
-        return;
-    }
-
-    // save session in localStorage
-    const session = {
-        username: user,
-        loginAt: Date.now(),
-        expiry: Date.now() + 24*60*60*1000 // 24 hours
-    };
-    localStorage.setItem('session', JSON.stringify(session));
-
-    // redirect to dashboard
-    window.location.href = "index.html";
-});
-
-
