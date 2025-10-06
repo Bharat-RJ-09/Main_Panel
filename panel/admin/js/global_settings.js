@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         minDeposit: 60,
         prices: {
             "1 Month": 59,
-            "3 Months": 109,
-            "6 Months": 159
+            "2 Months": 109,
+            "3 Months": 159
         }
     };
 

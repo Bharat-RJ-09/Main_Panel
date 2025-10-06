@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const userSearchInput = document.getElementById('userSearchInput');
     const searchBtn = document.getElementById('searchBtn');
     const userCountElement = document.getElementById('userCount');
-    // FIX 9: Logout button declaration added
     const adminLogoutBtn = document.getElementById('adminLogoutBtn'); 
     
     // Modal Elements
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     checkAdminSession();
     
-    // FIX 8: Add local logout handler for robustness
+    // FIX 8 & 9: Add local logout handler for robustness
     if(adminLogoutBtn) {
         adminLogoutBtn.addEventListener('click', () => {
             localStorage.removeItem(ADMIN_SESSION_KEY);
@@ -128,12 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedPlan === 'none') {
             updates.plan = null;
             updates.expiry = null;
-            // NOTE: hasTakenFreeTrial is generally NOT cleared by admin here
         } else {
             updates.plan = selectedPlan;
             // Convert expiry date string to timestamp for consistency with user panel logic
             updates.expiry = new Date(expiryDate).getTime();
-            
+
             // If admin manually sets the trial, mark the trial as taken
             if (selectedPlan === '1 Week Free Trial') {
                  updates.hasTakenFreeTrial = true;

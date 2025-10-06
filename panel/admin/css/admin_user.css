@@ -1,14 +1,7 @@
 /* admin/css/admin_dashboard.css - NextEarnX Manager Dashboard & Management Styles */
-
-/* --- BASE STYLES --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    background: #1a1a2a; /* Solid dark background */
-    font-family: Inter, sans-serif;
-    color: #e6eef8;
-    overflow: auto; 
-    padding-top: 60px; /* Space for fixed navbar */
-}
+ body{
+    color: white;
+ }
 
 /* --- ADMIN NAVBAR (Dashboard & Management) --- */
 .admin-navbar {
@@ -216,20 +209,4 @@ body {
 .table-info {
     margin-top: 15px;
     color: #aaa;
-}
-
-
-
-/* --- USER STATUS STYLES (Added for Freeze/Ban Feature) --- */
-.status-active {
-    color: #aaffaa; /* Green for Active */
-    font-weight: bold;
-}
-.status-frozen {
-    color: #ffcc00; /* Yellow/Gold for Frozen */
-    font-weight: bold;
-}
-.status-banned {
-    color: #ff0000; /* Red for Banned */
-    font-weight: bold;
 }
