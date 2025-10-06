@@ -298,3 +298,78 @@ a { text-decoration: none; color: inherit; }
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
+
+
+/* --- NEW INFO LINKS GRID STYLES (Based on User's Image) --- */
+.info-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.info-link-card {
+    /* Base Glass Card */
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    backdrop-filter: blur(12px) saturate(1.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 18px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.info-link-card:hover {
+    transform: translateY(-3px);
+    border-color: #00e0ff;
+}
+
+.info-link-card .card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-link-card .text-content h4 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.info-link-card .text-content p {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.info-link-card .link-icon {
+    font-size: 3rem;
+    opacity: 0.8;
+}
+
+/* Icon Colors */
+.info-link-card .link-icon.blue { color: #00e0ff; }
+.info-link-card .link-icon.red { color: #ff0077; }
+.info-link-card .link-icon.yellow { color: #ffcc00; }
+.info-link-card .link-icon.purple { color: #a020f0; }
+
+
+/* --- FOOTER STYLES --- */
+.app-footer {
+    width: 100%;
+    background: rgba(15, 15, 30, 0.6);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 15px 20px;
+    margin-top: 30px;
+    text-align: center;
+    color: #777;
+    font-size: 0.8rem;
+}
+.app-footer p {
+    margin: 5px 0;
+}
+
+
+/* --- MOBILE ADJUSTMENTS FOR NEW GRID --- */
+@media (max-width: 650px) {
+    .info-links-grid {
+        grid-template-columns: 1fr; /* Stack on small screens */
+    }
+}
