@@ -83,17 +83,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return false;
     }
-  
-    // --- 3. MODAL HANDLERS ---
+
+
+     // --- 3. MODAL HANDLERS ---
     function openEditModal(username) {
-        // panel/admin/js/user_manager.js (openEditModal function ke andar)
-// ...
-    newPasswordInput.value = ''; // Clear password field on open
+        const user = findUser(username);
+        if (!user) {
+            alert("Error: User data not found.");
+            return;
+        }
+        
+        modalUsername.textContent = username;
+        editUsernameHidden.value = username;
+        newPasswordInput.value = ''; // Clear password field on open
+
+        // Find saved plan/expiry or default to none
+        const currentPlan = user.plan || 'none';
+        // Date format: YYYY-MM-DD required by input type="date"
+        const currentExpiry = user.expiry ? new Date(user.expiry).toISOString().substring(0, 10) : ''; 
+
+        subscriptionPlanSelect.value = currentPlan;
+        expiryDateInput.value = currentExpiry;
+
+        modal.style.display = 'flex';
+    }
+
+    function closeEditModal() {
+        modal.style.display = 'none';
+        editUserForm.reset();
+    }
     
-    // START: ADD THIS LOGIC
-    const currentStatus = user.status || 'active'; // Default to active
-    userStatusSelect.value = currentStatus;
-    // END: ADD THIS LOGIC
+    closeModalBtn.addEventListener('click', closeEditModal);
+
+    editUserForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = editUsernameHidden.value;
+        const updates = {};
+        
+        // 1. Password Update
+        if (newPasswordInput.value.trim() !== '') {
+            updates.password = newPasswordInput.value.trim();
+        }
+
+        // 2. Subscription Update
+        const selectedPlan = subscriptionPlanSelect.value;
+        const expiryDate = expiryDateInput.value;
+
+        if (selectedPlan === 'none') {
+            updates.plan = null;
+            updates.expiry = null;
+        } else {
+            updates.plan = selectedPlan;
+            // Convert expiry date string to timestamp for consistency with user panel logic
+            updates.expiry = new Date(expiryDate).getTime();
+            
+            // If admin manually sets the trial, mark the trial as taken
+            if (selectedPlan === '1 Week Free Trial') {
+                 updates.hasTakenFreeTrial = true;
+            }
+        }
+
+        if (updateUser(username, updates)) {
+            alert(`✅ User ${username} updated successfully!`);
+            closeEditModal();
+            renderUserTable(loadUsers()); // Re-render table
+        } else {
+            alert('❌ Failed to update user.');
+        }
+    });
+
+
+  
+   
     
     // ... (subscription loading logic)
 // ...
@@ -163,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 4. RENDERING & INITIALIZATION ---
+     // --- 4. RENDERING & INITIALIZATION ---
     function renderUserTable(users) {
         userTableBody.innerHTML = ''; 
         
@@ -174,21 +235,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         users.forEach((user, index) => {
-        const row = userTableBody.insertRow();
-        const userId = index + 1;  
-
-        const userStatus = user.status || 'active'; 
-        const statusClass = userStatus === 'banned' ? 'status-banned' : userStatus === 'frozen' ? 'status-frozen' : 'status-active';
-        // END: ADD THIS LOGIC
+            const row = userTableBody.insertRow();
+            const userId = index + 1; 
 
             row.innerHTML = `
-            <td>${userId}</td>
-            <td>${user.username}</td>
-            <td>${user.fullname}</td>
-            <td>${user.email}</td>
-            <td>${user.mobile}</td>
-            <td class="${statusClass}">${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}</td>
-            <td class="action-buttons">
+                <td>${userId}</td>
+                <td>${user.username}</td>
+                <td>${user.fullname}</td>
+                <td>${user.email}</td>
+                <td>${user.mobile}</td>
+                <td class="action-buttons">
                     <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
                     <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>
                 </td>
@@ -196,25 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         userCountElement.textContent = `${users.length} users displayed. Total registered users: ${loadUsers().length}`;
 
+        // CRITICAL: Yeh call hona zaroori hai har baar table render hone ke baad
         attachActionListeners();
     }
 
     // --- 5. SEARCH/FILTERING (Remains the same) ---
-    function searchUsers() {
-        const query = userSearchInput.value.toLowerCase();
-        const allUsers = loadUsers();
-        
-        const filteredUsers = allUsers.filter(user => 
-            user.username.toLowerCase().includes(query) ||
-            user.email.toLowerCase().includes(query) ||
-            user.fullname.toLowerCase().includes(query)
-        );
-        
-        renderUserTable(filteredUsers);
-    }
-
-    searchBtn.addEventListener('click', searchUsers);
-    userSearchInput.addEventListener('keyup', searchUsers); 
+    // ...
 
     // --- 6. ACTION LISTENERS (UPDATED EDIT LOGIC) ---
     function attachActionListeners() {
@@ -230,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const username = e.currentTarget.dataset.username;
-                if (confirm(`WARNING: Are you sure you want to delete user "${username}"? This cannot be undone.`)) {
+                if (confirm(`WARNING: Are you sure you want to delete user "${username}"? This cannot be undone."`)) {
                     if (deleteUser(username)) {
                         alert(`✅ User ${username} deleted successfully!`);
                         renderUserTable(loadUsers());
