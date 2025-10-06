@@ -1,4 +1,4 @@
-/* panel/css/customise_profile.css - NextEarnX Customise Profile Styles (Base: Wallet Theme) */
+/* panel/css/customise_profile.css - NextEarnX Profile Customization Styles */
 
 /* --- BASE STYLES --- */
 * { box-sizing: border-box; }
@@ -16,12 +16,9 @@ body {
 /* --- Animated Background Layer --- */
 body::before {
     content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: -1;
-    background:
-        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
-        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+    background: radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
     mix-blend-mode: screen;
     animation: slowPan 30s infinite alternate;
 }
@@ -40,26 +37,14 @@ body::before {
 .menu-btn { color: #00e0ff; font-size: 24px; text-decoration: none; }
 .logo { font-size: 24px; font-weight: 700; color: #fff; }
 .logo span { color: #00e0ff; }
-#logoutBtn {
-    background: #ff0077; border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer;
-}
+#logoutBtn { background: #ff0077; border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
 
 /* --- MAIN CONTAINER & CARDS --- */
 .customise-container {
     max-width: 600px;
-    margin: 0 auto 20px; 
+    margin: 20px auto; 
     padding: 0 20px;
 }
-.customise-container h2 {
-    color: #00e0ff;
-    margin-bottom: 5px;
-}
-.welcome-msg {
-    color: #aaa;
-    margin-bottom: 20px;
-}
-
-/* Base Card Style (Frosted Glass) */
 .card {
     margin-bottom: 20px;
     padding: 25px;
@@ -69,71 +54,154 @@ body::before {
     border: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
-.card h3 {
-    color: #ffcc00;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 5px;
-}
-.note {
-    font-size: 0.85rem;
-    color: #aaa;
-    margin-bottom: 15px;
-}
-.action-btn {
-    background: none;
-    border: 1px solid #00e0ff;
-    color: #00e0ff;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.action-btn:hover { background: rgba(0, 224, 255, 0.1); }
-.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* --- LOGO SPECIFIC STYLES --- */
-.logo-preview-box {
+/* --- TOP PROFILE HEADER (NEW DESIGN) --- */
+.profile-header {
+    background: linear-gradient(135deg, #4169E1, #00e0ff); /* Blue/Cyan Gradient */
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 20px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-    border: 3px dashed rgba(255,255,255,0.2);
-    border-radius: 15px;
-    padding: 15px;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
-.logo-img {
-    width: 100px;
-    height: 100px;
+.profile-info-main {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.profile-logo-box {
+    position: relative;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    object-fit: contain;
+    overflow: hidden;
+    border: 3px solid #fff;
+    flex-shrink: 0;
+}
+.profile-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.profile-text {
+    color: #fff;
+}
+.main-username {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.main-mobile {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+.upload-btn {
+    background: #fff;
+    color: #4169E1;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
-    transition: transform 0.2s;
-}
-.logo-img:hover {
-    transform: scale(1.05);
-}
-
-/* --- SETTINGS SPECIFIC STYLES --- */
-.form-group {
-    margin-bottom: 15px;
-}
-.form-group label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #fff;
-    margin-bottom: 10px;
-    font-weight: 500;
+    gap: 5px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
 }
+.upload-btn:hover {
+    background: #eee;
+}
+
+/* --- PROFILE INFORMATION SECTION --- */
+.info-header {
+    color: #ffcc00;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.section-title {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.info-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+}
+.info-group label {
+    font-size: 0.9rem;
+    color: #00e0ff;
+    width: 120px;
+}
+.info-value {
+    flex-grow: 1;
+    color: #fff;
+    font-weight: 500;
+    padding-right: 15px;
+    cursor: default;
+}
+.edit-btn, .copy-btn {
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #ffcc00;
+    transition: color 0.1s;
+    padding: 5px;
+}
+.edit-btn:hover { color: #ff0077; }
+.copy-btn:hover { color: #aaffaa; }
+
+/* Styles for Editable Input fields (temporarily added for editing) */
+.info-group input {
+    flex-grow: 1;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background: #333355;
+    color: #fff;
+    margin-right: 15px;
+}
+
+.reset-btn {
+    background: #ff0077;
+    border-color: #ff0077;
+    color: #fff;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+}
+.reset-btn:hover {
+    background: #ff3399;
+}
+
 
 /* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 600px) {
-    .customise-container {
-        padding: 0 10px;
+@media (max-width: 450px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .info-group {
+        flex-wrap: wrap;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .info-group label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .info-value {
+        padding-right: 10px;
+    }
+    .edit-btn, .copy-btn {
+        margin-left: auto;
+        padding: 5px 0;
     }
 }
