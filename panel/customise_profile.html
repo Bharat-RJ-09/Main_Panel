@@ -69,7 +69,33 @@
         </section>
 
     </main>
+<div id="passwordModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <button class="close-modal-btn" id="closePassModalBtn">✕</button>
+        <h3>Change Password</h3>
+        <p class="modal-info">Enter your new password below.</p>
 
+        <form id="changePasswordForm">
+            <div class="form-group">
+                <label for="newPasswordInput">New Password</label>
+                <div class="password-box">
+                    <input type="password" id="newPasswordInput" placeholder="Enter new password (min 6 chars)" required minlength="6">
+                    <i class="ri-eye-line password-toggle" data-target="newPasswordInput"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPasswordInput">Confirm New Password</label>
+                <div class="password-box">
+                    <input type="password" id="confirmPasswordInput" placeholder="Confirm new password" required minlength="6">
+                    <i class="ri-eye-line password-toggle" data-target="confirmPasswordInput"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="action-btn save-btn"><i class="ri-save-line"></i> Save Password</button>
+        </form>
+    </div>
+</div>
     <script src="js/customise_profile.js"></script>
 </body>
 </html>

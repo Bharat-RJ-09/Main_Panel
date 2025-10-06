@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     });
-
+  
 
     // --- LOGOUT HANDLER (For consistency) ---
     const handleLogout = () => {
