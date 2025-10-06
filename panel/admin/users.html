@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Management - NextEarnX Manager</title>
-  <link rel="stylesheet" href="css/admin_dashboard.css">
-  <link rel="stylesheet" href="css/admin_user.css">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - NextEarnX Manager</title>
+    <link rel="stylesheet" href="css/admin_dashboard.css">
+    <link rel="stylesheet" href="css/admin_user.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
+
 <body>
-    
+
     <nav class="admin-navbar">
         <h1 class="logo">NextEarn<span>X</span> Manager</h1>
         <button id="adminLogoutBtn" class="admin-logout-btn">Logout</button>
@@ -17,7 +19,7 @@
 
     <div class="main-content">
         <a href="dashboard.html" class="back-link"><i class="ri-arrow-left-line"></i> Back to Dashboard</a>
-        
+
         <h2>User Management</h2>
         <p class="welcome-msg">View, search, and manage user accounts.</p>
 
@@ -35,14 +37,15 @@
                         <th>Full Name</th>
                         <th>Email</th>
                         <th>Mobile</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="userTableBody">
-                    </tbody>
+                </tbody>
             </table>
         </div>
-        
+
         <p id="userCount" class="table-info"></p>
     </div>
 
@@ -50,37 +53,60 @@
     <script src="js/user_manager.js"></script>
 
     <div id="editUserModal" class="modal-overlay" style="display:none;">
-    <div class="modal-content">
-        <button class="close-modal-btn" id="closeModalBtn">✕</button>
-        <h3>Edit User: <span id="modalUsername"></span></h3>
-        <p class="modal-info">Update credentials and subscription status.</p>
+        <div class="modal-content">
+            <button class="close-modal-btn" id="closeModalBtn">✕</button>
+            <h3>Edit User: <span id="modalUsername"></span></h3>
+            <p class="modal-info">Update credentials and subscription status.</p>
 
-        <form id="editUserForm">
-            <input type="hidden" id="editUsernameHidden">
+            <form id="editUserForm">
+                <input type="hidden" id="editUsernameHidden">
 
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="text" id="newPassword" placeholder="Leave blank to keep current password">
-            </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="text" id="newPassword" placeholder="Leave blank to keep current password">
+                </div>
+                <form id="editUserForm">
+                    <input type="hidden" id="editUsernameHidden">
 
-            <div class="form-group">
-                <label for="subscriptionPlan">Subscription Plan</label>
-                <select id="subscriptionPlan">
-                    <option value="none">None/Inactive</option>
-                    <option value="1 Month">1 Month</option>
-                    <option value="3 Months">3 Months</option>
-                    <option value="6 Months">6 Months</option>
-                </select>
-            </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="text" id="newPassword" placeholder="Leave blank to keep current password">
+                    </div>
 
-            <div class="form-group">
-                <label for="expiryDate">Expiry Date</label>
-                <input type="date" id="expiryDate" required>
-            </div>
+                    <div class="form-group">
+                        <label for="userStatus">Account Status</label>
+                        <select id="userStatus">
+                            <option value="active">Active</option>
+                            <option value="frozen">Frozen (Temporarily Block)</option>
+                            <option value="banned">Banned (Permanent Block)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subscriptionPlan">Subscription Plan</label>
+                        <select id="subscriptionPlan">
+                        </select>
+                    </div>
 
-            <button type="submit" class="action-btn save-btn"><i class="ri-save-line"></i> Save Changes</button>
-        </form>
+                </form>
+                <div class="form-group">
+                    <label for="subscriptionPlan">Subscription Plan</label>
+                    <select id="subscriptionPlan">
+                        <option value="none">None/Inactive</option>
+                        <option value="1 Month">1 Month</option>
+                        <option value="3 Months">3 Months</option>
+                        <option value="6 Months">6 Months</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" id="expiryDate" required>
+                </div>
+
+                <button type="submit" class="action-btn save-btn"><i class="ri-save-line"></i> Save Changes</button>
+            </form>
+        </div>
     </div>
-</div>
 </body>
+
 </html>

@@ -115,6 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
             updates.password = newPasswordInput.value.trim();
         }
 
+        // ... (existing code)
+    const newPasswordInput = document.getElementById('newPassword');
+    // NEW ELEMENT: Account Status
+    const userStatusSelect = document.getElementById('userStatus'); // ADD THIS LINE
+    const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
+    const expiryDateInput = document.getElementById('expiryDate');
+
+    // ... (existing code)
+
         // 2. Subscription Update
         const selectedPlan = subscriptionPlanSelect.value;
         const expiryDate = expiryDateInput.value;
@@ -138,37 +147,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 4. RENDERING & INITIALIZATION ---
-    function renderUserTable(users) {
-        // ... (Rendering logic remains the same) ...
-        userTableBody.innerHTML = ''; 
-        
-        if (users.length === 0) {
-            userTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No users found.</td></tr>';
-            userCountElement.textContent = '0 users displayed.';
-            return;
-        }
+   // admin/js/user_manager.js
+   
 
-        users.forEach((user, index) => {
-            const row = userTableBody.insertRow();
-            const userId = index + 1; 
-
-            row.innerHTML = `
-                <td>${userId}</td>
-                <td>${user.username}</td>
-                <td>${user.fullname}</td>
-                <td>${user.email}</td>
-                <td>${user.mobile}</td>
-                <td class="action-buttons">
-                    <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
-                    <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>
-                </td>
-            `;
-        });
-        userCountElement.textContent = `${users.length} users displayed. Total registered users: ${loadUsers().length}`;
-
-        attachActionListeners();
+// --- 4. RENDERING & INITIALIZATION ---
+function renderUserTable(users) {
+    userTableBody.innerHTML = ''; 
+    
+    if (users.length === 0) {
+        // Colspan updated to 7
+        userTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No users found.</td></tr>';
+        userCountElement.textContent = '0 users displayed.';
+        return;
     }
+
+    users.forEach((user, index) => {
+        const row = userTableBody.insertRow();
+        const userId = index + 1; 
+        // New: Get status for display, default to 'active'
+        const userStatus = user.status || 'active'; 
+        const statusClass = userStatus === 'banned' ? 'status-banned' : userStatus === 'frozen' ? 'status-frozen' : 'status-active';
+
+        row.innerHTML = `
+            <td>${userId}</td>
+            <td>${user.username}</td>
+            <td>${user.fullname}</td>
+            <td>${user.email}</td>
+            <td>${user.mobile}</td>
+            <td class="${statusClass}">${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}</td>
+            <td class="action-buttons">
+                <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
+                <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>
+            </td>
+        `;
+    });
+    userCountElement.textContent = `${users.length} users displayed. Total registered users: ${loadUsers().length}`;
+
+    attachActionListeners();
+}
+
 
     // --- 5. SEARCH/FILTERING (Remains the same) ---
     function searchUsers() {
