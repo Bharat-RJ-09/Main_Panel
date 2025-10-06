@@ -1,4 +1,4 @@
-// panel/js/customise_profile.js - Full Profile Customization Logic (Logo, Edit Name, Copy Info)
+// panel/js/customise_profile.js - Full Profile Customization Logic (Logo, Edit Name, Copy Info, Password Change)
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -19,6 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         email: document.getElementById('infoEmail'),
         mobile: document.getElementById('infoMobileNumber'),
     };
+    
+    // Password Modal Elements
+    const passwordModal = document.getElementById('passwordModal');
+    const closePassModalBtn = document.getElementById('closePassModalBtn');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    const newPasswordInput = document.getElementById('newPasswordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
     
     // Keys
     const USER_KEY = 'nextEarnXCurrentUser';
@@ -123,8 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const group = e.target.closest('.info-group');
             const valueElement = group.querySelector('.info-value');
             
+            // Password Check - Opens Modal
             if (field === 'password-mock') {
-                 alert("⚠️ Password change feature is under development. Please contact admin if urgent.");
+                 // Open the new Password Change Modal
+                 newPasswordInput.value = '';
+                 confirmPasswordInput.value = '';
+                 passwordModal.style.display = 'flex';
                  return;
             }
             
@@ -143,10 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Change icon to Save
                 e.target.classList.remove('ri-pencil-line');
                 e.target.classList.add('ri-save-line');
-                e.target.removeEventListener('click', arguments.callee); // Remove current listener
-
-                // New Save Listener
-                e.target.addEventListener('click', () => {
+                
+                const saveHandler = (evt) => {
+                    evt.preventDefault();
                     const newValue = input.value.trim();
                     if (newValue && newValue !== currentValue) {
                         
@@ -164,8 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     valueElement.style.display = 'block';
                     e.target.classList.remove('ri-save-line');
                     e.target.classList.add('ri-pencil-line');
+                    e.target.removeEventListener('click', saveHandler);
+                    
                     updateUI(); // Refresh UI
-                });
+                };
+
+                e.target.addEventListener('click', saveHandler); 
             }
         });
     });
@@ -186,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     });
-  
+
 
     // --- LOGOUT HANDLER (For consistency) ---
     const handleLogout = () => {
@@ -197,6 +211,73 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if(logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+
+    // --- CORE LOGIC: PASSWORD CHANGE MODAL HANDLERS ---
+    
+    // Modal Close
+    if (closePassModalBtn) {
+        closePassModalBtn.addEventListener('click', () => {
+            passwordModal.style.display = 'none';
+        });
+    }
+
+    // Password Toggle Functionality
+    document.querySelectorAll('.password-toggle').forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            // Find the closest password-box container
+            const box = e.target.closest('.password-box');
+            if (!box) return;
+
+            // Find the input field inside that box
+            const targetInput = box.querySelector('input[type="password"], input[type="text"]');
+            
+            if (targetInput) {
+                 const type = targetInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                 targetInput.setAttribute('type', type);
+                 e.target.classList.toggle('ri-eye-line');
+                 e.target.classList.toggle('ri-eye-off-line');
+            }
+        });
+    });
+
+    // Password Submission
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newPass = newPasswordInput.value;
+            const confirmPass = confirmPasswordInput.value;
+
+            if (newPass !== confirmPass) {
+                alert("❌ Error: Passwords do not match!");
+                return;
+            }
+            if (newPass.length < 6) {
+                alert("❌ Error: Password must be at least 6 characters.");
+                return;
+            }
+
+            // Update user object
+            if (currentUser) {
+                const oldPassword = currentUser.password;
+                
+                if (newPass === oldPassword) {
+                     alert("⚠️ New password is the same as the old one.");
+                     passwordModal.style.display = 'none';
+                     return;
+                }
+                
+                currentUser.password = newPass;
+                saveCurrentUser();
+                updateMainUserList(currentUser);
+                
+                alert("✅ Password updated successfully! Use the new password next time you log in.");
+                
+                // Cleanup and close
+                changePasswordForm.reset();
+                passwordModal.style.display = 'none';
+            }
+        });
+    }
 
     // --- INITIALIZE ---
     getCurrentUser();
