@@ -22,6 +22,14 @@
 
         <h2>User Management</h2>
         <p class="welcome-msg">View, search, and manage user accounts.</p>
+        <div class="form-group">
+            <label for="userStatus">Account Status</label>
+            <select id="userStatus">
+                <option value="active">Active</option>
+                <option value="frozen">Frozen (Temporarily Block)</option>
+                <option value="banned">Banned (Permanent Block)</option>
+            </select>
+        </div>
 
         <div class="search-controls">
             <input type="text" id="userSearchInput" placeholder="Search by Username, Email, or Full Name">
@@ -34,8 +42,6 @@
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
                         <th>Mobile</th>
                         <th>Status</th>
                         <th>Actions</th>

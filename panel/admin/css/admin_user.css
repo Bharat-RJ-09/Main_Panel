@@ -217,3 +217,19 @@ body {
     margin-top: 15px;
     color: #aaa;
 }
+
+
+
+/* --- USER STATUS STYLES (Added for Freeze/Ban Feature) --- */
+.status-active {
+    color: #aaffaa; /* Green for Active */
+    font-weight: bold;
+}
+.status-frozen {
+    color: #ffcc00; /* Yellow/Gold for Frozen */
+    font-weight: bold;
+}
+.status-banned {
+    color: #ff0000; /* Red for Banned */
+    font-weight: bold;
+}

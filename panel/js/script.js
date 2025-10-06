@@ -4,21 +4,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById("password");
   const userLoginInput = document.getElementById("userLogin");
 
-  // Password Toggle Logic (Remains same)
+  // panel/js/script.js ke DOMContentLoaded block ke andar add karein
+
+  // Password Toggle Logic
   const togglePasswordBtn = document.getElementById("togglePassword");
 
   if (togglePasswordBtn) {
     togglePasswordBtn.addEventListener("click", () => {
+      // Check current type of the password input
       const currentType = passwordInput.getAttribute("type");
+
+      // Toggle the type attribute
       if (currentType === "password") {
         passwordInput.setAttribute("type", "text");
-        togglePasswordBtn.textContent = "🔒"; // Changed from 👁 to 🔒 for toggled state
+        togglePasswordBtn.textContent = "🔒"; // Change icon to lock/eye-off
       } else {
         passwordInput.setAttribute("type", "password");
-        togglePasswordBtn.textContent = "👁"; // Changed from 🔒 to 👁 for default state
+        togglePasswordBtn.textContent = "👁"; // Change icon back to eye
       }
     });
   }
+
+// NOTE: passwordInput element is already defined at the start of the file.
 
   // OTP modal elements
   const otpModal = document.getElementById("otpModal");
@@ -35,8 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let otpTimerInterval = null;
   let currentUser = null;
 
-  // CRITICAL FIX: Use the correct user list key: nextEarnXUsers
   const loadUsers = () => {
+    // FIX: Use the consistent key 'nextEarnXUsers'
     try { return JSON.parse(localStorage.getItem("nextEarnXUsers") || "[]"); }
     catch { return []; }
   };
@@ -52,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startOtpTimer() {
     clearInterval(otpTimerInterval);
-    otpExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
     otpTimerInterval = setInterval(() => {
       const diff = Math.max(0, otpExpires - Date.now());
       const sec = Math.ceil(diff / 1000);
@@ -92,6 +98,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!user) { alert("User not found. Please sign up."); return; }
     if (user.password !== password) { alert("Incorrect password."); return; }
 
+    // --- START: NEW FREEZE/BAN CHECK ---
+    const userStatus = user.status || 'active'; 
+    if (userStatus === 'banned') {
+        alert("🚫 Account Banned. Please contact support.");
+        return;
+    }
+    if (userStatus === 'frozen') {
+        alert("⚠️ Account Frozen. Access temporarily blocked.");
+        return;
+    }
+    // --- END: NEW FREEZE/BAN CHECK ---
+    
     currentUser = user;
     generateAndShowOtp(user.email);
   });
@@ -103,11 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!generatedOtp) { alert("No OTP generated. Please resend."); return; }
     if (Date.now() > otpExpires) { alert("OTP expired. Please resend."); return; }
     if (Number(entered) === generatedOtp) {
-      // CRITICAL FIX: Use the correct session key: nextEarnXCurrentUser
+      // success: save current user session and redirect
+      // FIX: Use the consistent key 'nextEarnXCurrentUser'
       localStorage.setItem("nextEarnXCurrentUser", JSON.stringify(currentUser));
-      // NOTE: We also keep the 'session' key for compatibility with other files (index.js, pay_to_other.js)
-      localStorage.setItem("session", JSON.stringify({ username: currentUser.username, loginAt: Date.now(), expiry: Date.now() + 24*60*60*1000 }));
-      
       alert("✅ Login successful!");
       // close modal and redirect
       otpModal.style.display = "none";
@@ -135,5 +151,9 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(otpTimerInterval);
   });
   
-  // CRITICAL FIX: Remove the redundant simple login code at the end of the file.
+  // --- START: REDUNDANT SIMPLE LOGIN BLOCK REMOVED/SKIPPED ---
+  /* The original file had a second simple login block which is redundant as the OTP flow is preferred. 
+    It has been omitted to keep the logic clean and use the OTP flow.
+  */
+  // --- END: REDUNDANT SIMPLE LOGIN BLOCK REMOVED/SKIPPED ---
 });

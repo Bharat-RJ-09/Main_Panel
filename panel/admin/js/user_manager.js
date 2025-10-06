@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const editUsernameHidden = document.getElementById('editUsernameHidden');
     const editUserForm = document.getElementById('editUserForm');
     const newPasswordInput = document.getElementById('newPassword');
+    // START: ADDED new element
+    const userStatusSelect = document.getElementById('userStatus');
+    // END: ADDED new element
     const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
     const expiryDateInput = document.getElementById('expiryDate');
 
@@ -84,11 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         editUsernameHidden.value = username;
         newPasswordInput.value = ''; // Clear password field on open
 
-        // Mock: Set current subscription status based on a simple 'subscription' property
-        // NOTE: Since the subscription is stored globally in user panel, this is a mock representation.
-        // We assume admin panel will manage the user's subscription property.
+        // START: NEW STATUS CONTROL LOAD
+        const currentStatus = user.status || 'active'; // Default to active
+        userStatusSelect.value = currentStatus;
+        // END: NEW STATUS CONTROL LOAD
         
-        // Find saved plan/expiry or default to none
+        // Mock: Set current subscription status
         const currentPlan = user.plan || 'none';
         const currentExpiry = user.expiry ? new Date(user.expiry).toISOString().substring(0, 10) : '';
 
@@ -115,14 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updates.password = newPasswordInput.value.trim();
         }
 
-        // ... (existing code)
-    const newPasswordInput = document.getElementById('newPassword');
-    // NEW ELEMENT: Account Status
-    const userStatusSelect = document.getElementById('userStatus'); // ADD THIS LINE
-    const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
-    const expiryDateInput = document.getElementById('expiryDate');
-
-    // ... (existing code)
+        // START: NEW STATUS SAVE
+        updates.status = userStatusSelect.value;
+        // END: NEW STATUS SAVE
 
         // 2. Subscription Update
         const selectedPlan = subscriptionPlanSelect.value;
@@ -147,45 +146,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-   // admin/js/user_manager.js
-   
+    // --- 4. RENDERING & INITIALIZATION ---
+    function renderUserTable(users) {
+        userTableBody.innerHTML = ''; 
+        
+        if (users.length === 0) {
+            // Updated colspan to 7
+            userTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No users found.</td></tr>';
+            userCountElement.textContent = '0 users displayed.';
+            return;
+        }
 
-// --- 4. RENDERING & INITIALIZATION ---
-function renderUserTable(users) {
-    userTableBody.innerHTML = ''; 
-    
-    if (users.length === 0) {
-        // Colspan updated to 7
-        userTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No users found.</td></tr>';
-        userCountElement.textContent = '0 users displayed.';
-        return;
+        users.forEach((user, index) => {
+            const row = userTableBody.insertRow();
+            const userId = index + 1; 
+            
+            // START: NEW STATUS DISPLAY
+            const userStatus = user.status || 'active'; 
+            const statusClass = userStatus === 'banned' ? 'status-banned' : userStatus === 'frozen' ? 'status-frozen' : 'status-active';
+            // END: NEW STATUS DISPLAY
+
+            row.innerHTML = `
+                <td>${userId}</td>
+                <td>${user.username}</td>
+                <td>${user.fullname}</td>
+                <td>${user.email}</td>
+                <td>${user.mobile}</td>
+                <td class="${statusClass}">${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}</td>
+                <td class="action-buttons">
+                    <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
+                    <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>
+                </td>
+            `;
+        });
+        userCountElement.textContent = `${users.length} users displayed. Total registered users: ${loadUsers().length}`;
+
+        attachActionListeners();
     }
-
-    users.forEach((user, index) => {
-        const row = userTableBody.insertRow();
-        const userId = index + 1; 
-        // New: Get status for display, default to 'active'
-        const userStatus = user.status || 'active'; 
-        const statusClass = userStatus === 'banned' ? 'status-banned' : userStatus === 'frozen' ? 'status-frozen' : 'status-active';
-
-        row.innerHTML = `
-            <td>${userId}</td>
-            <td>${user.username}</td>
-            <td>${user.fullname}</td>
-            <td>${user.email}</td>
-            <td>${user.mobile}</td>
-            <td class="${statusClass}">${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}</td>
-            <td class="action-buttons">
-                <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
-                <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>
-            </td>
-        `;
-    });
-    userCountElement.textContent = `${users.length} users displayed. Total registered users: ${loadUsers().length}`;
-
-    attachActionListeners();
-}
-
 
     // --- 5. SEARCH/FILTERING (Remains the same) ---
     function searchUsers() {
