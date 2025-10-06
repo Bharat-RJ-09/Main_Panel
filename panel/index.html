@@ -7,11 +7,6 @@
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/theme_base.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
-  <style>
-    a{
-      text-decoration: none;
-    }
-  </style>
 </head>
 <body>
   
@@ -22,12 +17,15 @@
     </div>
     <nav class="sidebar-nav">
       <a href="index.html" class="nav-item active"><i class="ri-dashboard-line"></i> Dashboard</a>
-      <a href="wallet.html" class="nav-item"><i class="ri-money-rupee-circle-line"></i> Wallet</a>
-      <a href="instant_panel.html" class="nav-item"><i class="ri-flash-line"></i> Instant Panel</a>
-      <a href="#" class="nav-item"><i class="ri-bar-chart-box-ai-line"></i> Camp Panel</a>
-      <a href="#" class="nav-item"><i class="ri-notification-3-line"></i> Bot Alert</a>
-      <div class="separator"></div>
+      <a href="wallet.html" class="nav-item"><i class="ri-money-rupee-circle-line"></i> Wallet (Deposit/History)</a>
       <a href="subscription.html" class="nav-item"><i class="ri-vip-line"></i> Subscription</a>
+      <a href="affiliate.html" class="nav-item"><i class="ri-group-line"></i> Affiliate Panel</a>
+      <div class="separator"></div>
+      <a href="instant_panel.html" class="nav-item feature-link" data-feature="Instant Panel"><i class="ri-flash-line"></i> Instant Panel</a>
+      <a href="pay_to_other.html" class="nav-item feature-link" data-feature="Pay to other"><i class="ri-send-plane-line"></i> Pay to User/Lifafa</a>
+      <a href="#" class="nav-item feature-link" data-feature="Camp Panel"><i class="ri-bar-chart-box-ai-line"></i> Camp Panel</a>
+      <a href="#" class="nav-item feature-link" data-feature="Bot Alert"><i class="ri-notification-3-line"></i> Bot Alert</a>
+      <div class="separator"></div>
       <a href="#" id="sidebarLogout" class="nav-item"><i class="ri-logout-box-r-line"></i> Logout</a>
     </nav>
   </aside>
@@ -38,83 +36,112 @@
     <button id="logoutBtn">Logout</button>
   </nav>
 
-  <section class="balance-card">
-    <div class="balance-left">
-      <img src="logo.png" alt="logo" class="logo-img" id="logoImg" title="Click to change logo">
-      <input type="file" id="customLogoInput" accept="image/*" style="display:none;">
-      <h2><span id="balanceDisplay">₹0</span></h2>
-      <button class="add-btn" id="addFundsBtn">+</button>
-    </div>
-    <div class="balance-right">
-      <p><b>User:</b> <span id="username">Bharat</span></p>
-      <p id="subscriptionStatus" style="font-size:13px; margin-top:5px; color:#aaffaa;"></p> 
-      <div class="action-btns"> 
-        <a href="subscription.html"><button class="red-btn" id="subscriptionBtn">Subscription</button></a>
-      </div>
-    </div>
-  </section>
+  <main class="dashboard-main">
 
-  <section class="features">
-    
-    <a href="wallet.html" class="feature-link" data-feature="Wallet">
-        <div class="feature-card">
+    <section class="top-cards-grid">
+      <div class="card profile-card">
+        <div class="card-header">
+          <i class="ri-user-line profile-icon"></i>
+          <h3 id="usernameDisplay">Username</h3>
+        </div>
+        <div class="card-body">
+          <p id="subscriptionStatus" class="sub-status"></p>
+          <div class="profile-actions">
+             <a href="subscription.html" class="action-btn small-btn"><i class="ri-vip-line"></i> Renew Plan</a>
+             <a href="affiliate.html" class="action-btn small-btn"><i class="ri-group-line"></i> Affiliate</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card balance-card-new">
+        <div class="card-header">
+          <i class="ri-wallet-line balance-icon"></i>
+          <h3>Wallet Balance</h3>
+        </div>
+        <div class="card-body">
+          <p class="balance-amount"><span id="balanceDisplay">₹0.00</span></p>
+          <button class="action-btn primary-btn" id="addFundsBtn"><i class="ri-add-line"></i> Add Funds</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="middle-section-grid">
+      <a href="instant_panel.html" class="card quick-feature-card feature-link" data-feature="Instant Panel">
+       <i class="ri-chat-unread-line"></i>
+        <h4>Make lifafa</h4>
+        <span class="lock-badge"></span>
+      </a>
+      <a href="pay_to_other.html" class="card quick-feature-card feature-link" data-feature="Pay to other">
+        <i class="ri-send-plane-line feature-icon"></i>
+        <h4>Pay to User</h4>
+        <span class="lock-badge"></span>
+      </a>
+    </section>
+
+
+    <section class="features-grid">
+      <h2 class="section-title">All Services</h2>
+      
+      <a href="wallet.html" class="feature-link" data-feature="Wallet">
+        <div class="feature-card-item">
             <i class="ri-money-rupee-circle-line"></i>
-            <p>Wallet</p>
+            <p>Wallet (Deposit/History)</p>
             <span class="lock-badge"></span>
         </div>
-    </a>
-    <a href="instant_panel.html" class="feature-link" data-feature="Instant Panel">
-        <div class="feature-card">
-            <i>⚡</i>
-            <p>Instant Panel</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    <a href="#" class="feature-link" data-feature="Camp Panel">
-        <div class="feature-card">
+      </a>
+      <a href="instant_panel.html" class="feature-link" data-feature="Instant Panel">
+          <div class="feature-card-item"> 
             <i class="ri-bar-chart-box-ai-line"></i>
-            <p>Camp Panel</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    <a href="#" class="feature-link" data-feature="Bot Alert">
-        <div class="feature-card">
-            <i class="ri-notification-3-line"></i>
-            <p>Bot Alert</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    
-    <a href="https://t.me/NextEarnX" class="feature-link" data-feature="Telegram Channel" data-lock="no">
-        <div class="feature-card">
-            <i class="ri-telegram-line"></i>
-            <p>Join Telegram</p>
-        </div>
-    </a>
-    
-    <a href="affiliate.html" class="feature-link" data-feature="Affiliate Panel">
-        <div class="feature-card">
-            <i class="ri-group-line"></i>
-            <p>Affiliate Panel</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-    
-    <a href="https://t.me/NextEarnXelf" class="feature-link" data-feature="Contact Us" data-lock="no">
-        <div class="feature-card">
-            <i class="ri-chat-4-line"></i>
-            <p>Contact Us</p>
-        </div>
-    </a>
-    
-    <a href="pay_to_other.html" class="feature-link" data-feature="Pay to other">
-        <div class="feature-card">
-            <i class="ri-send-plane-line"></i>
-            <p>Pay to other</p>
-            <span class="lock-badge"></span>
-        </div>
-    </a>
-</section>
+              <p>Instant Panel</p>
+              <span class="lock-badge"></span>
+          </div>
+      </a>
+      <a href="pay_to_other.html" class="feature-link" data-feature="Pay to other">
+          <div class="feature-card-item">
+              <i class="ri-send-plane-line"></i>
+              <p>Pay to other / Lifafa</p>
+              <span class="lock-badge"></span>
+          </div>
+      </a>
+      <a href="affiliate.html" class="feature-link" data-feature="Affiliate Panel">
+          <div class="feature-card-item">
+              <i class="ri-group-line"></i>
+              <p>Affiliate Panel</p>
+              <span class="lock-badge"></span>
+          </div>
+      </a>
+      
+      <a href="#" class="feature-link" data-feature="Camp Panel">
+          <div class="feature-card-item locked">
+              <i class="ri-bar-chart-box-ai-line"></i>
+              <p>Camp Panel</p>
+              <span class="lock-badge">🔒</span>
+          </div>
+      </a>
+      <a href="#" class="feature-link" data-feature="Bot Alert">
+          <div class="feature-card-item locked">
+              <i class="ri-notification-3-line"></i>
+              <p>Bot Alert</p>
+              <span class="lock-badge">🔒</span>
+          </div>
+      </a>
+      
+      <a href="https://t.me/NextEarnX" class="feature-link external-link" data-feature="Telegram Channel">
+          <div class="feature-card-item">
+              <i class="ri-telegram-line"></i>
+              <p>Join Telegram</p>
+          </div>
+      </a>
+      <a href="https://t.me/NextEarnXelf" class="feature-link external-link" data-feature="Contact Us">
+          <div class="feature-card-item">
+              <i class="ri-chat-4-line"></i>
+              <p>Contact Us</p>
+          </div>
+      </a>
+      
+    </section>
+
+  </main>
 
   <script src="js/index.js"></script>
 </body>

@@ -1,13 +1,41 @@
- 
-/* -------------------------------------- */
+/* General theme */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0a0a1a, #1a0a2a); 
+  color: #e6eef8; 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
 
+/* --- Animated Background Layer --- */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    mix-blend-mode: screen;
+    animation: slowPan 30s infinite alternate;
+}
+@keyframes slowPan {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-5%, 5%); }
+}
 
 /* Navbar (Fixed and uses Glass effect) */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(15, 15, 30, 0.6); /* Deeper dark blur */
+  background: rgba(15, 15, 30, 0.6); 
   backdrop-filter: blur(15px) saturate(1.2);
   display: flex;
   justify-content: space-between;
@@ -15,30 +43,22 @@
   padding: 12px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff;
-}
-.logo span {
-  color: #00e0ff; /* Neon Cyan Accent */
-}
+.logo { font-size: 24px; font-weight: 700; color: #fff; }
+.logo span { color: #00e0ff; }
 #logoutBtn {
-  background: #ff0077; /* Neon Pink/Red */
+  background: #ff0077; 
   border: none;
   color: #fff;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(255,0,119,0.5); /* Neon Glow */
+  box-shadow: 0 0 10px rgba(255,0,119,0.5); 
   transition: all 0.2s;
 }
 #logoutBtn:hover {
     box-shadow: 0 0 15px rgba(255,0,119,0.8);
     transform: translateY(-1px);
 }
-
-/* Hamburger Menu Button (REQUIRED FOR TOGGLE) */
 .menu-btn {
     background: none;
     border: none;
@@ -48,193 +68,233 @@
     padding: 0 5px;
 }
 
-/* -------------------- SIDEBAR STYLES (CRITICAL FIX) -------------------- */
+/* --- SIDEBAR STYLES (Kept as is) --- */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 250px;
-  height: 100%;
-  background: rgba(10, 10, 20, 0.98); /* Very dark opaque sidebar */
-  backdrop-filter: blur(15px);
-  z-index: 1000;
-  transform: translateX(-100%); /* Hidden by default */
+  position: fixed; top: 0; left: 0; width: 250px; height: 100%;
+  background: rgba(10, 10, 20, 0.98); backdrop-filter: blur(15px);
+  z-index: 1000; transform: translateX(-100%); 
   transition: transform 0.3s ease-out;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.8);
-  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.8); padding: 20px;
 }
-
-.sidebar.open {
-  transform: translateX(0); /* Slides into view */
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
+.sidebar.open { transform: translateX(0); }
+.sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.close-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 5px; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 10px; }
 .nav-item {
-  color: #fff;
-  text-decoration: none;
-  padding: 12px 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.2s, color 0.2s;
+  color: #fff; text-decoration: none; padding: 12px 10px; border-radius: 8px; font-size: 16px;
+  display: flex; align-items: center; gap: 10px; transition: background 0.2s, color 0.2s;
 }
+.nav-item i { font-size: 18px; }
+.nav-item:hover { background: rgba(0, 224, 255, 0.1); }
+.nav-item.active { background: #00e0ff; color: #1a0a2a; font-weight: bold; }
+.separator { height: 1px; background: rgba(255,255,255,0.15); margin: 10px 0; }
 
-.nav-item i {
-  font-size: 18px;
+
+/* --- NEW DASHBOARD LAYOUT & CARD STYLES --- */
+.dashboard-main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    width: 100%;
 }
+a { text-decoration: none; color: inherit; }
 
-.nav-item:hover {
-  background: rgba(0, 224, 255, 0.1);
-}
-
-.nav-item.active {
-  background: #00e0ff;
-  color: #1a0a2a;
-  font-weight: bold;
-}
-
-.separator {
-    height: 1px;
-    background: rgba(255,255,255,0.15);
-    margin: 10px 0;
-}
-/* -------------------- END SIDEBAR STYLES -------------------- */
-
-
-/* Balance Card (Frosted Glass Card) */
-.balance-card {
-  margin: 20px;
-  padding: 25px;
+/* Base Glass Card Style */
+.card {
+  padding: 20px;
   border-radius: 18px;
-  /* Glass effect background */
   background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
   backdrop-filter: blur(12px) saturate(1.1);
   border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #e6eef8;
-}
-.balance-left h2 {
-    font-size: 2.2rem;
-    color: #00e0ff; /* Highlight balance */
-}
-.balance-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.logo-img {
-  width: 50px;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0,224,255,0.5); /* Subtle glow */
-}
-.add-btn {
-  background: #00e0ff;
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  font-size: 24px;
-  color: #1a0a2a; /* Dark text on bright button */
-  cursor: pointer;
-  box-shadow: 0 0 8px rgba(0,224,255,0.5);
-  transition: transform 0.1s;
-}
-.add-btn:active { transform: scale(0.95); }
-.action-btns {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-.red-btn {
-  background: #ff0077;
-  border: none;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 0 8px rgba(255,0,119,0.3);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
 
-/* Features Grid */
-.features {
-  margin: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Better responsiveness */
-  gap: 15px;
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
 }
-.feature-card {
-  /* Glass effect for features */
-  background: rgba(255,255,255,0.06);
-  border-radius: 15px;
-  padding: 25px;
-  text-align: center;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  transition: transform 0.2s, background 0.2s, box-shadow 0.3s;
-  cursor: pointer;
+.card-header h3 {
+    font-size: 1.1rem;
+    color: #00e0ff;
 }
-.feature-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  background: rgba(255,255,255,0.15);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 15px rgba(0,224,255,0.3); /* Subtle neon glow on hover */
+.profile-icon, .balance-icon {
+    font-size: 1.5rem;
+    color: #ffcc00; /* Gold accent */
 }
-.feature-card i, .feature-card p {
+
+/* Top Row Grid (Profile & Balance) */
+.top-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Profile Card (Left) */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.profile-card .card-header h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
     color: #fff;
 }
-.feature-card i {
-  font-size: 32px;
-  display: block;
-  margin-bottom: 10px;
-  color: #00e0ff; /* Icon color */
+.sub-status {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+.profile-actions {
+    display: flex;
+    gap: 10px;
+}
+.small-btn {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
-/* Lock Badge Update */
-.lock-badge {
+/* Balance Card (Right) */
+.balance-card-new {
+    border: 1px solid #00e0ff;
+    box-shadow: 0 0 20px rgba(0,224,255,0.3);
+}
+.balance-card-new .card-header h3 {
+    color: #ff0077;
+}
+.balance-amount {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #aaffaa; /* Green for money */
+    margin-bottom: 15px;
+}
+
+/* Action Buttons (General) */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid #00e0ff;
+    color: #00e0ff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+.action-btn:hover {
+    background: rgba(0, 224, 255, 0.1);
+}
+.primary-btn {
+    background: #ff0077;
+    border-color: #ff0077;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(255,0,119,0.3);
+}
+.primary-btn:hover {
+    background: #ff3399;
+}
+
+
+/* Middle Section Grid (Quick Features) */
+.middle-section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.quick-feature-card {
+    text-align: center;
+    transition: transform 0.2s;
+    position: relative;
+    border-color: rgba(255,255,255,0.1);
+}
+.quick-feature-card:hover {
+    transform: translateY(-3px);
+    border-color: #ffcc00;
+}
+.quick-feature-card h4 {
+    margin: 10px 0 0;
+    color: #ffcc00;
+}
+.feature-icon {
+    font-size: 2.5rem;
+    color: #00e0ff;
+}
+
+/* Features Grid (Bottom) */
+.section-title {
+    color: #00e0ff;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+}
+.feature-card-item {
+    /* Similar style to Quick Feature Card but simpler */
+    padding: 20px 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+}
+.feature-card-item:hover {
+    transform: translateY(-2px);
+    border-color: #00e0ff;
+}
+.feature-card-item i {
+    font-size: 28px;
+    color: #ffcc00;
+    margin-bottom: 5px;
+    display: block;
+}
+.feature-card-item p {
+    font-size: 0.85rem;
+    line-height: 1.2;
+}
+.feature-card-item .lock-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 18px;
-    color: #ff0077; /* Neon Pink/Red lock */
+    top: 5px;
+    right: 5px;
+    font-size: 14px;
+    color: #ff0077;
 }
 
-/* Mobile Adjustments */
-@media (max-width: 600px) {
-    .balance-card {
-        flex-direction: column;
-        align-items: flex-start;
+/* Locked Card Styling */
+.feature-card-item.locked {
+    opacity: 0.6;
+    pointer-events: none;
+    background: rgba(255, 0, 119, 0.05);
+    border-color: rgba(255, 0, 119, 0.2);
+}
+.feature-link.external-link .feature-card-item i {
+    color: #00e0ff;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 650px) {
+    .dashboard-main {
+        padding: 0 10px;
     }
-    .balance-right {
-        margin-top: 15px;
+    .top-cards-grid {
+        grid-template-columns: 1fr;
     }
-    .features {
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    .middle-section-grid {
+         grid-template-columns: 1fr;
+    }
+    .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
