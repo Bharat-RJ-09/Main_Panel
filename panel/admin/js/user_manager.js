@@ -1,4 +1,4 @@
-// admin/js/user_manager.js - WITH EDIT/UPDATE LOGIC
+// admin/js/user_manager.js - FINAL WITH FREEZE/BAN LOGIC
 
 document.addEventListener('DOMContentLoaded', () => {
     const ADMIN_SESSION_KEY = 'nextEarnXAdminSession';
@@ -16,9 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const editUsernameHidden = document.getElementById('editUsernameHidden');
     const editUserForm = document.getElementById('editUserForm');
     const newPasswordInput = document.getElementById('newPassword');
-    const userStatusSelect = document.getElementById('userStatus'); 
     const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
     const expiryDateInput = document.getElementById('expiryDate');
+    // NEW: Ban/Freeze Element
+    const accountStatusSelect = document.getElementById('accountStatus'); 
 
     // --- 1. SECURITY CHECK ---
     function checkAdminSession() {
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     checkAdminSession();
     
-    // FIX 8 & 9: Add local logout handler for robustness
+    // Logout handler for robustness
     if(adminLogoutBtn) {
         adminLogoutBtn.addEventListener('click', () => {
             localStorage.removeItem(ADMIN_SESSION_KEY);
@@ -45,8 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return [];
         }
     }
-
-      
     
     function saveUsers(users) {
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
@@ -65,12 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NEW: Function to find user by username
     function findUser(username) {
         return loadUsers().find(user => user.username === username);
     }
     
-    // NEW: Function to update user details
     function updateUser(usernameToUpdate, updates) {
         let users = loadUsers();
         let userIndex = users.findIndex(user => user.username === usernameToUpdate);
@@ -84,8 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     }
 
-
-     // --- 3. MODAL HANDLERS ---
+    // --- 3. MODAL HANDLERS ---
     function openEditModal(username) {
         const user = findUser(username);
         if (!user) {
@@ -97,83 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
         editUsernameHidden.value = username;
         newPasswordInput.value = ''; // Clear password field on open
 
-        // Find saved plan/expiry or default to none
-        const currentPlan = user.plan || 'none';
-        // Date format: YYYY-MM-DD required by input type="date"
-        const currentExpiry = user.expiry ? new Date(user.expiry).toISOString().substring(0, 10) : ''; 
-
-        subscriptionPlanSelect.value = currentPlan;
-        expiryDateInput.value = currentExpiry;
-
-        modal.style.display = 'flex';
-    }
-
-    function closeEditModal() {
-        modal.style.display = 'none';
-        editUserForm.reset();
-    }
-    
-    closeModalBtn.addEventListener('click', closeEditModal);
-
-    editUserForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = editUsernameHidden.value;
-        const updates = {};
-        
-        // 1. Password Update
-        if (newPasswordInput.value.trim() !== '') {
-            updates.password = newPasswordInput.value.trim();
-        }
-
-        // 2. Subscription Update
-        const selectedPlan = subscriptionPlanSelect.value;
-        const expiryDate = expiryDateInput.value;
-
-        if (selectedPlan === 'none') {
-            updates.plan = null;
-            updates.expiry = null;
-        } else {
-            updates.plan = selectedPlan;
-            // Convert expiry date string to timestamp for consistency with user panel logic
-            updates.expiry = new Date(expiryDate).getTime();
-            
-            // If admin manually sets the trial, mark the trial as taken
-            if (selectedPlan === '1 Week Free Trial') {
-                 updates.hasTakenFreeTrial = true;
-            }
-        }
-
-        if (updateUser(username, updates)) {
-            alert(`✅ User ${username} updated successfully!`);
-            closeEditModal();
-            renderUserTable(loadUsers()); // Re-render table
-        } else {
-            alert('❌ Failed to update user.');
-        }
-    });
-
-
-  
-   
-    
-    // ... (subscription loading logic)
-// ...
-        const user = findUser(username);
-        if (!user) {
-            alert("Error: User data not found.");
-            return;
-        }
-        
-        modalUsername.textContent = username;
-        editUsernameHidden.value = username;
-        newPasswordInput.value = ''; // Clear password field on open
-
-        // Find saved plan/expiry or default to none
+        // Subscription Fields
         const currentPlan = user.plan || 'none';
         const currentExpiry = user.expiry ? new Date(user.expiry).toISOString().substring(0, 10) : '';
-
         subscriptionPlanSelect.value = currentPlan;
         expiryDateInput.value = currentExpiry;
+        
+        // NEW: Ban/Freeze Field
+        const currentStatus = user.status || 'active'; // Default to active
+        if (accountStatusSelect) {
+            accountStatusSelect.value = currentStatus;
+        }
 
         modal.style.display = 'flex';
     }
@@ -182,14 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'none';
         editUserForm.reset();
     }
-      
+    
     closeModalBtn.addEventListener('click', closeEditModal);
 
     editUserForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const username = editUsernameHidden.value;
         const updates = {};
-        updates.status = userStatusSelect.value;
         
         // 1. Password Update
         if (newPasswordInput.value.trim() !== '') {
@@ -205,14 +134,18 @@ document.addEventListener('DOMContentLoaded', () => {
             updates.expiry = null;
         } else {
             updates.plan = selectedPlan;
-            // Convert expiry date string to timestamp for consistency with user panel logic
             updates.expiry = new Date(expiryDate).getTime();
-
-            // If admin manually sets the trial, mark the trial as taken
+            
             if (selectedPlan === '1 Week Free Trial') {
                  updates.hasTakenFreeTrial = true;
             }
         }
+        
+        // 3. NEW: Account Status Update (Ban/Freeze)
+        if (accountStatusSelect) {
+            updates.status = accountStatusSelect.value;
+        }
+
 
         if (updateUser(username, updates)) {
             alert(`✅ User ${username} updated successfully!`);
@@ -224,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-     // --- 4. RENDERING & INITIALIZATION ---
+    // --- 4. RENDERING & INITIALIZATION ---
     function renderUserTable(users) {
         userTableBody.innerHTML = ''; 
         
@@ -237,6 +170,13 @@ document.addEventListener('DOMContentLoaded', () => {
         users.forEach((user, index) => {
             const row = userTableBody.insertRow();
             const userId = index + 1; 
+            
+            // Highlight row if banned/frozen
+            if (user.status === 'banned') {
+                row.style.backgroundColor = 'rgba(255, 0, 0, 0.2)'; // Red tint for ban
+                row.style.color = '#ffaaaa';
+            }
+
 
             row.innerHTML = `
                 <td>${userId}</td>
@@ -257,9 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 5. SEARCH/FILTERING (Remains the same) ---
-    // ...
+    function searchUsers() {
+        const query = userSearchInput.value.toLowerCase();
+        const allUsers = loadUsers();
+        
+        const filteredUsers = allUsers.filter(user => 
+            user.username.toLowerCase().includes(query) ||
+            user.email.toLowerCase().includes(query) ||
+            user.fullname.toLowerCase().includes(query)
+        );
+        
+        renderUserTable(filteredUsers);
+    }
 
-    // --- 6. ACTION LISTENERS (UPDATED EDIT LOGIC) ---
+    searchBtn.addEventListener('click', searchUsers);
+    userSearchInput.addEventListener('keyup', searchUsers); 
+
+    // --- 6. ACTION LISTENERS ---
     function attachActionListeners() {
         // Edit button listener (NOW OPENS MODAL)
         document.querySelectorAll('.edit-btn').forEach(button => {
@@ -273,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 const username = e.currentTarget.dataset.username;
-                if (confirm(`WARNING: Are you sure you want to delete user "${username}"? This cannot be undone."`)) {
+                if (confirm(`WARNING: Are you sure you want to delete user "${username}"? This cannot be undone.`)) {
                     if (deleteUser(username)) {
                         alert(`✅ User ${username} deleted successfully!`);
                         renderUserTable(loadUsers());
