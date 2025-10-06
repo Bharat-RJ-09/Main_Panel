@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const userSearchInput = document.getElementById('userSearchInput');
     const searchBtn = document.getElementById('searchBtn');
     const userCountElement = document.getElementById('userCount');
+    // FIX 9: Logout button declaration added
+    const adminLogoutBtn = document.getElementById('adminLogoutBtn'); 
     
     // Modal Elements
     const modal = document.getElementById('editUserModal');
@@ -15,9 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const editUsernameHidden = document.getElementById('editUsernameHidden');
     const editUserForm = document.getElementById('editUserForm');
     const newPasswordInput = document.getElementById('newPassword');
-    // START: ADDED new element
-    const userStatusSelect = document.getElementById('userStatus');
-    // END: ADDED new element
     const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
     const expiryDateInput = document.getElementById('expiryDate');
 
@@ -29,6 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     checkAdminSession();
+    
+    // FIX 8: Add local logout handler for robustness
+    if(adminLogoutBtn) {
+        adminLogoutBtn.addEventListener('click', () => {
+            localStorage.removeItem(ADMIN_SESSION_KEY);
+            window.location.href = 'admin_login.html';
+        });
+    }
 
     // --- 2. DATA UTILITY (CRUD CORE) ---
     function loadUsers() {
@@ -87,12 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editUsernameHidden.value = username;
         newPasswordInput.value = ''; // Clear password field on open
 
-        // START: NEW STATUS CONTROL LOAD
-        const currentStatus = user.status || 'active'; // Default to active
-        userStatusSelect.value = currentStatus;
-        // END: NEW STATUS CONTROL LOAD
-        
-        // Mock: Set current subscription status
+        // Find saved plan/expiry or default to none
         const currentPlan = user.plan || 'none';
         const currentExpiry = user.expiry ? new Date(user.expiry).toISOString().substring(0, 10) : '';
 
@@ -119,10 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updates.password = newPasswordInput.value.trim();
         }
 
-        // START: NEW STATUS SAVE
-        updates.status = userStatusSelect.value;
-        // END: NEW STATUS SAVE
-
         // 2. Subscription Update
         const selectedPlan = subscriptionPlanSelect.value;
         const expiryDate = expiryDateInput.value;
@@ -130,10 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedPlan === 'none') {
             updates.plan = null;
             updates.expiry = null;
+            // NOTE: hasTakenFreeTrial is generally NOT cleared by admin here
         } else {
             updates.plan = selectedPlan;
             // Convert expiry date string to timestamp for consistency with user panel logic
             updates.expiry = new Date(expiryDate).getTime();
+            
+            // If admin manually sets the trial, mark the trial as taken
+            if (selectedPlan === '1 Week Free Trial') {
+                 updates.hasTakenFreeTrial = true;
+            }
         }
 
         if (updateUser(username, updates)) {
@@ -151,8 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userTableBody.innerHTML = ''; 
         
         if (users.length === 0) {
-            // Updated colspan to 7
-            userTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No users found.</td></tr>';
+            userTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No users found.</td></tr>';
             userCountElement.textContent = '0 users displayed.';
             return;
         }
@@ -160,11 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         users.forEach((user, index) => {
             const row = userTableBody.insertRow();
             const userId = index + 1; 
-            
-            // START: NEW STATUS DISPLAY
-            const userStatus = user.status || 'active'; 
-            const statusClass = userStatus === 'banned' ? 'status-banned' : userStatus === 'frozen' ? 'status-frozen' : 'status-active';
-            // END: NEW STATUS DISPLAY
 
             row.innerHTML = `
                 <td>${userId}</td>
@@ -172,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${user.fullname}</td>
                 <td>${user.email}</td>
                 <td>${user.mobile}</td>
-                <td class="${statusClass}">${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}</td>
                 <td class="action-buttons">
                     <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
                     <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>

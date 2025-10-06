@@ -6,7 +6,7 @@ body {
     background: #1a1a2a; /* Solid dark background */
     font-family: Inter, sans-serif;
     color: #e6eef8;
-    overflow-y: auto;
+    overflow: auto; 
     padding-top: 60px; /* Space for fixed navbar */
 }
 

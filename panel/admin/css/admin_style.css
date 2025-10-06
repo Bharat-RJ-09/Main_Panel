@@ -7,7 +7,7 @@ body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden; /* keep background visuals contained */
+  overflow: auto; /* keep background visuals contained */
   background: #0f172a; /* fallback */
 }
 
