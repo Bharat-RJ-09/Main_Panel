@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editUsernameHidden = document.getElementById('editUsernameHidden');
     const editUserForm = document.getElementById('editUserForm');
     const newPasswordInput = document.getElementById('newPassword');
+    const userStatusSelect = document.getElementById('userStatus'); 
     const subscriptionPlanSelect = document.getElementById('subscriptionPlan');
     const expiryDateInput = document.getElementById('expiryDate');
 
@@ -44,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return [];
         }
     }
+
+      
     
     function saveUsers(users) {
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
@@ -80,9 +83,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return false;
     }
-
+  
     // --- 3. MODAL HANDLERS ---
     function openEditModal(username) {
+        // panel/admin/js/user_manager.js (openEditModal function ke andar)
+// ...
+    newPasswordInput.value = ''; // Clear password field on open
+    
+    // START: ADD THIS LOGIC
+    const currentStatus = user.status || 'active'; // Default to active
+    userStatusSelect.value = currentStatus;
+    // END: ADD THIS LOGIC
+    
+    // ... (subscription loading logic)
+// ...
         const user = findUser(username);
         if (!user) {
             alert("Error: User data not found.");
@@ -107,13 +121,14 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'none';
         editUserForm.reset();
     }
-    
+      
     closeModalBtn.addEventListener('click', closeEditModal);
 
     editUserForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const username = editUsernameHidden.value;
         const updates = {};
+        updates.status = userStatusSelect.value;
         
         // 1. Password Update
         if (newPasswordInput.value.trim() !== '') {
@@ -159,16 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         users.forEach((user, index) => {
-            const row = userTableBody.insertRow();
-            const userId = index + 1; 
+        const row = userTableBody.insertRow();
+        const userId = index + 1;  
+
+        const userStatus = user.status || 'active'; 
+        const statusClass = userStatus === 'banned' ? 'status-banned' : userStatus === 'frozen' ? 'status-frozen' : 'status-active';
+        // END: ADD THIS LOGIC
 
             row.innerHTML = `
-                <td>${userId}</td>
-                <td>${user.username}</td>
-                <td>${user.fullname}</td>
-                <td>${user.email}</td>
-                <td>${user.mobile}</td>
-                <td class="action-buttons">
+            <td>${userId}</td>
+            <td>${user.username}</td>
+            <td>${user.fullname}</td>
+            <td>${user.email}</td>
+            <td>${user.mobile}</td>
+            <td class="${statusClass}">${userStatus.charAt(0).toUpperCase() + userStatus.slice(1)}</td>
+            <td class="action-buttons">
                     <button class="edit-btn" data-username="${user.username}"><i class="ri-edit-2-line"></i> Edit</button>
                     <button class="delete-btn" data-username="${user.username}"><i class="ri-delete-bin-line"></i> Delete</button>
                 </td>

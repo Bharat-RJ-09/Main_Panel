@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     // --- END: NEW FREEZE/BAN CHECK ---
+    // --- END: NEW FREEZE/BAN CHECK ---
     
     currentUser = user;
     generateAndShowOtp(user.email);
