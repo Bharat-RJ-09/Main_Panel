@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customise Profile - NextEarnX</title>
+  <link rel="stylesheet" href="css/customise_profile.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+<br> <br>
+    <main class="customise-container">
+        <h2>Customise Profile</h2>
+        <p class="welcome-msg">Personalize your app experience by changing the logo and settings.</p>
+
+        <section class="logo-section card">
+            <h3>App Logo Customization (Local)</h3>
+            <p class="note">Click the logo below to upload a new image. (Visible only on this device)</p>
+            
+            <div class="logo-preview-box">
+                <img src="logo.png" alt="logo" class="logo-img" id="logoImg" title="Click to change logo">
+                <input type="file" id="customLogoInput" accept="image/*" style="display:none;">
+            </div>
+            
+            <button id="resetLogoBtn" class="action-btn"><i class="ri-refresh-line"></i> Reset to Default Logo</button>
+        </section>
+
+        <section class="settings-card card">
+            <h3>Future Custom Settings</h3>
+            <p class="note" style="color:#ffcc00;">These settings can be expanded later, e.g., Theme Toggle, Notification Prefs, etc.</p>
+            <div class="form-group">
+                <label for="themeToggle"><i class="ri-brush-2-line"></i> Dark/Light Mode (Coming Soon)</label>
+                <button class="action-btn" disabled>Toggle Theme</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/customise_profile.js"></script>
+</body>
+</html>
