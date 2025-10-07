@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (normalLifafaForm) {
         normalLifafaForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+             
             // Use elements corresponding to the submitted form (Normal in this case)
             const perUserAmount = parseFloat(document.getElementById('lifafaPerUserAmount_Normal').value);
             const count = parseInt(document.getElementById('lifafaCount_Normal').value);
@@ -266,3 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+ 

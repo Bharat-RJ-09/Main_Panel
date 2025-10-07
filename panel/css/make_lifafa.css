@@ -266,7 +266,7 @@ body::before {
 .accordion-content {
     background: rgba(0, 0, 0, 0.2);
     padding: 15px;
-    border-radius: 0 0 10px 10px;
+    border-radius:25px;
     margin-bottom: 15px;
     display: none;
     overflow: hidden;
@@ -306,4 +306,25 @@ body::before {
 /* Active State for Accordion */
 .accordion-header.active .arrow-icon {
     transform: rotate(180deg);
+}
+
+/* --- ADD THIS CODE AT THE END OF panel/css/make_lifafa.css --- */
+
+/* --- FEATURE ACCORDION SPECIFIC STYLES --- */
+
+/* Feature headers use a slightly different color and style (based on image) */
+.accordion-header.feature-header {
+    background: linear-gradient(90deg, rgba(50, 220, 214, 0.9), rgba(50, 70, 220, 0.7));
+    margin-bottom: 1px; /* To make them look grouped */
+    border-radius: 0;
+}
+/* First feature header needs top border-radius */
+.lifafa-form-new .accordion-header:nth-of-type(3) { /* Targeting Telegram Channel which is the 3rd accordion (1st feature block) */
+    border-radius: 10px 10px 0 0;
+}
+
+/* Last accordion content needs bottom border-radius */
+#referEarnContent {
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 25px; /* Add space below the final group */
 }
