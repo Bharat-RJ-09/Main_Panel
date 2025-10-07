@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Lifafa - NextEarnX</title>
+  <link rel="stylesheet" href="css/make_lifafa.css">
+  <link rel="stylesheet" href="css/theme_base.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="lifafa-container">
+        <div class="header-section">
+            <h2>Create Lifafa</h2>
+            <p class="balance-status">Your Balance: <span id="currentBalanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
+        </div>
+
+        <section class="lifafa-form-card card">
+            
+            <div class="lifafa-tabs-secondary">
+                <button class="lifafa-tab-secondary active" data-lifafa-type="Normal">Normal</button>
+                <button class="lifafa-tab-secondary" data-lifafa-type="Dice">Dice</button>
+                <button class="lifafa-tab-secondary" data-lifafa-type="Toss">Toss</button>
+                <button class="lifafa-tab-secondary" data-lifafa-type="Scratch">Scratch</button>
+                <button class="draft-btn"><i class="ri-bookmark-line"></i> Draft</button>
+            </div>
+
+            <div id="lifafaFormsContainer">
+                
+                <form id="normalLifafaForm" data-type="Normal" class="lifafa-form-new" style="display: block;">
+                    
+                    <div class="form-group input-icon-group">
+                        <i class="ri-gift-line"></i>
+                        <input type="text" id="lifafaTitle_Normal" placeholder="Giveaway Title" required>
+                    </div>
+                    
+                    <div class="form-group input-icon-group">
+                        <i class="ri-group-line"></i>
+                        <input type="number" id="lifafaCount_Normal" min="2" placeholder="Total Users (Min 2)" required>
+                    </div>
+                    
+                    <div class="form-group input-icon-group">
+                        <i class="ri-money-rupee-circle-line"></i>
+                        <input type="number" id="lifafaPerUserAmount_Normal" min="0.01" step="0.01" placeholder="Per User Amount (₹)" required>
+                    </div>
+
+                    <div class="form-group input-icon-group">
+                        <i class="ri-message-3-line"></i>
+                        <input type="text" id="paymentComment_Normal" placeholder="Payment Comment" required>
+                    </div>
+                    
+                    <div class="form-group input-icon-group">
+                        <i class="ri-external-link-line"></i>
+                        <input type="url" id="redirectLink_Normal" placeholder="Redirect Link (Optional)">
+                    </div>
+
+                    <button type="submit" class="submit-btn create-btn"><i class="ri-coupon-line"></i> Create Normal Lifafa</button>
+                </form>
+                <form id="diceLifafaForm" data-type="Dice" class="lifafa-form-new" style="display: none;"></form>
+                <form id="tossLifafaForm" data-type="Toss" class="lifafa-form-new" style="display: none;"></form>
+                <form id="scratchLifafaForm" data-type="Scratch" class="lifafa-form-new" style="display: none;"></form> <br>
+                     
+
+                <!-- Faetures is here  -->
+
+                <div class="accordion-header red-header" data-target="accessCodeContent">
+                    <i class="ri-lock-fill"></i>
+                    Access Code
+                    <i class="ri-arrow-down-s-line arrow-icon"></i>
+                </div> <br>
+                <div class="accordion-content" id="accessCodeContent">
+                    <div class="form-group input-icon-group">
+                        <i class="ri-key-2-line"></i>
+                        <input type="text" id="lifafaAccessCode_Normal" placeholder="Enter Access Code (Optional)">
+                    </div> 
+                </div> 
+
+                <div class="accordion-header red-header" data-target="specialUsersContent">
+                    <i class="ri-group-fill"></i>
+                    Special Users
+                    <i class="ri-arrow-down-s-line arrow-icon"></i>
+                </div>
+                <div class="accordion-content" id="specialUsersContent">
+                    <div class="form-group">
+                        <textarea id="lifafaSpecialUsers_Normal" rows="4" placeholder="All Mobile numbers should be separated by comma (,), asterisk (*), period (.), space, or line by line"></textarea>
+                    </div>
+                    <button type="button" class="action-btn check-btn"><i class="ri-check-line"></i> Check Numbers (Mock)</button>
+                </div> <br>
+                
+                <button type="submit" class="submit-btn create-btn"><i class="ri-coupon-line"></i> Create Normal Lifafa</button>
+                
+            </div>
+
+            <div class="lifafa-log-area">
+                <h4>Active Lifafas:</h4>
+                <div id="activeLifafasList">
+                    <p>No active giveaways.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="result-display">
+            <h3>Activity Log</h3>
+            <div id="logArea">
+                <p>Ready to create Lifafa...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/make_lifafa.js"></script>
+</body>
+</html>
