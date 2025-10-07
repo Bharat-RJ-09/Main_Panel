@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Settings - NextEarnX</title>
+  <link rel="stylesheet" href="css/telegram_settings.css">
+  <link rel="stylesheet" href="css/theme_base.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="settings-container">
+        <h2>Global Telegram Channels</h2>
+        <p class="welcome-msg">Manage the channels that users must join to claim Lifafas. Max 4 channels allowed.</p>
+
+        <section class="channels-list-card card">
+            <h3>Required Channels: <span id="totalChannels">0</span></h3>
+            
+            <div id="activeChannelsContainer">
+                <p style="color:#777;">No channels added yet.</p>
+            </div>
+            
+            <button id="saveChannelsBtn" class="action-btn save-btn"><i class="ri-save-line"></i> Save Channels</button>
+        </section>
+
+        <section class="add-channel-card card">
+            <h3 style="color:#00e0ff;">Add New Channel</h3>
+            <div class="form-group">
+                <label for="newChannelLink">Channel link or username:</label>
+                <input type="text" id="newChannelLink" placeholder="@channelusername or t.me/link">
+            </div>
+            <button id="addChannelBtn" class="action-btn add-btn"><i class="ri-add-line"></i> Add Channel</button>
+        </section>
+
+        <section class="verifier-card card">
+            <h3>Bot Verifier Setup (CRITICAL)</h3>
+            <p class="note">To enable advanced Lifafa features, please make <span style="color:#00e0ff; font-weight:bold;">@FxL_lifafa_verifier_bot</span> an admin of your channels.</p>
+            
+            <div class="form-group verifier-input-group">
+                <label for="verifierUsername">Verifier bot username:</label>
+                <input type="text" id="verifierUsername" value="@FxL_lifafa_verifier_bot" readonly>
+                <button id="copyVerifierBtn" class="action-btn copy-btn"><i class="ri-file-copy-line"></i> Copy</button>
+            </div>
+
+            <button id="tapToAdminBtn" class="action-btn admin-btn"><i class="ri-check-line"></i> Tap To Add Admin (Mock Link)</button>
+        </section>
+        
+    </main>
+
+    <script src="js/telegram_settings.js"></script>
+</body>
+</html>

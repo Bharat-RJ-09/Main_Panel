@@ -1,0 +1,93 @@
+/* panel/css/telegram_settings.css - Telegram Global Settings Styles */
+
+/* --- BASE STYLES (Matching other panel pages) --- */
+* { box-sizing: border-box; }
+body {
+    margin: 0; font-family: Inter, sans-serif;
+    background: linear-gradient(135deg, #0a0a1a, #1a0a2a); color: #e6eef8;
+    min-height: 100vh; padding-top: 75px; position: relative; overflow-x: hidden;
+}
+body::before { /* Animated Background */
+    content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+    background: radial-gradient(circle at 10% 20%, rgba(106,17,203,0.1), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(37,117,252,0.1), transparent 30%);
+    mix-blend-mode: screen; animation: slowPan 30s infinite alternate;
+}
+@keyframes slowPan { from { transform: translate(0, 0); } to { transform: translate(-5%, 5%); } }
+
+/* --- NAVBAR (Same as other panels) --- */
+.navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    background: rgba(15, 15, 30, 0.6); backdrop-filter: blur(15px) saturate(1.2);
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.menu-btn { color: #fff; font-size: 24px; text-decoration: none; }
+.logo { font-size: 24px; font-weight: 700; color: #fff; }
+.logo span { color: #00e0ff; }
+#logoutBtn { background: #ff0077; border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+
+/* --- MAIN CONTAINER & CARDS --- */
+.settings-container {
+    max-width: 600px; margin: 20px auto; padding: 0 20px;
+}
+.settings-container h2 { color: #00e0ff; margin-bottom: 5px; }
+.welcome-msg { color: #aaa; margin-bottom: 20px; }
+
+/* Base Card Style (Frosted Glass) */
+.card {
+    margin-bottom: 20px; padding: 25px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    backdrop-filter: blur(12px) saturate(1.1); border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.card h3 { color: #ffcc00; margin-bottom: 15px; }
+
+.action-btn {
+    width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;
+    transition: background 0.2s;
+}
+.add-btn { background: #00e0ff; color: #1a1a2a; }
+.add-btn:hover { background: #33ffff; }
+.save-btn { background: #aaffaa; color: #1a1a2a; margin-top: 15px; }
+.save-btn:hover { background: #ccffcc; }
+.admin-btn { background: #4169E1; color: #fff; margin-top: 15px; }
+.admin-btn:hover { background: #5c85ff; }
+
+/* Channel List Specific */
+.channels-list-card h3 { color: #aaffaa; }
+.channel-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 15px; margin-bottom: 8px; border-radius: 8px;
+    background: rgba(255, 0, 119, 0.2); /* Red/Pink Background */
+    color: #fff;
+}
+.channel-item .channel-name {
+    display: flex; align-items: center; gap: 8px;
+}
+.channel-item .channel-name i { color: #00e0ff; }
+.channel-item .remove-btn {
+    background: none; border: none; color: #ff0077; font-size: 1.2rem; cursor: pointer;
+}
+
+/* Form Styles */
+.form-group input {
+    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444;
+    background: #333355; color: #fff;
+}
+.note { font-size: 0.9rem; color: #aaa; margin-bottom: 10px; }
+.verifier-input-group {
+    display: flex; align-items: center; gap: 10px;
+}
+.verifier-input-group input { flex-grow: 1; font-weight: bold; }
+.verifier-input-group .copy-btn {
+    width: 100px; padding: 10px; font-size: 0.8rem; background: #00e0ff; color: #1a1a2a;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .settings-container { padding: 0 10px; }
+    .verifier-input-group { flex-direction: column; align-items: flex-start; }
+    .verifier-input-group input, .verifier-input-group .copy-btn { width: 100%; margin-top: 5px; }
+    .verifier-input-group label { margin-bottom: 0; }
+}
