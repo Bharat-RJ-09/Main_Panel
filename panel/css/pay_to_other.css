@@ -180,3 +180,43 @@
 @media (max-width: 600px) {
     .transfer-container { padding: 0 10px; }
 }
+
+
+/* --- ADD THIS CODE AT THE END OF panel/css/pay_to_other.css --- */
+
+/* --- BULK TRANSFER SPECIFIC STYLES --- */
+
+/* Textarea style for bulk numbers */
+#bulkRecipientNumbers {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.3);
+    color: white;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+#bulkRecipientNumbers:focus {
+    border-color: #00e0ff;
+    box-shadow: 0 0 5px rgba(0,224,255,0.5);
+    outline: none;
+}
+
+/* Overriding form-group margin for cleaner bulk look */
+#bulkTransferForm .form-group {
+    margin-bottom: 12px;
+}
+
+/* Bulk History Button */
+.submit-btn.history-btn {
+    background: #444466; /* Darker/Grey background */
+    color: #fff;
+    border: 1px solid #777;
+    margin-top: 15px; /* Space from Next button */
+    padding: 10px 12px;
+}
+.submit-btn.history-btn:hover {
+    background: #555577;
+}

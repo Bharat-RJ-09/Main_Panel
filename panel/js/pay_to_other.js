@@ -196,6 +196,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- BULK TRANSFER MOCK LOGIC ---
+    const bulkTransferForm = document.getElementById('bulkTransferForm');
+    const bulkHistoryBtn = document.getElementById('bulkHistoryBtn');
+
+    if (bulkTransferForm) {
+        bulkTransferForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const numbersText = document.getElementById('bulkRecipientNumbers').value.trim();
+            const amount = parseFloat(document.getElementById('bulkTransferAmount').value);
+            const comment = document.getElementById('bulkPaymentComment').value.trim();
+            
+            // Basic number parsing (using the same logic as Lifafa special users)
+            const recipientNumbers = numbersText.split(/[,. \s\n]+/).filter(Boolean);
+            
+            if (recipientNumbers.length === 0) {
+                appendLog('Error: Please enter at least one mobile number for bulk transfer.', 'error');
+                return;
+            }
+            if (isNaN(amount) || amount < 1) {
+                appendLog('Error: Transfer amount must be at least ₹1.', 'error');
+                return;
+            }
+
+            const totalCost = amount * recipientNumbers.length;
+            const currentBalance = getBalance(senderUsername);
+
+            if (currentBalance < totalCost) {
+                appendLog(`Error: Insufficient balance. Total cost for ${recipientNumbers.length} users is ₹${totalCost.toFixed(2)}.`, 'error');
+                alert('Insufficient Balance for Bulk Transfer.');
+                return;
+            }
+            
+            if (confirm(`Confirm bulk transfer of ₹${amount.toFixed(2)} to ${recipientNumbers.length} users? Total Cost: ₹${totalCost.toFixed(2)}`)) {
+                 appendLog(`MOCK: Processing bulk transfer of ₹${amount.toFixed(2)} to ${recipientNumbers.length} users.`, 'loading');
+                 
+                 // MOCK DEDUCTION (Actual transfer logic would iterate and log individual transactions)
+                 const newBalance = currentBalance - totalCost;
+                 setBalance(senderUsername, newBalance);
+                 refreshBalanceUI();
+
+                 setTimeout(() => {
+                     appendLog(`SUCCESS: Bulk transfer initiated for ${recipientNumbers.length} users.`, 'success');
+                     bulkTransferForm.reset();
+                 }, 2500);
+            }
+        });
+    }
+    
+    if (bulkHistoryBtn) {
+        bulkHistoryBtn.addEventListener('click', () => {
+            alert('MOCK: Bulk transfer history feature under development.');
+        });
+    }
+    // --- END BULK MOCK LOGIC ---
+
     // Logout Button (For consistency)
     if(logoutBtn) {
         logoutBtn.addEventListener('click', () => {

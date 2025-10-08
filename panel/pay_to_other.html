@@ -14,7 +14,7 @@
         <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
         <h1 class="logo">NextEarn<span>X</span></h1>
         <button id="logoutBtn">Logout</button>
-    </nav>
+    </nav> <br> <br>
 
     <main class="transfer-container">
         <div class="header-section">
@@ -65,8 +65,29 @@
             </div>
             
             <div id="bulkContent" class="transfer-tab-content" style="display:none;">
-                <p class="status-msg">Bulk transfer feature is under development.</p>
-                </div>
+                
+                <form id="bulkTransferForm">
+                    
+                    <div class="form-group">
+                        <textarea id="bulkRecipientNumbers" rows="5" placeholder="All numbers should be separated by comma (,), period (.), or space, or line by line"></textarea>
+                    </div>
+
+                    <div class="form-group input-icon-group">
+                        <i class="ri-money-rupee-circle-line" style="color:#4169E1;"></i>
+                        <input type="number" id="bulkTransferAmount" min="1" placeholder="Enter Amount" required>
+                    </div>
+
+                    <div class="form-group input-icon-group">
+                        <i class="ri-chat-3-line" style="color:#4169E1;"></i>
+                        <input type="text" id="bulkPaymentComment" placeholder="Enter Payment Comment (optional)">
+                    </div>
+
+                    <button type="submit" id="nextBulkBtn" class="submit-btn pay-btn">NEXT</button>
+                    
+                    <button type="button" id="bulkHistoryBtn" class="submit-btn history-btn"><i class="ri-history-line"></i> BULK HISTORY</button>
+
+                </form>
+            </div>
         </section>
 
 
