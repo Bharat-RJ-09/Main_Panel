@@ -1,62 +1,19 @@
+/* panel/css/pay_to_other.css - NextEarnX Wallet Transfer Styles (Redesigned) */
+
+/* --- BASE STYLES (Neon Dark Theme Consistency) --- */
  
-body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    /* CRITICAL CHANGE: Deep Black Background */
-    background: #00000a;
-    color: #e6eef8;
-    min-height: 100vh;
-    padding-top: 75px; 
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* --- Animated Background Layer (Aqua Blur Balls) --- */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: -1;
-    /* Aqua/Cyan Radial Gradients (Blur Balls) */
-    background: 
-        /* Large Aqua Ball (Top Left) */
-        radial-gradient(circle at 20% 15%, rgba(0, 255, 255, 0.25), transparent 45%),
-        /* Smaller Cyan Ball (Bottom Right) */
-        radial-gradient(circle at 85% 75%, rgba(0, 224, 255, 0.30), transparent 40%),
-        /* Medium Aqua Glow (Center) */
-        radial-gradient(circle at 50% 50%, rgba(0, 160, 255, 0.15), transparent 60%);
-    
-    mix-blend-mode: screen;
-    filter: blur(50px);
-    animation: aquaFloat 25s infinite ease-in-out alternate;
-}
-
-/* Keyframes for Floating Blur */
- 
-
 /* --- NAVBAR (Fixed and Glass effect) --- */
 .navbar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 10;
-    background: rgba(15, 15, 30, 0.6);
-    backdrop-filter: blur(15px) saturate(1.2);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    background: rgba(15, 15, 30, 0.6); backdrop-filter: blur(15px) saturate(1.2);
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .menu-btn { color: #fff; font-size: 24px; text-decoration: none; }
 .logo { font-size: 24px; font-weight: 700; color: #fff; }
 .logo span { color: #00e0ff; }
 #logoutBtn {
-    background: #ff0077;
-    border: none;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
+    background: #ff0077; border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer;
 }
 
 /* --- TRANSFER LAYOUT --- */
@@ -65,429 +22,161 @@ body::before {
     max-width: 600px;
     margin: 20px auto;
 }
-
 .header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
 }
-.transfer-container h2 {
-    color: #00e0ff;
-    margin: 0;
-}
-.balance-status {
-    font-size: 1rem;
-    color: #aaa;
-}
+.transfer-container h2 { color: #00e0ff; margin: 0; }
+.balance-status { font-size: 1rem; color: #aaa; }
 
 /* --- FORM CARD (Glass Effect) --- */
 .transfer-form-card {
     background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
     border-radius: 18px;
-    padding: 25px;
+    padding: 10px; /* Reduced internal padding for cleaner look */
     backdrop-filter: blur(12px) saturate(1.1);
     border: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     margin-bottom: 30px;
 }
 .status-msg {
-    margin-bottom: 20px;
-    color: #ff0077; /* Highlight max limit */
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #ff0077; 
     font-size: 0.9rem;
     font-weight: 600;
 }
-.form-group {
-    margin-bottom: 15px;
-}
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #fff;
-}
-input[type="text"], input[type="number"], input[type="tel"] { /* Added tel input */
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(0,0,0,0.3);
-    color: white;
-    font-size: 1rem;
-}
-small { display: block; margin-top: 5px; font-size: 0.8rem; }
 
-.submit-btn {
-    width: 100%;
-    padding: 12px;
-    background: #ff0077; 
-    color: #1a1a2a;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-.submit-btn:hover {
-    background: #ff3399;
-}
 
-.result-display h3 {
-    margin-bottom: 10px;
-    color: #00e0ff;
-}
-#logArea {
-    background: rgba(0,0,0,0.5);
-    border-radius: 8px;
-    padding: 15px;
-    max-height: 150px;
-    overflow-y: auto;
-    font-size: 14px;
+/* --- MAIN TABS (Single/Bulk) --- */
+.main-tab-nav {
+    display: flex;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
     border: 1px solid rgba(255,255,255,0.1);
 }
-#logArea p {
-    margin: 5px 0;
-    line-height: 1.5;
-    border-bottom: 1px dotted rgba(255,255,255,0.1);
-}
-
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 600px) {
-    .transfer-container {
-        padding: 0 10px;
-    }
-}
-
-
-/* panel/css/pay_to_other.css: APPEND these styles */
-
-/* --- TAB NAVIGATION STYLES --- */
-.tab-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-}
-
-.tab-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 8px 15px;
-    border-bottom: 3px solid transparent;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: color 0.2s, border-color 0.2s;
-}
-
-.tab-btn:hover {
-    color: #00e0ff;
-}
-
-.tab-btn.active {
-    color: #ff0077;
-    border-bottom-color: #ff0077;
-}
-
-/* Lifafa Specific Log */
-.lifafa-log-area {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px dashed rgba(255, 255, 255, 0.1);
-}
-.lifafa-log-area h4 {
-    color: #00e0ff;
-    margin-bottom: 10px;
-}
-#activeLifafasList {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-}
-.lifafa-item {
-    padding: 8px 0;
-    border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
-    font-size: 0.9rem;
-    word-break: break-all; /* To handle long links */
-}
-.lifafa-item span.link {
-    color: #ffcc00;
-    font-weight: 500;
-    cursor: pointer;
-}
-.lifafa-item span.claimed {
-    color: #ff0077;
-}
-
-
-
-/* panel/css/pay_to_other.css: APPEND these styles */
-
-/* --- LIFAFA TAB STYLES --- */
-.lifafa-tabs {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.lifafa-tab {
+.main-tab-btn {
     flex-grow: 1;
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.7);
-    padding: 10px 5px;
-    border-bottom: 3px solid transparent;
-    cursor: pointer;
-    font-weight: 600;
-    transition: color 0.2s, border-color 0.2s;
-}
-.lifafa-tab.active {
-    color: #00e0ff;
-    border-bottom-color: #ff0077;
-}
-
-.lifafa-info-msg {
-    color: #00e0ff;
-    font-weight: 500;
-    margin-bottom: 20px;
-}
-
-/* --- ACCORDION (ADVANCED OPTIONS) STYLES --- */
-.accordion-header {
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    margin-bottom: 5px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-    user-select: none;
-    color: #fff;
-}
-
-/* Red Accent for Restriction Blocks */
-.red-header {
-    background: linear-gradient(90deg, #ff0077, rgba(255,0,119,0.7));
-    box-shadow: 0 4px 10px rgba(255,0,119,0.3);
-}
-
-.accordion-header i {
-    margin-right: 10px;
-    font-size: 1.2rem;
-}
-
-.accordion-header .arrow-icon {
-    margin-left: auto;
-    transition: transform 0.3s;
-}
-
-/* Accordion Content (Hidden by default) */
-.accordion-content {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    border-radius: 0 0 8px 8px;
-    margin-bottom: 15px;
-    display: none;
-    overflow: hidden;
-}
-
-/* Form Layout Fixes */
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-.input-icon-group {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-.input-icon-group i {
-    position: absolute;
-    left: 10px;
-    color: #00e0ff;
-    font-size: 1.1rem;
-    z-index: 2;
-}
-.input-icon-group input {
-    padding-left: 35px; /* Adjust input padding for icon */
-}
-
-.mock-feature {
-    color: #ffcc00;
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-/* Active State for Accordion */
-.accordion-header.active .arrow-icon {
-    transform: rotate(180deg);
-}
-
-
-
-
-
-
-/* panel/css/pay_to_other.css: APPEND these styles */
-
-/* --- LIFAFA TAB STYLES --- */
-.tab-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-}
-
-.tab-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 8px 15px;
-    border-bottom: 3px solid transparent;
-    cursor: pointer;
+    padding: 12px 15px;
     font-size: 1rem;
     font-weight: 600;
-    transition: color 0.2s, border-color 0.2s;
-}
-
-.tab-btn:hover {
-    color: #00e0ff;
-}
-
-.tab-btn.active {
-    color: #ff0077;
-    border-bottom-color: #ff0077;
-}
-
-/* Secondary Tabs (New styles for Image look) */
-.lifafa-tabs-secondary {
-    display: flex;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 25px;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.lifafa-tab-secondary {
-    flex-grow: 1;
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 10px 5px;
-    font-weight: 500;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
+    border-radius: 10px;
 }
-.lifafa-tab-secondary.active {
+.main-tab-btn.active {
+    background: linear-gradient(90deg, #4169E1, #5c85ff); /* Primary Blue Gradient */
     color: #fff;
-    background: #4682B4; /* Default active blue */
-    font-weight: 600;
-}
-.lifafa-tab-secondary.blue-active {
-    background: #4169E1; /* Strong blue for "Scratch" */
-    color: #fff;
-    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(65, 105, 225, 0.5);
 }
 
-/* --- ACCORDION (REMOVED: Old accordion styles removed) --- */
+/* --- FORM STYLES --- */
+#transferForm {
+    padding: 0 15px 15px 15px; /* Apply padding only below form elements */
+}
+.form-group {
+    margin-bottom: 15px;
+}
 
-/* Form Layout Fixes */
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-.lifafa-form-new .form-group {
-    margin-bottom: 10px;
-}
+/* Input Group Redesign (Clean look matching the image) */
 .input-icon-group {
     display: flex;
     align-items: center;
     position: relative;
-    padding-left: 0; /* Resetting padding if copied */
-}
-.input-icon-group i {
-    position: absolute;
-    left: 10px;
-    color: #00e0ff;
-    font-size: 1.1rem;
-    z-index: 2;
-}
-.input-icon-group input {
-    padding-left: 35px; /* Adjust input padding for icon */
-}
-
-/* --- SLIDER STYLES --- */
-.slider-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
+    padding: 12px 15px;
+    background: rgba(0,0,0,0.2);
+    margin-bottom: 12px;
 }
-#percentageSlider {
-    flex-grow: 1;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 8px;
-    background: #333;
-    border-radius: 4px;
-    cursor: default; /* Disabled in this version */
+.input-icon-group:focus-within {
+    border-color: #00e0ff;
+    box-shadow: 0 0 5px rgba(0,224,255,0.5);
 }
-#percentageSlider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #00e0ff;
-    cursor: default;
+.input-icon-group input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 1rem;
+    padding: 0;
+    padding-left: 10px; /* Space from icon */
 }
-#sliderValue {
+.input-icon-group i {
+    font-size: 1.2rem;
+    color: #4169E1;
+    flex-shrink: 0;
+}
+.validation-msg { display: block; margin-top: 5px; font-size: 0.85rem; color: #ffcc00; }
+
+/* Recent Check Button */
+.recent-check-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding: 0 15px;
     color: #00e0ff;
+    font-size: 0.9rem;
+    position: relative;
+}
+.recent-check-bar button {
+    background: none;
+    border: none;
+    color: #4169E1;
     font-weight: bold;
-    width: 50px;
-    text-align: right;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.recent-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 40px;
+    background: #2a2a44;
+    border: 1px solid #4169E1;
+    border-radius: 8px;
+    z-index: 50;
+    min-width: 150px;
+}
+.recent-dropdown-content a {
+    color: #fff;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+.recent-dropdown-content a:hover {
+    background: #333355;
 }
 
-/* Existing Lifafa Log Area Styles */
-.lifafa-log-area {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px dashed rgba(255,255,255,0.1);
+/* Pay Button */
+.submit-btn.pay-btn {
+    background: linear-gradient(90deg, #4169E1, #5c85ff);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(65, 105, 225, 0.4);
+    margin-top: 5px;
 }
-.lifafa-log-area h4 {
-    color: #00e0ff;
-    margin-bottom: 10px;
+.submit-btn.pay-btn:hover {
+    background: linear-gradient(90deg, #5c85ff, #4169E1);
 }
-#activeLifafasList {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 8px;
-    max-height: 200px;
-    overflow-y: auto;
+
+
+/* Activity Log */
+.result-display h3 { margin-bottom: 10px; color: #00e0ff; }
+#logArea {
+    background: rgba(0,0,0,0.5); border-radius: 8px; padding: 15px; max-height: 150px; 
+    overflow-y: auto; font-size: 14px; border: 1px solid rgba(255,255,255,0.1);
 }
-.lifafa-item {
-    padding: 8px 0;
-    border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
-    font-size: 0.9rem;
-    word-break: break-all;
-}
-.lifafa-item span.link {
-    color: #ffcc00;
-    font-weight: 500;
-    cursor: pointer;
-}
-.lifafa-item span.claimed {
-    color: #ff0077;
+#logArea p { margin: 5px 0; line-height: 1.5; border-bottom: 1px dotted rgba(255,255,255,0.1); }
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+    .transfer-container { padding: 0 10px; }
 }

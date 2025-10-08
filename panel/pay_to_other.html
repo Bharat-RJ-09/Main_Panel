@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pay to other / Lifafa - NextEarnX</title>
+  <title>Pay To User - NextEarnX</title>
   <link rel="stylesheet" href="css/pay_to_other.css">
   <link rel="stylesheet" href="css/theme_base.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
@@ -18,86 +18,55 @@
 
     <main class="transfer-container">
         <div class="header-section">
-            <h2>Wallet Transfer / Lifafa</h2>
+            <h2>Pay To User</h2>
             <p class="balance-status">Your Balance: <span id="currentBalanceDisplay" style="color:#aaffaa; font-weight:bold;">₹0.00</span></p>
         </div>
-
-        <div class="tab-nav">
-            <button class="tab-btn active" data-target="transfer">Pay to other</button>
-            <button class="tab-btn" data-target="lifafa">Create Lifafa</button>
-        </div>
-
-        <section id="transferSection" class="transfer-form-card card tab-content active">
-            <p class="status-msg">Max transfer limit is ₹100 per user per day.</p>
-            <form id="transferForm">
-                
-                <div class="form-group">
-                    <label for="recipientMobile">Recipient Mobile Number:</label>
-                    <input type="tel" id="recipientMobile" placeholder="Enter 10-digit Mobile Number" pattern="[0-9]{10}" maxlength="10" required>
-                    <small id="recipientUsernameMsg"></small>
-                </div>
-
-                <div class="form-group">
-                    <label for="transferAmount">Amount (₹):</label>
-                    <input type="number" id="transferAmount" min="1" max="100" placeholder="Max ₹100" required>
-                </div>
-
-                <button type="submit" id="sendFundsBtn" class="submit-btn"><i class="ri-send-plane-line"></i> Send Funds</button>
-            </form>
-        </section>
-
-
-        <section id="lifafaSection" class="transfer-form-card card tab-content" style="display: none;">
+        
+        <section class="transfer-form-card card">
             
-            <div class="lifafa-tabs-secondary">
-                <button class="lifafa-tab-secondary active">Normal</button>
-                <button class="lifafa-tab-secondary">Dice</button>
-                <button class="lifafa-tab-secondary">Toss</button>
-                <button class="lifafa-tab-secondary blue-active">Scratch</button>
+            <div class="main-tab-nav">
+                <button class="main-tab-btn active" data-tab="single">Single</button>
+                <button class="main-tab-btn" data-tab="bulk">BULK</button>
             </div>
-
-           <form id="lifafaForm" class="lifafa-form-new">
+            
+            <div id="singleContent" class="transfer-tab-content active">
                 
-                <div class="form-group input-icon-group">
-                    <i class="ri-gift-line"></i>
-                    <input type="text" id="lifafaTitle" placeholder="Giveaway Title" required>
-                </div>
-                
-                <div class="form-group grid-2">
-                    <div class="input-icon-group">
-                        <i class="ri-group-line"></i>
-                        <input type="number" id="lifafaCount" min="2" placeholder="Total Users" required>
-                    </div>
-                    <div class="input-icon-group">
-                        <i class="ri-money-rupee-circle-line"></i>
-                        <p id="lifafaTotalCostDisplay" class="status-msg" style="margin-top: -10px; margin-bottom: 20px; text-align: center; color: #00e0ff;">Total Cost: ₹0.00</p>
+                <div class="recent-check-bar">
+                    <i class="ri-history-line"></i>
+                    <button id="recentCheckBtn">Recent <i class="ri-arrow-down-s-line"></i></button>
+                    <div id="recentDropdown" class="recent-dropdown-content">
+                        <a href="#">Recent User 1</a>
+                        <a href="#">Recent User 2</a>
                     </div>
                 </div>
-                
-                <div class="form-group slider-group">
-                    <input type="range" id="percentageSlider" min="0" max="100" value="100" disabled>
-                    <span id="sliderValue">100%</span>
-                </div>
 
-                <div class="form-group input-icon-group">
-                    <i class="ri-message-3-line"></i>
-                    <input type="text" id="paymentComment" placeholder="Payment Comment" required>
-                </div>
+                <p class="status-msg">Max transfer limit is ₹100 per user per day. <a href="make_lifafa.html" style="color:#00e0ff;">Create Lifafa here.</a></p>
                 
-                <div class="form-group input-icon-group">
-                    <i class="ri-external-link-line"></i>
-                    <input type="url" id="redirectLink" placeholder="Redirect Link (Optional)">
-                </div>
+                <form id="transferForm">
+                    
+                    <div class="form-group input-icon-group">
+                        <i class="ri-phone-line" style="color:#4169E1;"></i>
+                        <input type="tel" id="recipientMobile" placeholder="Enter User FXL Number" pattern="[0-9]{10}" maxlength="10" required>
+                        <small id="recipientUsernameMsg" class="validation-msg"></small>
+                    </div>
 
-                <button type="submit" id="createLifafaBtn" class="submit-btn"><i class="ri-coupon-line"></i> Create Lifafa Link</button>
-            </form>
-            
-            <div class="lifafa-log-area">
-                <h4>Active Lifafas:</h4>
-                <div id="activeLifafasList">
-                    <p>No active giveaways.</p>
-                </div>
+                    <div class="form-group input-icon-group">
+                        <i class="ri-money-rupee-circle-line" style="color:#4169E1;"></i>
+                        <input type="number" id="transferAmount" min="1" max="100" placeholder="Enter Amount" required>
+                    </div>
+
+                    <div class="form-group input-icon-group">
+                        <i class="ri-chat-3-line" style="color:#4169E1;"></i>
+                        <input type="text" id="paymentComment" placeholder="Enter Payment Comment (optional)">
+                    </div>
+
+                    <button type="submit" id="sendFundsBtn" class="submit-btn pay-btn">PAY</button>
+                </form>
             </div>
+            
+            <div id="bulkContent" class="transfer-tab-content" style="display:none;">
+                <p class="status-msg">Bulk transfer feature is under development.</p>
+                </div>
         </section>
 
 
