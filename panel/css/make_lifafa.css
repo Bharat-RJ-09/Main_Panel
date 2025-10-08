@@ -124,7 +124,7 @@ body::before {
     align-items: center;
     position: relative;
     padding: 15px; 
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(2, 238, 57, 0.987);
     border-radius: 10px;
     margin-bottom: 12px;
     background: rgba(0,0,0,0.2);
