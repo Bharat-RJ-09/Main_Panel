@@ -156,12 +156,14 @@
 }
 
 /* Pay Button */
-.submit-btn.pay-btn {
+.submit-btn.pay-btn { 
     background: linear-gradient(90deg, #4169E1, #5c85ff);
     color: #fff;
     font-weight: 700;
     box-shadow: 0 4px 15px rgba(65, 105, 225, 0.4);
     margin-top: 5px;
+    padding: 5px 12px;
+    border-radius: 8px ;
 }
 .submit-btn.pay-btn:hover {
     background: linear-gradient(90deg, #5c85ff, #4169E1);
@@ -211,11 +213,12 @@
 
 /* Bulk History Button */
 .submit-btn.history-btn {
-    background: #444466; /* Darker/Grey background */
+    background: #000082; /* Darker/Grey background */
     color: #fff;
     border: 1px solid #777;
     margin-top: 15px; /* Space from Next button */
-    padding: 10px 12px;
+    padding: 5px 12px;
+    border-radius: 5px;
 }
 .submit-btn.history-btn:hover {
     background: #555577;
