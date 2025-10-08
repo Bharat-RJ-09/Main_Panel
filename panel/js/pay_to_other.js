@@ -1,38 +1,30 @@
-// panel/js/pay_to_other.js - Wallet Transfer & Lifafa Logic (Finalized & Robust)
+// panel/js/pay_to_other.js - Wallet Transfer Logic (Cleaned & Redesigned)
 
 document.addEventListener('DOMContentLoaded', () => {
     const transferForm = document.getElementById('transferForm');
     const recipientMobileInput = document.getElementById('recipientMobile');
     const transferAmountInput = document.getElementById('transferAmount');
+    const paymentCommentInput = document.getElementById('paymentComment'); // ADDED Comment Input
     const recipientUsernameMsg = document.getElementById('recipientUsernameMsg');
     const currentBalanceDisplay = document.getElementById('currentBalanceDisplay'); 
     const logArea = document.getElementById('logArea');
     const logoutBtn = document.getElementById('logoutBtn');
+    const recentCheckBtn = document.getElementById('recentCheckBtn'); // NEW
+    const recentDropdown = document.getElementById('recentDropdown'); // NEW
     
-    // NEW: Lifafa Elements 
-    const lifafaForm = document.getElementById('lifafaForm');
-    const lifafaCountInput = document.getElementById('lifafaCount');
-    const lifafaPerUserAmountInput = document.getElementById('lifafaPerUserAmount'); 
-    const activeLifafasList = document.getElementById('activeLifafasList');
-
-    // IMPROVEMENT: Total Cost Display Element
-    const lifafaTotalCostDisplay = document.getElementById('lifafaTotalCostDisplay');
-
-    // TRANSFER/LIFAFA LIMITS
+    // TRANSFER LIMITS
     const MAX_DAILY_TRANSFER = 100; 
-    const MIN_LIFAFA_AMOUNT = 10;
     const DAILY_LIMIT_KEY = 'nextEarnXDailyTransfer'; 
-    const LIFAFA_STORAGE_KEY = 'nextEarnXLifafas'; 
     
-    // CRITICAL FIX: Global Balance and History Keys for the sender
+    // CRITICAL FIX: Global Balance and History Keys
     const GLOBAL_BALANCE_KEY = 'nextEarnXBalance'; 
     const GLOBAL_HISTORY_KEY = 'nextEarnXHistory'; 
+    const USER_STORAGE_KEY = 'nextEarnXUsers';
 
     let senderUsername = '';
     let recipientUser = null; 
 
-    // --- UTILITIES (CRITICAL FIX: Sender uses GLOBAL Keys) ---
-    const USER_STORAGE_KEY = 'nextEarnXUsers';
+    // --- UTILITIES ---
     
     function getCurrentUserSession() {
         try {
@@ -41,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch { return null; }
     }
 
-    // CRITICAL FIX: Sender always uses the GLOBAL_BALANCE_KEY
     function getBalance(username) {
         if (username === senderUsername) {
             return parseFloat(localStorage.getItem(GLOBAL_BALANCE_KEY) || '0.00');
@@ -49,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00'); 
     }
     
-    // CRITICAL FIX: Sender always uses the GLOBAL_BALANCE_KEY
     function setBalance(username, balance) {
         if (username === senderUsername) {
             localStorage.setItem(GLOBAL_BALANCE_KEY, balance.toFixed(2));
@@ -58,14 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(`nextEarnXBalance_${username}`, balance.toFixed(2));
     }
     
-    // CRITICAL FIX: Sender always uses the GLOBAL_HISTORY_KEY
     function getHistory(username) {
         const key = (username === senderUsername) ? GLOBAL_HISTORY_KEY : `nextEarnXHistory_${username}`;
         try { return JSON.parse(localStorage.getItem(key) || '[]'); }
         catch { return []; }
     }
 
-    // CRITICAL FIX: Sender always uses the GLOBAL_HISTORY_KEY
     function saveHistory(username, history) {
         const key = (username === senderUsername) ? GLOBAL_HISTORY_KEY : `nextEarnXHistory_${username}`;
         localStorage.setItem(key, JSON.stringify(history));
@@ -76,16 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         catch { return []; }
     }
     
-    function loadLifafas() {
-        try { return JSON.parse(localStorage.getItem(LIFAFA_STORAGE_KEY) || "[]"); }
-        catch { return []; }
-    }
-    
-    function saveLifafas(lifafas) {
-        localStorage.setItem(LIFAFA_STORAGE_KEY, JSON.stringify(lifafas));
-    }
-    
-    // Utility to get today's transferred amount (for daily limit check)
     function getTodayTransferredAmount(username) {
         const todayKey = `${DAILY_LIMIT_KEY}_${username}_${new Date().toDateString()}`;
         return parseFloat(localStorage.getItem(todayKey) || '0.00');
@@ -111,106 +89,48 @@ document.addEventListener('DOMContentLoaded', () => {
         logArea.prepend(p);
     }
     
-    // --- LIFAFA LIST RENDERING (unchanged) ---
-    function renderLifafas() {
-        const lifafas = loadLifafas().filter(l => l.creator === senderUsername);
-        activeLifafasList.innerHTML = '';
-        
-        if (lifafas.length === 0) {
-            activeLifafasList.innerHTML = '<p>No active giveaways.</p>';
-            return;
-        }
-
-        lifafas.forEach(l => {
-            const item = document.createElement('div');
-            item.classList.add('lifafa-item');
-            
-            const claimedCount = l.claims.length;
-            const statusText = (claimedCount === l.count) ? 'CLOSED' : `${claimedCount}/${l.count} Claimed`;
-            
-            const totalAmount = (l.perClaim * l.count); 
-
-            item.innerHTML = `
-                <p>
-                    <strong>₹${totalAmount.toFixed(2)}</strong> | ${statusText}
-                    <br>Link: <span class="link" data-link="${window.location.origin}/claim.html?id=${l.id}" title="Click to copy">${window.location.origin}/claim.html?id=${l.id}</span>
-                </p>
-                <p style="color:#777; font-size:11px;">Created: ${new Date(l.date).toLocaleString()}</p>
-            `;
-            activeLifafasList.appendChild(item);
-            
-            item.querySelector('.link').addEventListener('click', (e) => {
-                const linkToCopy = e.target.dataset.link;
-                navigator.clipboard.writeText(linkToCopy);
-                alert('Lifafa Link copied to clipboard!');
-            });
-        });
-    }
-    
-    // --- NEW IMPROVEMENT: DYNAMIC COST CALCULATION ---
-    function updateLifafaTotalCost() {
-        const count = parseInt(lifafaCountInput.value) || 0;
-        const perAmount = parseFloat(lifafaPerUserAmountInput.value) || 0;
-        const totalCost = (count * perAmount);
-        
-        if (lifafaTotalCostDisplay) {
-            lifafaTotalCostDisplay.innerHTML = `Total Cost: <span style="font-weight:bold;">₹${totalCost.toFixed(2)}</span>`;
-            
-            // Highlight if minimum amount is not met (MIN_LIFAFA_AMOUNT = 10)
-            if (totalCost < MIN_LIFAFA_AMOUNT && totalCost > 0) {
-                 lifafaTotalCostDisplay.style.color = '#ffcc00'; // Yellow warning
-                 lifafaTotalCostDisplay.innerHTML += `<br><small style="color:red;">Min total amount is ₹${MIN_LIFAFA_AMOUNT}.</small>`;
-            } else {
-                 lifafaTotalCostDisplay.style.color = '#00e0ff'; // Aqua
-            }
-        }
-    }
-    
-    // Attach listener only if the elements exist
-    if (lifafaCountInput) lifafaCountInput.addEventListener('input', updateLifafaTotalCost);
-    if (lifafaPerUserAmountInput) lifafaPerUserAmountInput.addEventListener('input', updateLifafaTotalCost);
-
-
-    // --- INITIALIZE ---
     getCurrentUserSession(); 
     refreshBalanceUI();
-    renderLifafas();
-    updateLifafaTotalCost(); // Initial call to show cost
 
-
-    // --- TAB SWITCHING LOGIC (updated to call cost calculation) ---
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    // Tab Switching Logic (Single / Bulk)
+    document.querySelectorAll('.main-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const target = btn.dataset.target;
-            
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
-            
+            const target = btn.dataset.tab;
+            document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.transfer-tab-content').forEach(s => s.style.display = 'none');
             btn.classList.add('active');
-            document.getElementById(target + 'Section').style.display = 'block';
+            document.getElementById(target + 'Content').style.display = 'block';
             
-            const logType = (target === 'transfer') ? 'Ready to send...' : 'Ready to create Lifafa...';
-            logArea.innerHTML = `<p>${logType}</p>`;
-            
-            // Call updateLifafaTotalCost when switching to Lifafa tab
-            if (target === 'lifafa') {
-                updateLifafaTotalCost();
-            }
+            logArea.innerHTML = `<p>Ready for ${target} transfer...</p>`;
         });
     });
 
+    // Recent Check Dropdown Toggle
+    recentCheckBtn.addEventListener('click', () => {
+        recentDropdown.style.display = recentDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    // Close dropdown when clicking outside (Mock)
+    window.addEventListener('click', (e) => {
+        if (!recentCheckBtn.contains(e.target) && !recentDropdown.contains(e.target)) {
+            recentDropdown.style.display = 'none';
+        }
+    });
+
+
     // ------------------------------------------
-    // --- TRANSFER LOGIC (UPDATED CONFIRMATION) ---
+    // --- TRANSFER LOGIC ---
     // ------------------------------------------
 
     transferForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
         const amount = parseFloat(transferAmountInput.value);
+        const comment = paymentCommentInput.value.trim() || 'Wallet Transfer'; // Use comment or default
         const currentBalance = getBalance(senderUsername);
         const todayTransferred = getTodayTransferredAmount(senderUsername);
 
-        // ... (Validation and Limit Checks - UNCHANGED) ...
+        // Validation and Limit Checks
         if (!recipientUser) { appendLog('Error: Please enter a valid, registered mobile number.', 'error'); return; }
         if (isNaN(amount) || amount < 1) { appendLog('Error: Transfer amount must be at least ₹1.', 'error'); return; }
         if (amount > MAX_DAILY_TRANSFER) { appendLog(`Error: Transfer amount exceeds the ₹${MAX_DAILY_TRANSFER} limit.`, 'error'); return; }
@@ -219,17 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalAfterTransfer = todayTransferred + amount;
         if (totalAfterTransfer > MAX_DAILY_TRANSFER) { appendLog(`Error: Daily transfer limit exceeded. Remaining limit: ₹${(MAX_DAILY_TRANSFER - todayTransferred).toFixed(2)}`, 'error'); return; }
 
-        // NEW IMPROVEMENT: Detailed Confirmation Dialog
-        const confirmationMessage = `Confirm Fund Transfer?
-
-Recipient Details:
-- Mobile: ${recipientUser.mobile}
-- Username: ${recipientUser.username}
-- Amount: ₹${amount.toFixed(2)}
-
-Press OK to proceed.`;
-        
-        if (!confirm(confirmationMessage)) return; // If user cancels, stop execution
+        if (!confirm(`Confirm transfer of ₹${amount.toFixed(2)} to ${recipientUser.username}? Comment: ${comment}`)) return;
         
         // Execution
         const newSenderBalance = currentBalance - amount;
@@ -237,7 +147,14 @@ Press OK to proceed.`;
         const newRecipientBalance = getBalance(recipientUser.username) + amount;
         setBalance(recipientUser.username, newRecipientBalance);
 
-        // ... (Logging remains same) ...
+        // Logging
+        let senderHistory = getHistory(senderUsername);
+        senderHistory.push({ date: Date.now(), type: 'debit', amount: amount, txnId: 'TRANSFER_SENT_' + Date.now(), note: `${comment} (To ${recipientUser.username})` });
+        saveHistory(senderUsername, senderHistory);
+
+        let recipientHistory = getHistory(recipientUser.username);
+        recipientHistory.push({ date: Date.now(), type: 'credit', amount: amount, txnId: 'TRANSFER_RECEIVED_' + Date.now(), note: `${comment} (From ${senderUsername})` });
+        saveHistory(recipientUser.username, recipientHistory);
         
         recordTransfer(senderUsername, amount);
 
@@ -248,7 +165,7 @@ Press OK to proceed.`;
         recipientMobileInput.dispatchEvent(new Event('input')); 
     });
     
-    // Recipient Input Listener (NOTE: This handles the real-time lookup and is working)
+    // Recipient Input Listener 
     recipientMobileInput.addEventListener('input', () => {
         const mobile = recipientMobileInput.value.trim();
         const users = loadUsers();
@@ -274,89 +191,12 @@ Press OK to proceed.`;
             recipientUsernameMsg.textContent = `✅ Sending to: ${userFound.username}`;
             recipientUsernameMsg.style.color = 'limegreen';
         } else {
-            recipientUsernameMsg.textContent = "❌ Mobile number not found on NextEarnX.";
+            recipientUsernameMsg.textContent = "❌ User not found on NextEarnX.";
             recipientUsernameMsg.style.color = 'red';
         }
     });
 
-    // ------------------------------------------
-    // --- LIFAFA CREATION LOGIC (UPDATED SUBMIT) ---
-    // ------------------------------------------
-
-    if (lifafaForm) {
-        lifafaForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const perUserAmount = parseFloat(lifafaPerUserAmountInput.value);
-            const count = parseInt(lifafaCountInput.value);
-            const totalAmount = perUserAmount * count; // Calculate total amount
-            
-            const currentBalance = getBalance(senderUsername);
-
-            // 1. Validation 
-            if (isNaN(perUserAmount) || perUserAmount < 0.01) {
-                appendLog(`Error: Per user amount must be at least ₹0.01.`, 'error');
-                return;
-            }
-            if (isNaN(count) || count < 2) {
-                appendLog('Error: Minimum claims/users is 2.', 'error');
-                return;
-            }
-            if (totalAmount < MIN_LIFAFA_AMOUNT) {
-                appendLog(`Error: Minimum Lifafa total amount is ₹${MIN_LIFAFA_AMOUNT}.`, 'error');
-                return;
-            }
-            if (currentBalance < totalAmount) {
-                appendLog(`Error: Insufficient balance. Available: ₹${currentBalance.toFixed(2)}. Total Cost: ₹${totalAmount.toFixed(2)}`, 'error');
-                return;
-            }
-
-            // 2. Confirmation 
-            if (!confirm(`Confirm creation of Lifafa worth ₹${totalAmount.toFixed(2)} for ${count} users?`)) {
-                return;
-            }
-
-            // 3. Execution 
-            const newBalance = currentBalance - totalAmount;
-            setBalance(senderUsername, newBalance);
-
-            const uniqueId = senderUsername.slice(0, 3).toUpperCase() + Math.random().toString(36).substring(2, 9).toUpperCase() + Date.now().toString().slice(-4);
-            
-            const newLifafa = {
-                id: uniqueId,
-                creator: senderUsername,
-                date: Date.now(),
-                totalAmount: totalAmount, 
-                count: count,
-                perClaim: perUserAmount, 
-                claims: [] 
-            };
-
-            // 4. Save Lifafa & Log Transaction 
-            let lifafas = loadLifafas();
-            lifafas.push(newLifafa);
-            saveLifafas(lifafas);
-            
-            let senderHistory = getHistory(senderUsername);
-            senderHistory.push({ date: Date.now(), type: 'debit', amount: totalAmount, txnId: 'LIFAFA_CREATED_' + uniqueId, note: `Created Lifafa for ${count} users` });
-            saveHistory(senderUsername, senderHistory);
-
-
-            // 5. Final UI Update
-            refreshBalanceUI();
-            renderLifafas();
-            appendLog(`SUCCESS: Lifafa created! Share link with ID: ${uniqueId}`, 'success');
-            
-            const linkMsg = document.createElement('p');
-            linkMsg.innerHTML = `<span style="color: #00e0ff; font-weight:bold;">Link:</span> ${window.location.origin}/claim.html?id=${uniqueId}`;
-            logArea.prepend(linkMsg);
-            
-            lifafaForm.reset();
-            updateLifafaTotalCost(); // Reset cost display after submission
-        });
-    }
-
-    // Logout Button (For consistency - unchanged)
+    // Logout Button (For consistency)
     if(logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('session');
