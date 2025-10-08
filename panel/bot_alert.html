@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bot Alert Setup - NextEarnX</title>
+  <link rel="stylesheet" href="css/index.css"> <link rel="stylesheet" href="css/theme_base.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <a href="index.html" class="menu-btn"><i class="ri-arrow-left-line"></i></a>
+        <h1 class="logo">NextEarn<span>X</span></h1>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <main class="dashboard-main"> <h2>Telegram Bot Alert Setup</h2>
+        <p class="sub-status" style="margin-bottom:20px;">Setup your personal Telegram bot integration to receive alerts.</p>
+
+        <section class="card settings-card">
+            <h3>Bot Configuration</h3>
+            <form id="botSettingsForm">
+                <div class="form-group">
+                    <label for="botToken">Bot Token (e.g., 12345:ABC-DEF)</label>
+                    <input type="text" id="botToken" placeholder="Enter Telegram Bot Token" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="chatId">Your Chat ID (e.g., -10012345678)</label>
+                    <input type="text" id="chatId" placeholder="Enter Telegram Chat ID" required>
+                </div>
+                
+                <button type="submit" id="saveSettingsBtn" class="action-btn primary-btn" style="margin-top:10px;"><i class="ri-save-line"></i> Save Settings</button>
+            </form>
+        </section>
+
+        <section class="card test-alert-card">
+            <h3>Test Alert</h3>
+            <form id="testAlertForm">
+                <div class="form-group">
+                    <label for="alertMessage">Message to Send:</label>
+                    <textarea id="alertMessage" rows="3" placeholder="Enter a test message..."></textarea>
+                </div>
+                <button type="submit" id="sendTestBtn" class="action-btn" style="background:#4169E1; color:#fff; border:none;"><i class="ri-send-plane-line"></i> Send Test Alert</button>
+            </form>
+        </section>
+        
+        <section class="result-display">
+            <h3>Activity Log</h3>
+            <div id="logArea" class="log-area" style="max-height:150px; overflow-y:auto; background: rgba(0,0,0,0.5); border-radius: 8px; padding: 15px; font-size: 14px; border: 1px solid rgba(255,255,255,0.1);">
+                <p>Status: Ready to configure...</p>
+            </div>
+        </section>
+        
+    </main>
+
+    <script src="js/bot_alert.js"></script>
+</body>
+</html>
