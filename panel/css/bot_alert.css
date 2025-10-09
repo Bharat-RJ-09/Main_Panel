@@ -1,0 +1,122 @@
+/* panel/css/bot_alert.css - Telegram Bot Alert Setup Styles */
+
+/* --- Main Content Layout (Inheriting from index.css) --- */
+.dashboard-main {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.dashboard-main h2 {
+    color: #ffcc00; /* Gold accent for the main title */
+    margin-bottom: 5px;
+}
+.dashboard-main .sub-status {
+    color: #aaa;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* --- Card Headers --- */
+.settings-card h3 {
+    color: #00e0ff; /* Neon Cyan for Settings header */
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+.test-alert-card h3 {
+    color: #ff0077; /* Neon Pink for Test Alert header */
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+
+/* --- Form Elements --- */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Input & Textarea style (Matching theme_base inputs) */
+#botToken, #chatId, #alertMessage {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical; /* Textarea ke liye */
+}
+
+#botToken:focus, #chatId:focus, #alertMessage:focus {
+    border-color: #00e0ff;
+    box-shadow: 0 0 5px rgba(0,224,255,0.5);
+}
+
+/* --- Button Customization --- */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+/* Save Settings Button (Primary: Pink) */
+#saveSettingsBtn {
+    background: #ff0077;
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(255,0,119,0.3);
+}
+#saveSettingsBtn:hover {
+    background: #ff3399;
+}
+
+/* Send Test Alert Button (Secondary: Blue/Cyan) */
+#sendTestBtn {
+    background: linear-gradient(90deg, #4169E1, #00e0ff);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(65, 105, 225, 0.4);
+}
+#sendTestBtn:hover {
+    background: linear-gradient(90deg, #5c85ff, #33ffff);
+}
+
+/* --- Activity Log Styling --- */
+.result-display h3 {
+    color: #ffcc00; /* Gold color for Activity Log header */
+    margin-bottom: 10px;
+}
+#logArea {
+    background: rgba(0,0,0,0.5); 
+    border-radius: 8px; 
+    padding: 15px; 
+    max-height: 150px; 
+    overflow-y: auto; 
+    font-size: 14px; 
+    border: 1px solid rgba(255,255,255,0.1);
+}
+#logArea p {
+    margin: 5px 0;
+    line-height: 1.5;
+    border-bottom: 1px dotted rgba(255,255,255,0.1);
+}
