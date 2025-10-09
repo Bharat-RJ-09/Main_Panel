@@ -4,8 +4,10 @@
 .login-container {
     /* REMOVED fixed positioning and margin */
     position: relative;
-    z-index: 2; 
-    width: 360px;   
+    z-index: 2;  
+    width: 400px;
+    margin: auto;
+    margin-top: 12%;
     padding: 32px;
     border-radius: 18px;
     box-shadow: 0 10px 40px rgba(2,6,23,0.6);
