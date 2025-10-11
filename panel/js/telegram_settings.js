@@ -3,8 +3,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const SETTINGS_KEY = 'nextEarnXGlobalSettings';
     const MAX_CHANNELS = 4;
-    const BOT_USERNAME = '@FxL_lifafa_verifier_bot';
-
+    const BOT_USERNAME = '@NextEarnX_Verifier_Bot';
+ 
     // UI Elements
     const activeChannelsContainer = document.getElementById('activeChannelsContainer');
     const totalChannelsDisplay = document.getElementById('totalChannels');
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             activeChannelsContainer.innerHTML = '<p style="color:#777;">No channels added yet.</p>';
             return;
         }
-          
+        
 
         currentChannels.forEach((channel, index) => {
             const item = document.createElement('div');
@@ -70,48 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Add Channel
     addChannelBtn.addEventListener('click', () => {
-    const link = newChannelLinkInput.value.trim();
-    if (!link) {
-        alert('Please enter a channel link or username.');
-        return;
-    }
-    if (currentChannels.length >= MAX_CHANNELS) {
-        alert(`Maximum limit of ${MAX_CHANNELS} channels reached. Remove one first.`);
-        return;
-    }
-    if (currentChannels.includes(link)) {
-         alert('This channel is already added.');
-         return;
-    }
-    
-    // Simple Link Validation (Check for @ or t.me)
-    if (!link.startsWith('@') && !link.toLowerCase().startsWith('https://t.me/') && !link.toLowerCase().startsWith('t.me/')) {
-        if (!confirm('The format seems incorrect. Continue anyway?')) return;
-    }
-    
-    currentChannels.push(link);
-    newChannelLinkInput.value = '';
-    
-    // Hide validation icon after successful add
-    if(validationCheckIcon) validationCheckIcon.style.display = 'none';
-
-    renderChannels();
-    saveChannelsBtn.classList.add('unsaved');
-});
-
-// panel/js/telegram_settings.js (Line 115 ke aas-paas)
-// Input Listener for Live Validation Icon
-newChannelLinkInput.addEventListener('input', () => {
-    const link = newChannelLinkInput.value.trim();
-    if (!validationCheckIcon) return;
-    
-    // Show green tick if it looks like a valid link/username, otherwise hide.
-    if (link && (link.startsWith('@') || link.toLowerCase().includes('t.me/'))) {
-        validationCheckIcon.style.display = 'block';
-    } else {
-        validationCheckIcon.style.display = 'none';
-    }
-});
+        const link = newChannelLinkInput.value.trim();
+        if (!link) {
+            alert('Please enter a channel link or username.');
+            return;
+        }
+        if (currentChannels.length >= MAX_CHANNELS) {
+            alert(`Maximum limit of ${MAX_CHANNELS} channels reached. Remove one first.`);
+            return;
+        }
+        if (currentChannels.includes(link)) {
+            alert('This channel is already added.');
+            return;
+        }
 
         // Simple Link Validation (Check for @ or t.me)
         if (!link.startsWith('@') && !link.toLowerCase().startsWith('https://t.me/')) {
@@ -151,10 +122,13 @@ newChannelLinkInput.addEventListener('input', () => {
         alert(`✅ Copied: ${BOT_USERNAME}`);
     });
 
+     
+
     // 5. Tap to Admin (Mock)
-    tapToAdminBtn.addEventListener('click', () => {
-        alert("MOCK: This feature would typically redirect you to add the bot as admin.");
-    });
+    // tapToAdminBtn.addEventListener('click', () => {
+    //     alert(`To add the bot as an admin, open Telegram and navigate to your channel's admin settings. Add ${BOT_USERNAME} as an admin with the required permissions.`);
+        
+    // });
 
     // 6. Logout
     if (logoutBtn) {

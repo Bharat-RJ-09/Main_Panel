@@ -25,10 +25,10 @@
             <div class="list-header-bar">
                 <p>Total Channels: <span id="totalChannels">0</span></p>
                 <button id="saveChannelsBtn" class="action-btn save-btn">Save</button>
-            </div>
+            </div> <br>
             
             <div id="activeChannelsContainer">
-                <p style="color:#777; font-size:0.9rem;">No channels added yet.</p>
+                <p style="color:#777; font-size:0.9rem;">No channels added yet.</p>  
             </div>
             
         </section>
@@ -37,9 +37,9 @@
             <h3 style="color:#00e0ff;">Add Channels Below</h3>
             <p class="note">Add your channels below. These channels will automatically appear in every Lifafa.</p>
             
-            <div class="form-group input-icon-group">
-                <label for="newChannelLink">Channel link or username.</label>
-                <input type="text" id="newChannelLink" placeholder="Enter channel link or username.">
+            <div class="form-group input-icon-group"> <br>
+                <label for="newChannelLink">Channel link or username.</label> <br> <br>
+                <input type="text" id="newChannelLink" placeholder="Enter channel link or username.">  <br> <br>
                 <i class="ri-check-line validation-check-icon" style="color:limegreen; display:none;"></i> 
             </div>
             
@@ -47,39 +47,21 @@
         </section>
         
         <section class="verifier-card card">
-            <h3>Bot Verifier Setup (CRITICAL)</h3>
-            <p class="note">To enable advanced Lifafa features, please make <span style="color:#00e0ff; font-weight:bold;">@FxL_lifafa_verifier_bot</span> an admin of your channel.</p>
+            <h3>Bot Verifier Setup</h3>
+            <p class="note">To enable advanced Lifafa features, please make <span style="color:#00e0ff; font-weight:bold;">@NextEarnX_Verifier_Bot</span> an admin of your channel.</p>
             
             <div class="form-group verifier-input-group">
-                <label for="verifierUsername">Verifier bot username:</label>
-                <input type="text" id="verifierUsername" value="@FxL_lifafa_verifier_bot" readonly>
+                <label for="verifierUsername">Verifier bot username:</label> <br><br>
+                <input type="text" id="verifierUsername" value="@NextEarnX_Verifier_Bot" readonly> <br> <br> <br>
                 <button id="copyVerifierBtn" class="action-btn copy-btn"><i class="ri-file-copy-line"></i> Copy</button>
             </div>
 
-            <button id="tapToAdminBtn" class="action-btn admin-btn">Tap To Add Admin</button>
-        </section>
-
-        <section class="add-channel-card card">
-            <h3 style="color:#00e0ff;">Add New Channel</h3>
-            <div class="form-group">
-                <label for="newChannelLink">Channel link or username:</label>
-                <input type="text" id="newChannelLink" placeholder="@channelusername or t.me/link">
+            <div><a href="https://t.me/NextEarnX_Verifier_Bot">
+            <button id="tapToAdminBtn" class="action-btn admin-btn">Tap To Add Admin</button></a>
             </div>
-            <button id="addChannelBtn" class="action-btn add-btn"><i class="ri-add-line"></i> Add Channel</button>
         </section>
-
-        <section class="verifier-card card">
-            <h3>Bot Verifier Setup (CRITICAL)</h3>
-            <p class="note">To enable advanced Lifafa features, please make <span style="color:#00e0ff; font-weight:bold;">@FxL_lifafa_verifier_bot</span> an admin of your channels.</p>
-            
-            <div class="form-group verifier-input-group">
-                <label for="verifierUsername">Verifier bot username:</label>
-                <input type="text" id="verifierUsername" value="@FxL_lifafa_verifier_bot" readonly>
-                <button id="copyVerifierBtn" class="action-btn copy-btn"><i class="ri-file-copy-line"></i> Copy</button>
-            </div>
-
-            <button id="tapToAdminBtn" class="action-btn admin-btn"><i class="ri-check-line"></i> Tap To Add Admin (Mock Link)</button>
-        </section>
+ 
+ 
         
     </main>
 

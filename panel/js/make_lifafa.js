@@ -1,11 +1,14 @@
-// panel/js/make_lifafa.js - Dedicated Lifafa Creation Logic
+// panel/js/make_lifafa.js - Dedicated Lifafa Creation Logic (UPDATED FOR GLOBAL TELEGRAM)
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    const SETTINGS_KEY = 'nextEarnXGlobalSettings'; // Define settings key
     
     // UI Elements
     const currentBalanceDisplay = document.getElementById('currentBalanceDisplay'); 
     const logArea = document.getElementById('logArea');
     const logoutBtn = document.getElementById('logoutBtn');
+    const currentChannelCountDisplay = document.getElementById('currentChannelCount'); // ADDED
     
     // Lifafa Form Elements (Normal Lifafa is the default for submission)
     const normalLifafaForm = document.getElementById('normalLifafaForm');
@@ -20,11 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // CRITICAL: Global Balance and History Keys
     const GLOBAL_BALANCE_KEY = 'nextEarnXBalance'; 
     const GLOBAL_HISTORY_KEY = 'nextEarnXHistory'; 
+    const USER_STORAGE_KEY = 'nextEarnXUsers';
 
     let senderUsername = '';
+    let globalSettings = {}; // ADDED Global Settings container
 
     // --- UTILITIES ---
-    const USER_STORAGE_KEY = 'nextEarnXUsers';
     
     function getCurrentUserSession() {
         try {
@@ -32,13 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
             senderUsername = user ? user.username : ''; 
         } catch { return null; }
     }
+    
+    // ADDED: Load Global Settings
+    function loadGlobalSettings() {
+        try {
+            const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY));
+            globalSettings = settings || {};
+        } catch {
+            globalSettings = {};
+        }
+    }
 
     function getBalance(username) {
-        // If checking sender's balance, use the global key. 
         if (username === senderUsername) {
             return parseFloat(localStorage.getItem(GLOBAL_BALANCE_KEY) || '0.00');
         }
-        // For recipients/other, use per-user keys
         return parseFloat(localStorage.getItem(`nextEarnXBalance_${username}`) || '0.00'); 
     }
     
@@ -47,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem(GLOBAL_BALANCE_KEY, balance.toFixed(2));
             return;
         }
-        // For recipients/other, use per-user keys
         localStorage.setItem(`nextEarnXBalance_${username}`, balance.toFixed(2));
     }
     
@@ -81,6 +92,22 @@ document.addEventListener('DOMContentLoaded', () => {
         p.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
         p.style.color = type === 'success' ? '#aaffaa' : type === 'error' ? '#ffaaaa' : '#e0e0e0';
         logArea.prepend(p);
+    }
+    
+    // ADDED: Update Telegram Channel Status on UI
+    function updateTelegramStatusUI() {
+        const channels = globalSettings.telegramChannels || [];
+        const count = channels.length;
+        
+        if (currentChannelCountDisplay) {
+            if (count > 0) {
+                 currentChannelCountDisplay.textContent = `(Currently ${count} channel(s) are required globally)`;
+                 currentChannelCountDisplay.style.color = '#aaffaa';
+            } else {
+                 currentChannelCountDisplay.textContent = `(No channels required yet. Click 'Manage Channels' to add.)`;
+                 currentChannelCountDisplay.style.color = '#ffcc00';
+            }
+        }
     }
     
     // --- LIFAFA LIST RENDERING ---
@@ -122,8 +149,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INITIALIZE & TAB SWITCHING LOGIC ---
     getCurrentUserSession(); 
+    loadGlobalSettings(); // CALL HERE
     refreshBalanceUI();
     renderLifafas();
+    updateTelegramStatusUI(); // CALL HERE
+
+    // --- ACCORDION TOGGLE LOGIC ---
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const targetId = header.dataset.target;
+            const content = document.getElementById(targetId);
+            
+            if (content) {
+                header.classList.toggle('active');
+                
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                } else {
+                    content.style.display = 'block';
+                }
+            }
+        });
+    });
+
+    // Mock Check Button Listener (Special Users)
+    document.querySelector('#specialUsersContent .check-btn')?.addEventListener('click', () => {
+        const users = document.getElementById('lifafaSpecialUsers_Normal').value.trim();
+        if (users) {
+            alert(`MOCK: Checking ${users.split(/[,*.\s\n]+/).filter(Boolean).length} numbers. Validation is pending.`);
+        } else {
+            alert('Enter mobile numbers first!');
+        }
+    });
 
     // Secondary Tab Switching Logic (Lifafa Types)
     document.querySelectorAll('.lifafa-tab-secondary').forEach(btn => {
@@ -133,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.lifafa-form-new').forEach(f => f.style.display = 'none');
             
             btn.classList.add('active');
-            // Assuming form ID is 'normalLifafaForm', 'diceLifafaForm', etc.
             document.getElementById(`${type.toLowerCase()}LifafaForm`).style.display = 'block';
             logArea.innerHTML = `<p>Ready to create ${type} Lifafa...</p>`;
             
@@ -142,19 +198,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ------------------------------------------
-    // --- LIFAFA CREATION LOGIC (ONLY FOR NORMAL) ---
+    // --- LIFAFA CREATION LOGIC (NORMAL) ---
     // ------------------------------------------
 
     if (normalLifafaForm) {
         normalLifafaForm.addEventListener('submit', (e) => {
             e.preventDefault();
-             
-            // Use elements corresponding to the submitted form (Normal in this case)
+            
             const perUserAmount = parseFloat(document.getElementById('lifafaPerUserAmount_Normal').value);
             const count = parseInt(document.getElementById('lifafaCount_Normal').value);
             const title = document.getElementById('lifafaTitle_Normal').value.trim();
             const comment = document.getElementById('paymentComment_Normal').value.trim();
             const redirectLink = document.getElementById('redirectLink_Normal').value.trim();
+            
+            // FETCHING ADVANCED FIELDS
+            const accessCode = document.getElementById('lifafaAccessCode_Normal').value.trim();
+            const specialUsers = document.getElementById('lifafaSpecialUsers_Normal').value.trim();
+            
+            const requiredChannels = globalSettings.telegramChannels || []; // Use GLOBAL channels
+
+            const youtubeLink = document.getElementById('lifafaYoutubeLink_Normal')?.value.trim();
+            const referCount = parseInt(document.getElementById('lifafaReferCount_Normal')?.value) || 0;
             
             const totalAmount = perUserAmount * count; 
             const currentBalance = getBalance(senderUsername);
@@ -193,14 +257,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: uniqueId,
                 creator: senderUsername,
                 date: Date.now(),
-                type: 'Normal', // Save Lifafa type
+                type: 'Normal',
                 title: title,
                 comment: comment,
                 redirectLink: redirectLink,
+                accessCode: accessCode || null,
+                specialUsers: specialUsers ? specialUsers.split(/[,*.\s\n]+/).filter(Boolean) : [],
+                requirements: {
+                    channels: requiredChannels, // Save the list of global required channels
+                    youtube: youtubeLink || null,
+                    referrals: referCount > 0 ? referCount : null,
+                },
                 totalAmount: totalAmount, 
                 count: count,
                 perClaim: perUserAmount, 
-                claims: [] // Array of {username, date, amount}
+                claims: [] 
             };
 
             // 4. Save Lifafa & Log Transaction
@@ -235,37 +306,4 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'login.html';
         });
     }
-
-    // --- ACCORDION TOGGLE LOGIC ---
-    document.querySelectorAll('.accordion-header').forEach(header => {
-        header.addEventListener('click', () => {
-            const targetId = header.dataset.target;
-            const content = document.getElementById(targetId);
-            
-            if (content) {
-                // Toggle active class on header
-                header.classList.toggle('active');
-                
-                // Toggle display of content
-                if (content.style.display === 'block') {
-                    content.style.display = 'none';
-                } else {
-                    content.style.display = 'block';
-                }
-            }
-        });
-    });
-
-    // Mock Check Button Listener (Special Users)
-    document.querySelector('#specialUsersContent .check-btn')?.addEventListener('click', () => {
-        const users = document.getElementById('lifafaSpecialUsers_Normal').value.trim();
-        if (users) {
-            alert(`MOCK: Checking ${users.split(/[,*.\s\n]+/).filter(Boolean).length} numbers. Validation is pending.`);
-        } else {
-            alert('Enter mobile numbers first!');
-        }
-    });
 });
-
-
- 
