@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SETTINGS_KEY = 'nextEarnXGlobalSettings';
     const MAX_CHANNELS = 4;
     const BOT_USERNAME = '@FxL_lifafa_verifier_bot';
-    
+
     // UI Elements
     const activeChannelsContainer = document.getElementById('activeChannelsContainer');
     const totalChannelsDisplay = document.getElementById('totalChannels');
@@ -36,16 +36,19 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(globalSettings));
         alert('✅ Global Telegram Channels saved successfully!');
     }
-    
+
     // --- UI RENDERING ---
     function renderChannels() {
         activeChannelsContainer.innerHTML = '';
         totalChannelsDisplay.textContent = currentChannels.length;
-        
+        const validationCheckIcon = document.querySelector('.validation-check-icon');
+        const newChannelLinkInput = document.getElementById('newChannelLink');
+
         if (currentChannels.length === 0) {
             activeChannelsContainer.innerHTML = '<p style="color:#777;">No channels added yet.</p>';
             return;
         }
+          
 
         currentChannels.forEach((channel, index) => {
             const item = document.createElement('div');
@@ -59,33 +62,62 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             activeChannelsContainer.appendChild(item);
         });
-        
+
         attachRemoveListeners();
     }
-    
+
     // --- EVENT HANDLERS ---
 
     // 1. Add Channel
     addChannelBtn.addEventListener('click', () => {
-        const link = newChannelLinkInput.value.trim();
-        if (!link) {
-            alert('Please enter a channel link or username.');
-            return;
-        }
-        if (currentChannels.length >= MAX_CHANNELS) {
-            alert(`Maximum limit of ${MAX_CHANNELS} channels reached. Remove one first.`);
-            return;
-        }
-        if (currentChannels.includes(link)) {
-             alert('This channel is already added.');
-             return;
-        }
-        
+    const link = newChannelLinkInput.value.trim();
+    if (!link) {
+        alert('Please enter a channel link or username.');
+        return;
+    }
+    if (currentChannels.length >= MAX_CHANNELS) {
+        alert(`Maximum limit of ${MAX_CHANNELS} channels reached. Remove one first.`);
+        return;
+    }
+    if (currentChannels.includes(link)) {
+         alert('This channel is already added.');
+         return;
+    }
+    
+    // Simple Link Validation (Check for @ or t.me)
+    if (!link.startsWith('@') && !link.toLowerCase().startsWith('https://t.me/') && !link.toLowerCase().startsWith('t.me/')) {
+        if (!confirm('The format seems incorrect. Continue anyway?')) return;
+    }
+    
+    currentChannels.push(link);
+    newChannelLinkInput.value = '';
+    
+    // Hide validation icon after successful add
+    if(validationCheckIcon) validationCheckIcon.style.display = 'none';
+
+    renderChannels();
+    saveChannelsBtn.classList.add('unsaved');
+});
+
+// panel/js/telegram_settings.js (Line 115 ke aas-paas)
+// Input Listener for Live Validation Icon
+newChannelLinkInput.addEventListener('input', () => {
+    const link = newChannelLinkInput.value.trim();
+    if (!validationCheckIcon) return;
+    
+    // Show green tick if it looks like a valid link/username, otherwise hide.
+    if (link && (link.startsWith('@') || link.toLowerCase().includes('t.me/'))) {
+        validationCheckIcon.style.display = 'block';
+    } else {
+        validationCheckIcon.style.display = 'none';
+    }
+});
+
         // Simple Link Validation (Check for @ or t.me)
         if (!link.startsWith('@') && !link.toLowerCase().startsWith('https://t.me/')) {
             if (!confirm('The format seems incorrect. Continue anyway?')) return;
         }
-        
+
         currentChannels.push(link);
         newChannelLinkInput.value = '';
         renderChannels();
@@ -111,20 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    
+
+
     // 4. Copy Verifier Bot
     copyVerifierBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(BOT_USERNAME);
         alert(`✅ Copied: ${BOT_USERNAME}`);
     });
-    
+
     // 5. Tap to Admin (Mock)
     tapToAdminBtn.addEventListener('click', () => {
-         alert("MOCK: This feature would typically redirect you to add the bot as admin.");
+        alert("MOCK: This feature would typically redirect you to add the bot as admin.");
     });
-    
+
     // 6. Logout
-    if(logoutBtn) {
+    if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('session');
             localStorage.removeItem('nextEarnXCurrentUser');

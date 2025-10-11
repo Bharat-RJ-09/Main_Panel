@@ -91,3 +91,23 @@ body::before { /* Animated Background */
     .verifier-input-group input, .verifier-input-group .copy-btn { width: 100%; margin-top: 5px; }
     .verifier-input-group label { margin-bottom: 0; }
 }
+
+/* Channel List Specific */
+.channels-list-card h3 { color: #aaffaa; }
+.channel-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 15px; margin-bottom: 8px; border-radius: 8px;
+    background: linear-gradient(90deg, rgba(220, 50, 50, 0.9), rgba(220, 50, 50, 0.7)); /* RED BACKGROUND */
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(220, 50, 50, 0.4);
+}
+.channel-item .channel-name {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600;
+}
+.channel-item .channel-name i { color: #fff; }
+.channel-item .remove-btn {
+    background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;
+    transition: transform 0.1s;
+}
+.channel-item .remove-btn:hover { color: #ffcc00; transform: scale(1.1); }
